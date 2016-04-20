@@ -1,4 +1,4 @@
-:
+#!/bin/sh
 
 update(){(
 
@@ -36,15 +36,27 @@ commit(){(
 
 )}
 
+usage_and_exit(){
+  echo "Usage: make.sh update or make.sh commit" 1>&2
+  exit 1
+}
+
+if [ -z "$1" ]; then
+  usage_and_exit
+fi
+
 cmd="$1"
 shift
 
 case "$cmd" in
   update)
-    git pull && update
+    update
     ;;
   commit)
-    merge && git commit -m. -a && git push
+    commit
+    ;;
+  *)
+    usage_and_exit
     ;;
 esac
 
