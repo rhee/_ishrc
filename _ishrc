@@ -208,15 +208,10 @@ if [ "y" = "${is_cygwin}" ]; then
 
 fi
 
-#LANG=${LANG:-ko_KR.utf8}
-#export LANG
 LC_MESSAGES=C
 LC_TIME=C
 LC_NUMERIC=C
-#LC_COLLATE=ko_KR.UTF-8
 export LC_MESSAGES LC_TIME LC_NUMERIC
-#LC_MONETARY=C
-#export LC_MONETARY
 
 #XMODIFIERS="@im=Ami"
 #export XMODIFIERS
