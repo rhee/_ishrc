@@ -1,0 +1,323 @@
+:
+
+# in .?shrc:
+# case $- in *i*|*l*) test -f ~/emacs/dotishrc && . ~/emacs/dotishrc;; esac
+
+case $- in *i*|*l*)
+
+#-------------------------------------
+
+# slight performance
+unset HISTFILE
+
+# prevent recursive call in bash
+o_env=$ENV
+ENV=
+
+umask 022
+
+### Aliases
+
+#match(){seq=$1; pat=$2; case "$seq" in "$pat") return 0 ;; esac; return 1}
+
+case $0 in
+    -bash|bash|*/bash)
+	shell_flavour=bash
+
+	bind "set show-all-if-ambiguous on"
+	bind \\C-o:menu-complete
+
+	;;
+    -zsh|-zsh-static|zsh|zsh-static|*/zsh|*/zsh-static)
+	shell_flavour=zsh
+	;;
+    -kzh|ksh|*/ksh)
+	shell_flavour=ksh
+	;;
+    -sh|sh|*/sh)
+	shell_flavour=sh
+	;;
+    *)
+      # another test idea:
+      # true xyzzy; if [ "xyzzy" = "$_" ]; then ...; fi
+
+      if [ ! -z "$BASH_VERSION" ]; then
+	  shell_flavour=bash
+      elif [ ! -z "$ZSH_VERSION" ]; then
+	  shell_flavour=zsh
+      elif [ ! -z "$KSH_VERSION" ]; then
+	shell_flavour=ksh
+      else
+	shell_flavour=sh
+      fi
+      ;;
+esac
+
+#echo "*** FLAV $shell_flavour ***"
+
+PS1='$ '
+
+case ${shell_flavour} in
+  zsh)
+      if [ -z "$STY" ]; then PS1='%m:%.%# '; else PS1='{%m}:%.%# '; fi
+      bindkey -A emacs main
+      setopt ignoreeof
+      IGNOREEOF=4
+      export PS1 IGNOREEOF
+      ;;
+  ksh)
+      if [ -z "$STY" ]; then _h=`hostname |sed -e 's/\..*$//;'`; else _h="<`hostname |sed -e 's/\..*$//;'`>"; fi
+      if [ 0 -eq `id |sed -e 's/^uid=//;s/(.*$//;'` ]; then _r='#'; else _r='$'; fi
+      PS1='$_h:${PWD##*/}$_r '
+      export PS1
+      set -o emacs
+      set -o ignoreeof
+      ;;
+  bash)
+      if [ -z "$STY" ]; then PS1='\h:\W\$ '; else PS1='[\h]:\W\$ '; fi
+      IGNOREEOF=4
+      export PS1 IGNOREEOF
+      ;;
+  *)
+      if [ -z "$STY" ]; then _h=`hostname |sed -e 's/\..*$//;'`; else _h="(`hostname |sed -e 's/\..*$//;'`)"; fi
+      if [ 0 -eq `id |sed -e 's/^uid=//;s/(.*$//;'` ]; then _r='#'; else _r='$'; fi
+      #PS1=$_h$_r' '
+      PS1=$_r' '
+      export PS1
+      ;;
+esac
+
+case $(uname -s) in
+    CYGWIN*)
+	is_cygwin=y
+	;;
+    MINGW32*)
+	is_mingw=y
+	;;
+    Darwin*)
+	is_macosx=y
+	;;
+esac
+
+shr_addpath(){
+  #var=$1; elem=$2
+  eval "case :\${$1}: in *:$2:*) ;; *) $1=$2:\${$1} ;; esac"
+  #eval "echo \"$1=\${$1}\""
+}
+
+shr_appendpath(){
+  #var=$1; elem=$2
+  eval "case :\${$1}: in *:$2:*) ;; *) $1=\${$1}:$2 ;; esac"
+  #eval "echo \"$1=\${$1}\""
+}
+
+########  ENV  ###########
+
+#shr_addpath PATH ${HOME}/bin/override
+#shr_addpath PATH ${HOME}/bin
+shr_addpath PATH ${HOME}/emacs
+
+# force /usr/local/bin first
+#shr_addpath PATH /usr/local/bin
+PATH=/usr/local/bin:$PATH
+
+shr_addpath PATH /usr/local/sbin
+shr_appendpath PATH /usr/sbin
+shr_appendpath PATH /sbin
+shr_appendpath PATH /usr/bsd/local/bin
+shr_appendpath PATH .
+export PATH
+
+#shr_addpath LD_LIBRARY_PATH /usr/local/lib
+#export LD_LIBRARY_PATH
+
+shr_appendpath MANPATH /usr/local/man
+shr_appendpath MANPATH /usr/local/share/man
+export MANPATH
+
+# for SSH2
+#test -z "$SSH2_AGENT_PID" &&  eval `ssh-agent2`; ssh-add2 ${HOME}/.ssh2/id_dsa_1024_a;
+
+# for OpenSSH
+#alias xa='if [ -z "$SSH_AGENT_PID" ]; then eval `ssh-agent`; ssh-add ${HOME}/.ssh/id_dsa ${HOME}/.ssh/id_rsa ${HOME}/.ssh/identity; fi'
+
+#LESS="-C -j-3 -r"
+#LESSCHARSET=latin1
+#export LESS LESSCHARSET
+
+EXINIT="se sw=4 nows ai"
+export EXINIT
+PERL_BADLANG=0
+export PERL_BADLANG
+
+CVS_RSH=ssh
+export CVS_RSH
+
+CVSROOT=~/CVSRep
+export CVSROOT
+
+RSYNC_RSH=ssh
+export RSYNC_RSH
+
+EDITOR=vi
+export EDITOR
+
+TKDIFF_EDITOR="hanterm -T TKDIFF_EDITOR -n TKDIFF_EDITOR -e vim"
+export TKDIFF_EDITOR
+
+#VISUAL=emacs
+#export VISUAL
+
+if [ "ksh" = "${shell_flavour}" ]; then set -o emacs; fi
+
+MKISOFS_CHARSET=euc-kr
+export MKISOFS_CHARSET
+
+ESHELL=/bin/${shell_flavour}
+export ESHELL
+
+XAPPLRESDIR=${HOME}/.app-defaults/
+export XAPPLRESDIR
+
+#PS_PERSONALITY=`uname -s`
+#CMD_ENV=`uname -s`
+#export PS_PERSONALITY CMD_ENV
+
+PS_PERSONALITY=`uname`
+CMD_ENV=`uname`
+export PS_PERSONALITY CMD_ENV
+
+if [ "y" = "${is_cygwin}" ]; then
+    # for CYGWIN only
+    MAKE_MODE=unix	# or MAKE_MODE=win32
+    export MAKE_MODE
+    CYGWIN="ntsec tty binmode"
+    export CYGWIN
+
+    cdmadev(){
+	PATH=/cygdrive/C/APPS/UTILS:/cygdrive/C/Perl/bin:/cygdrive/c/APPS/ADS101/bin:$PATH
+	export PATH
+    }
+
+    cygdev(){
+	PATH=/usr/local/bin:/usr/bin:$PATH
+	export PATH
+	OCAMLLIB=/usr/local/lib/ocaml
+	export OCAMLLIB
+    }
+
+fi
+
+#LANG=${LANG:-ko_KR.utf8}
+#export LANG
+LC_MESSAGES=C
+LC_TIME=C
+LC_NUMERIC=C
+#LC_COLLATE=ko_KR.UTF-8
+export LC_MESSAGES LC_TIME LC_NUMERIC
+#LC_MONETARY=C
+#export LC_MONETARY
+
+#XMODIFIERS="@im=Ami"
+#export XMODIFIERS
+
+# term(){eval `tset -s $1`}
+# dmalloc() { eval `command dmalloc -b $*` }
+
+#########  wmrun trick ########
+if [ -z "${WMTITLE}" ]; then
+  case $TERM in xterm*) title="`hostname |sed -e 's/\..*$//;' |tr a-z A-Z`"; echo -n "%]2;${title}%]1;${title}"|sed -e 's/%//g' ;; esac
+fi
+
+#########  emacs ansi-term trick #######
+#Emacs ansi-term directory tracking
+# track directory, username, and cwd for remote logons
+
+case ${shell_flavour} in
+  ksh|zsh|bash)
+
+if [ $TERM = eterm-color ]; then
+    eterm_set_cwd() {
+        $@
+        echo -e "\033AnSiTc" $(pwd)
+    }
+    
+    # set hostname, user, and cwd
+    eterm_reset() {
+        echo -e "\033AnSiTu" $(whoami)
+        echo -e "\033AnSiTc" $(pwd)
+        echo -e "\033AnSiTh" $(hostname)
+    }
+    
+    for temp in cd pushd popd; do
+        alias $temp="eterm_set_cwd $temp"
+    done
+    
+    # set hostname, user, and cwd now
+    eterm_reset
+fi
+
+	;;
+esac
+
+
+case ${shell_flavour} in
+  zsh)
+set -G	# NULL_GLOB, no error on glob match not found
+	;;
+esac
+
+
+############ ALIASES #############
+
+#if [ "${shell_flavour}" != "sh" -o "y" != "${is_cygwin}" ]; then
+test -f $HOME/.aliases && . $HOME/.aliases
+#fi # [ "${shell_flavour}" == "sh" -a "y" != "${is_cygwin}" ]; then
+
+#########  Site specific definitions  ########
+
+
+for rc in $HOME/.siteshrc-*; do
+	case $rc in
+		\**|*~|*.bak|*.orig|*.old)
+			# skip backup files
+			;;
+		*)
+			test -f $rc && . $rc
+	esac
+done
+
+for rc in $HOME/.siteshrc.d/*; do
+	case $rc in
+		*~|*.bak|*.orig|*.old)
+			# skip backup files
+			;;
+		*)
+			test -f $rc && . $rc
+	esac
+done
+
+for rc in $HOME/.local/etc/profile.d/*; do
+	case $rc in
+		*~|*.bak|*.orig|*.old)
+			# skip backup files
+			;;
+		*)
+			test -f $rc && . $rc
+	esac
+done
+
+#
+# memorystick mount option
+# mount -o iocharset=cp949,utf8
+#
+
+#########  Ready  ########
+
+echo $shell_flavour Ready!
+ENV=$o_env
+
+#-------------------------------------
+;;
+esac
+
