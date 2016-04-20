@@ -389,34 +389,6 @@ alias lddA='sh -c '"'"'readelf -d "$@" | grep NEEDED'"'"' lddA'
 alias lxargs="xargs -d '\n'"
 
 
-#TXPROVIDER="${TXPROVIDER:-env}"
-TXPROVIDER="${TXPROVIDER:-docker exec transmission}"
-TXREMOTE="${TXREMOTE:-127.0.0.1:9091}"
-TXAUTH="${TXAUTH:---auth=transmission:transmission}"
-export TXREMOTE TXAUTH
-
-alias tx='$TXPROVIDER transmission-remote $TXREMOTE $TXAUTH '
-alias txl='$TXPROVIDER transmission-remote $TXREMOTE $TXAUTH -l'
-alias txx='xargs $TXPROVIDER transmission-remote $TXREMOTE $TXAUTH '
-alias txm='sh -c '"'"'dest="$1";shift;for n in "$@";do $TXPROVIDER transmission-remote $TXREMOTE $TXAUTH -t $n --move "$dest";done'"'"' txm'
-alias txa='sh -c '"'"'for url in "$@";do $TXPROVIDER transmission-remote $TXREMOTE $TXAUTH -a "$url" -ph all;done'"'"' txa'
-alias txah='sh -c '"'"'for h in "$@";do h=$(echo $h |tr a-z A-Z);\
-$TXPROVIDER transmission-remote $TXREMOTE $TXAUTH -a "http://torrage.com/torrent/$h.torrent" -ph all || \
-$TXPROVIDER transmission-remote $TXREMOTE $TXAUTH -a "http://torcache.net/torrent/$h.torrent" -ph all || \
-$TXPROVIDER transmission-remote $TXREMOTE $TXAUTH -a "http://zoink.it/torrent/$h.torrent" -ph all || \
-$TXPROVIDER transmission-remote $TXREMOTE $TXAUTH -a "magnet:?xt=urn:btih:$h&tr=udp%3A%2F%2Ftracker.publicbt.com%3A80%2Fannounce&tr=http%3A%2F%2Ftracker.publicbt.com%2Fannounce&tr=http%3A%2F%2Ftracker.torrentbox.com%3A2710%2Fannounce" -ph all || \
-true \
-;done'"'"' txah'
-
-alias txah_='sh -c '"'"'for h in "$@";do h=$(echo $h |tr a-z A-Z);$TXPROVIDER transmission-remote $TXREMOTE $TXAUTH -a "http://torrage.com/torrent/$h.torrent" -ph all;done'"'"' txah'
-alias txaH='sh -c '"'"'for h in "$@";do h=$(echo $h |tr a-z A-Z);$TXPROVIDER transmission-remote $TXREMOTE $TXAUTH -a "http://torcache.net/torrent/$h.torrent" -ph all;done'"'"' txaH'
-alias txaZ='sh -c '"'"'for h in "$@";do h=$(echo $h |tr a-z A-Z);$TXPROVIDER transmission-remote $TXREMOTE $TXAUTH -a "http://zoink.it/torrent/$h.torrent" -ph all;done'"'"' txaZ'
-alias txam='sh -c '"'"'for h in "$@";do h=$(echo $h |tr A-Z a-z);$TXPROVIDER transmission-remote $TXREMOTE $TXAUTH -a "magnet:?xt=urn:btih:$h&tr=udp%3A%2F%2Ftracker.publicbt.com%3A80%2Fannounce&tr=http%3A%2F%2Ftracker.publicbt.com%2Fannounce&tr=http%3A%2F%2Ftracker.torrentbox.com%3A2710%2Fannounce" -ph all;done'"'"' txam'
-
-txtl(){
-  xargs -d "\n" sh -c 'txselect="-t$1";shift;for opt in "$@";do txselect=$txselect","$opt;done;set -x;$TXPROVIDER transmission-remote $TXREMOTE $TXAUTH $txselect '"$@"'' ltx
-}
-
 lsmovies(){
 
   local not=""
