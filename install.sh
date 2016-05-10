@@ -15,10 +15,10 @@ for f in _*; do
 	    #  test "$f" -nt "$HOME"/"$destfile" ) && \
 	    #( echo cp "$f" "$HOME"/"$destfile" && \cp -p "$f" "$HOME"/"$destfile" )
 
-	    # quick hack create backup ( ~ )
-	    rsync -tP --backup "$f" "$HOME"/"$destfile"
+	    # create backup ( ~ )
+	    test -s "$HOME"/"$destfile" -a ! -L "$HOME"/"$destfile" && \mv "$HOME"/"$destfile" "$HOME"/"$destfile"~
 
-	    # delete rsync'd file, and then make symlink
+	    # make symlink
 	    ln -v -sf "$PWD"/"$f" "$HOME"/"$destfile"
 
 	  else
