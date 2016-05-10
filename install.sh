@@ -15,7 +15,7 @@ for f in _*; do
 	    #( echo cp "$f" "$HOME"/"$destfile" && \cp -p "$f" "$HOME"/"$destfile" )
 	    ln -v -sf "$PWD"/"$f" "$HOME"/"$destfile"
 	  else
-	    rsync -v --backup "$f" "$host:$destfile"
+	    rsync -tP --backup "$f" "$host:$destfile"
 	  fi
 	fi
     ;;
