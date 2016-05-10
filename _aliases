@@ -528,17 +528,19 @@ alias convmv-other-to-mac='convmv -r -f utf-8 -t utf-8 --nfd --notest'
 
 
 
-rename_files(){
-(
+rename_files(){(
+
+  if [ -z "$2" ]; then
+    echo "Usage: rename_files pattern replace [--no-dry-run]" 1>&2
+    return
+  fi
+
   pattern="$1"
   shift
 
   replace="$1"
   shift
 
-  if [ -z "$pattern" ]; then
-    echo "Usage: rename-files \"pattern\" \"replace\" [--no-dry-run]" 1>&2
-  else
     dryrun="yes"
     if [ "--no-dry-run" = "$1" ]; then dryrun="no" ; fi
 
@@ -554,9 +556,8 @@ rename_files(){
     if [ "yes" = "$dryrun" ]; then
       echo "Dry-run completed: run with --no-dry-run at the last of the command line actually to rename files" 1>&2
     fi
-  fi
-)
-}
+
+)}
 
 alias rename-files='rename_files'
 
