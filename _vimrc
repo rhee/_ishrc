@@ -120,7 +120,41 @@ au BufEnter *.py set ai sw=4 ts=4 et
 
 let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,.*.swp"
 
-source ~/.vimrc-largefile
+"### BEGIN source ~/.vimrc-largefile
+"let &termencoding=&encoding
+"se encoding=utf-8
+"setglobal fileencoding=utf-8
+
+if has("multi_byte")
+  if &termencoding == ""
+    let &termencoding = &encoding
+  endif
+  set encoding=utf-8                     " better default than latin1
+  setglobal fileencoding=utf-8           " change default file encoding when writing new files
+endif
+
+se noswapfile
+se bufhidden=unload
+"se buftype=nowritefile
+se undolevels=5
+"se scrolloff=9999
+"se bg=dark
+
+:hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+:hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+:nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
+
+"se cursorline
+"map ;; :.,.w>>check.txt.x
+
+map ;; :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !tee -a check.txt.x >/dev/null
+map ;a :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !transmission-remote -a $(perl -ne 's@^([0-9A-F]{40}).*$@magnet:?xt=urn:btih:\L\1\&tr=udp\%3A\%2F\%2Ftracker.publicbt.com\%3A80\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.publicbt.com\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.torrentbox.com\%3A2710\%2Fannounce@ && print;') -ph all
+
+autocmd FileType java set sw=4 ts=4 et
+autocmd FileType python set sw=4 ts=4 et
+au BufEnter *.java set ai sw=4 ts=4 et
+au BufEnter *.py set ai sw=4 ts=4 et
+"### END source ~/.vimrc-largefile
 
 se enc=utf8
 
