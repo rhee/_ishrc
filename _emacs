@@ -1,5 +1,7 @@
 ;; .emacs
 
+(global-set-key "\C-c;" 'set-mark-command)
+
 ;;; uncomment this line to disable loading of "default.el" at startup
 ;; (setq inhibit-default-init t)
 
@@ -65,13 +67,13 @@
 
 (display-time)
 
-
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 
 (if (fboundp 'cscope-minor-mode)
     (progn (defvar cscope-program "/usr/local/bin/cscope" )))
 
+(setq inferior-R-program-name "~/.local/bin/R-wrapper")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
