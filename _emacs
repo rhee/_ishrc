@@ -73,7 +73,11 @@
 (if (fboundp 'cscope-minor-mode)
     (progn (defvar cscope-program "/usr/local/bin/cscope" )))
 
-(setq inferior-R-program-name "~/.local/bin/R-wrapper")
+;;;(setq inferior-R-program-name "~/.local/bin/R-wrapper")
+
+(setq inferior-R-program-name "jupyter console --kernel=ir --existing")
+(setq-default inferior-ess-primary-prompt "In \\[[0-9]+\\]: ")
+(setq-default inferior-ess-primary-prompt "\\.\\.\\.\\.: ")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
