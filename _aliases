@@ -31,8 +31,10 @@ alias sl='screen -ls'
 alias sx8='LANG=ko_KR.utf8 screen -U -x -r'
 
 # dtach
-alias dC='env dC_sock_=.dtach.dC.sock dtach -c ~/.dtach.dC.sock -z -r winch'
-alias dA='if [ -S ~/"$dC_sock_" ]; then echo "socket already attached"; else dtach -a ~/.dtach.dC.sock -z -r winch; fi'                                                                                                
+#alias dC='env dC_sock_=.dtach.dC.sock dtach -c ~/.dtach.dC.sock -z -r winch'
+#alias dA='if [ -S ~/"$dC_sock_" ]; then echo "socket already attached"; else dtach -a ~/.dtach.dC.sock -z -r winch; fi'                                                                                                
+alias dC='d_=/tmp/dtach/$(id -u); mkdir -p $d_; env dC_sock_=$d_/sock dtach -c $d_/sock -z -r winch'
+alias dA='d_=/tmp/dtach/$(id -u); if [ -S "$dC_sock_" ]; then echo "socket already attached"; else dtach -a $d_/sock -z -r winch; fi'
 
 alias telnet='\telnet -L'
 alias vt100='export TERM=vt100; eval "tset -s vt100"'
@@ -530,32 +532,30 @@ alias convmv-other-to-mac='convmv -r -f utf-8 -t utf-8 --nfd --notest'
 
 rename_files(){(
 
-  if [ -z "$2" ]; then
-    echo "Usage: rename_files pattern replace [--no-dry-run]" 1>&2
+  if [ "--no-dry-run" = "$1" ]; then dryrun="no" ; shift ; fi
+
+  if [ -z "$3" ]; then
+    echo "Usage: rename_files [--no-dry-run] pattern replace files" 1>&2
     return
   fi
 
   pattern="$1"
+  replace="$2"
+  shift
   shift
 
-  replace="$1"
-  shift
-
-    dryrun="yes"
-    if [ "--no-dry-run" = "$1" ]; then dryrun="no" ; fi
-
-    find . -name '*'"$pattern"'*' | while IFS= read -r f ; do
-      n="$( echo "$f" | sed -e 's#'"$pattern"'#'"$replace"'#g;' )"
-      if [ "yes" = "$dryrun" ]; then
-	echo mv "'$f'" "'$n'"
-      else
-	\mv -v "$f" "$n"
-      fi
-    done
-
-    if [ "yes" = "$dryrun" ]; then
-      echo "Dry-run completed: run with --no-dry-run at the last of the command line actually to rename files" 1>&2
+  for f in "$@" ; do
+    n="$( echo "$f" | sed -e 's#'"$pattern"'#'"$replace"'#g;' )"
+    if [ "no" = "$dryrun" ]; then
+      \mv -v "$f" "$n"
+    else
+      echo mv "'$f'" "'$n'"
     fi
+  done
+
+  if [ "no" != "$dryrun" ]; then
+    echo "Dry-run completed: run with --no-dry-run at the first of the command line arguments to rename files really" 1>&2
+  fi
 
 )}
 
