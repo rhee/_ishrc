@@ -73,7 +73,12 @@
 (if (fboundp 'cscope-minor-mode)
     (progn (defvar cscope-program "/usr/local/bin/cscope" )))
 
-(setq inferior-R-program-name "~/.local/bin/R-wrapper")
+;;(setq inferior-R-program-name "/usr/bin/R")
+;;(setq inferior-R-program-name "~/.local/bin/R-wrapper")
+
+(if (fboundp 'ess-disable-smart-S-underscore)
+    (progn (ess-disable-smart-S-underscore nil)))
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
