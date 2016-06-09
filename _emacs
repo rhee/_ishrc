@@ -81,8 +81,15 @@
     ;;(setq inferior-R-program-name "~/.local/bin/R-wrapper")
     (setq inferior-R-program-name "jupyter console --kernel=ir --existing")
     
-    (setq-default inferior-ess-primary-prompt "In \\[[0-9]+\\]: ")
-    (setq-default inferior-ess-primary-prompt "\\.\\.\\.\\.: ")
+    ;;;(setq-default inferior-ess-primary-prompt "In \\[[0-9]+\\]: ")
+    ;;;(setq-default inferior-ess-secondary-prompt "\\.\\.\\.\\.: ")
+
+    (when t
+      (setq ess-r-customize-alist
+	    (append
+	     '((inferior-ess-primary-prompt . "In \\[[0-9]+\\]: ")
+	       (inferior-ess-secondary-prompt . "\\.\\.\\.\\.: "))
+	     ess-r-customize-alist)))
 
     ))
 
