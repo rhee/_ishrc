@@ -247,22 +247,9 @@ lssources(){
 
 }
 
-#XGPAT="-false"
-#XGPAT="$XGPAT -o -iname \\*.h -o -iname \\*.c -o -iname \\*.hpp -o -iname \\*.cpp"
-#XGPAT="$XGPAT -o -iname \\*.inc -o -iname \\*.s -o -iname \\*.asm"
-#XGPAT="$XGPAT -o -iname \\*.m -o -iname \\*.mm"
-#XGPAT="$XGPAT -o -iname \\*.py -o -iname \\*.pyw"
-#XGPAT="$XGPAT -o -iname \\*.ml"
-#XGPAT="$XGPAT -o -iname \\*.mak -o -iname makefile -o -iname kbuild"
-#XGPAT="$XGPAT -o -iname \\*.java -o -iname \\*.jsp"
-#XGPAT="$XGPAT -o -iname \\*.js -o -iname \\*.css -o -iname \\*.html -o -iname \\*.htm -o -iname \\*.php"
-#alias xG='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; '$findbin' -L . \( ${XGPAT} \) -print0 |xargs -0 grep -n \${1+\"\$@\"} /dev/null |tee \${log}" xG'
-
-#alias xG='lsS --nodot | sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; xargs -d'"'"'\n'"'"' grep -n \${1+\"\$@\"} /dev/null | tee \${log}" xG'
 alias xG='lsS -0 | sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; xargs -0 grep -n \${1+\"\$@\"} /dev/null | sed '"'"'s&^\./&&'"'"' | tee \${log}" xG'
 
 alias vG='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; ( [ ! -z \"\${TERM}\" -a \"dumb\" != \"\${TERM}\" ] && vim -q \${log} -c cl) || cat \${log}" vG'
-#alias lsS='lssources -nodot '
 alias lsS='lssources'
 
 alias yG='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; cat -d ./.yginput |xargs grep -n \${1+\"\$@\"} /dev/null |tee \${log}" xG'
@@ -638,6 +625,336 @@ _lsof_port_listeners(){(
 # multitail
 alias mt='multitail -p l'
 alias mtj='multitail -p l -j'
+
+# /////////////////////////
+
+make_source_file_template(){
+  cat <<EOB
+// Emacs:
+// Local Variables:
+// mode: javascript
+// c-basic-offset: 4
+// End:
+// vim: sw=4 sts=4 ts=8 et
+EOB
+}
+
+make_rprofile_template(){(
+
+  date=$(date +%Y-%m-%d)
+
+  cat <<EOB
+##### BEGIN generated Rprofile ${date} #####
+
+### # ipak() from https://gist.github.com/stevenworthington/3178163
+### ipak<- function(pkg){
+###   new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+###   if (length(new.pkg)) 
+###     install.packages(new.pkg, dependencies = TRUE)
+###   sapply(pkg, require, character.only = TRUE)
+### }
+### 
+### ipak(c("ggplot2","ggthemes","extrafont"))
+
+### #시스템에 설치된 나눔고딕을 사용하기 위해 extrafont 패키지를 설치했다. 
+### #관련 내용은 http://blog.revolutionanalytics.com/2012/09/how-to-use-your-favorite-fonts-in-r-charts.html 참고
+### 
+### suppressPackageStartupMessages({
+###     library(ggplot2)
+###     library(ggthemes)
+###     library(extrafont)
+### })
+### 
+### 
+### #개인화된 테마 작업
+### theme_gogamza<- function(base_size = 12, base_family = "NanumGothic"){
+###      (theme_foundation(base_size = base_size, base_family = base_family) +
+###         theme(line = element_line(colour = "black"), rect = element_rect(fill = ggthemes_data$fivethirtyeight["ltgray"],
+###             linetype = 0, colour = NA), text = element_text(colour = ggthemes_data$fivethirtyeight["dkgray"]),
+###             axis.title = element_text(), axis.text = element_text(),
+###             axis.ticks = element_blank(), axis.line = element_blank(),
+###             legend.background = element_rect(), legend.position = "bottom",
+###             legend.direction = "horizontal", legend.box = "vertical",
+###             panel.grid = element_line(colour = NULL), panel.grid.major = element_line(colour = ggthemes_data$fivethirtyeight["medgray"]),
+###             panel.grid.minor = element_blank(), plot.title = element_text(hjust = 0,
+###                 size = rel(1.5), face = "bold"), plot.margin = grid::unit(c(1,
+###                 1, 0.5, 0.5), "lines"), strip.background = element_rect(), panel.margin.x=NULL, panel.margin.y=NULL))
+### }
+### 
+### #ggplot2 메인 테마로 설정
+### theme_set(theme_gogamza())
+### 
+### #기본 테마에서 한글 폰트 정의를 하고 싶다면 아래 코드만 실행한다. 
+### #theme_set(theme_gray(base_family='NanumGothic'))
+
+
+##### END generated Rprofile ${date} #####
+EOB
+
+)}
+
+make_privoxy_config_template(){
+  cat <<EOF
+# cat >> /opt/proxy/etc/privoxy/config
+# or
+# docker exec -i proxy tee -a /opt/proxy/etc/privoxy/config
+#
+# NOTE: last match wins
+forward-socks5		.onion			172.30.1.111:9050 .
+forward-socks5		gelbooru.com		172.30.1.111:9050 .
+forward-socks5		konachan.com		172.30.1.111:9050 .
+forward-socks5		bitsnoop.com		172.30.1.111:9050 .
+forward-socks5		extratorrent.cc		172.30.1.111:9050 .
+forward-socks5		torcache.net		172.30.1.111:9050 .
+EOF
+}
+
+make_screenrc_template(){(
+  date=$(date +%Y-%m-%d)
+  cat <<EOB
+##### BEGIN generated screenrc ${date} #####
+
+## if EUC-KR
+# defutf8 off
+# defencoding EUC-KR
+
+defutf8 on
+defencoding UTF-8
+bind ^a meta
+bind a other
+startup_message off
+vbell off
+defscrollback 1000
+defautonuke on
+zombie KR
+obuflimit 8192
+deflogin off
+defflow auto interrupt
+defc1 off
+defgr off
+maptimeout 0
+hardstatus on
+hardstatus alwayslastline
+hardstatus string "%w"
+
+## ESC delay??
+
+maptimeout 0
+defc1 off
+
+## ^\
+bind ^\\ meta
+bind \\ other
+
+##### END generated screenrc ${date} #####
+
+EOB
+)}
+
+make_tmuxconf_template(){(
+  date=$(date +%Y-%m-%d)
+  cat <<EOB
+##### BEGIN generated tmux.conf ${date} #####
+
+set-option -g prefix C-a
+unbind-key C-a
+bind-key C-a send-prefix
+
+#set -g status off
+set -s escape-time 0
+
+#run-shell "$HOME/.local/bin/powerline-daemon -q"
+#source "$HOME/.local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf"
+
+##### END generated tmux.conf ${date} #####
+EOB
+)}
+
+make_gitconfig_template(){
+  cat <<'EOB'
+[color]                                                                                                                                                                                   
+        ui = auto                                                                                                                                                                         
+[diff]
+	external = sh -c 'vimdiff $2 $5' git_diff_wrapper
+[pager]                                                                                                                                                                                   
+        diff =                                                                                                                                                                                  
+[push]
+	default = simple
+[pull]
+	ff = only
+[alias]
+	up = "!git remote update -p; git merge --ff-only @{u}"
+EOB
+}
+
+make_vimrc_template(){
+  cat <<'EOB'
+"
+set fencs=ucs-bom,utf-8,euc-kr
+set enc=utf8
+
+set noai nosi
+set sw=4 sts=4 ts=8 ai nows
+"set et
+
+set noai nosi
+set tags=tags.ctags,./tags.ctags,../tags.ctags,../../tags.ctags,../../../tags.ctags,../../../../tags.ctags,$CTAGSROOT/tags.ctags,~/src/tags.ctags,~/.ctags/*
+
+set nobackup noswapfile
+set nu nowrap nows
+
+se bufhidden=unload
+se undolevels=5
+
+sy on
+
+set diffopt=iwhite 
+set diffopt+=filler
+
+let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,.*.swp"
+
+
+" for ant
+" see :help errorformat-javac :help errorformat-ant
+set efm+=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,\%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
+
+
+if has("multi_byte")
+  if &termencoding == ""
+    let &termencoding = &encoding
+  endif
+  set encoding=utf-8                     " better default than latin1
+  setglobal fileencoding=utf-8           " change default file encoding when writing new files
+endif
+
+autocmd FileType java set sw=4 sts=4 ts=8 et
+au BufEnter *.java set ai sw=4 sts=4 ts=8 et
+autocmd FileType python set sw=4 sts=4 ts=8 et
+au BufEnter *.py set ai sw=4 sts=4 ts=8 et
+
+:hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+:hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+:nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
+
+map ;; :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !tee -a check.txt.x >/dev/null
+map ;a :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !transmission-remote -a $(perl -ne 's@^([0-9A-F]{40}).*$@magnet:?xt=urn:btih:\L\1\&tr=udp\%3A\%2F\%2Ftracker.publicbt.com\%3A80\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.publicbt.com\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.torrentbox.com\%3A2710\%2Fannounce@ && print;') -ph all
+
+map  :tp
+map  :tn
+map  :cp
+map  :cn
+map t i_T(f"f"a)F"F"F_
+map  i_TCHAR(f'f'a)F'F'F_
+map  :sy on:TlistToggle
+
+map  :set guifont=Lucida_Sans_Typewriter:h9:cANSI columns=119 lines=43 nu nowrap
+map  :set guifont=GulimChe:h10:cHANGEUL columns=89 lines=29 nonu wrap sw=8
+
+EOB
+}
+
+make_dotemacs_template(){
+  cat <<'EOB'
+;; .emacs
+
+(global-set-key "\C-c;" 'set-mark-command)
+
+;;; uncomment this line to disable loading of "default.el" at startup
+;; (setq inhibit-default-init t)
+
+;; turn on font-lock mode
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
+(when (fboundp 'global-font-lock-mode)
+  (global-font-lock-mode t))
+
+;; enable visual feedback on selections
+(setq transient-mark-mode t)
+
+;; default to better frame titles
+(setq frame-title-format
+      (concat  "%b - emacs@" (system-name)))
+
+;; default to unified diffs
+(setq diff-switches "-u")
+
+;; always end a file with a newline
+;;(setq require-final-newline 'query)
+
+(setq package-archives '( ("marmalade" . "http://marmalade-repo.org/packages/")
+			  ("gnu" . "http://elpa.gnu.org/packages/")
+			  ("melpa" . "http://melpa.milkbox.net/packages/")))
+
+;;;(load "~/.emacs-gdb-bindings")
+
+;; tramp ssh and sudo
+
+
+(unwind-protect
+    nil ;;;(error "tramp proxy setting problem")
+  (progn
+    (require 'tramp)
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push001" nil "/ssh:push001.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push002" nil "/ssh:push002.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push003" nil "/ssh:push003.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push004" nil "/ssh:push004.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push005" nil "/ssh:push005.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push007" nil "/ssh:push007.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push008" nil "/ssh:push008.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push009" nil "/ssh:push009.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push010" nil "/ssh:push010.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push011" nil "/ssh:push011.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push012" nil "/ssh:push012.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push012-101" nil "/ssh:push012-101:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-push012-103" nil "/ssh:push012-103:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-xcentos6" nil "/ssh:push012-101:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-xcentos5" nil "/ssh:push012-103:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-loc" nil "/ssh:loc.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-wrdb" nil "/ssh:wrdb.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-sksvc" nil "/ssh:sksvc.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-family" nil "/ssh:family.safe4kid.co.kr:"))
+    (add-to-list 'tramp-default-proxies-alist '("sudo-school-1" nil "/ssh:www-1.safeschool.kr:"))
+    ))
+
+
+(display-time)
+
+(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
+  (normal-top-level-add-subdirs-to-load-path))
+
+(if (fboundp 'cscope-minor-mode)
+    (progn (defvar cscope-program "/usr/local/bin/cscope" )))
+
+(add-hook
+ 'ess-mode-hook
+ '(lambda()
+    (when t
+      (let ((cust-alist ess-r-customize-alist))
+	(setcdr (assoc 'inferior-ess-primary-prompt cust-alist)
+		"In \\[[0-9]+\\]: ")
+	(setcdr (assoc 'inferior-ess-secondary-prompt cust-alist)
+		"\\.\\.\\.\\.: ")
+	nil))))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (js2-mode php-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+EOB
+}
 
 # /////////////////////////
 
