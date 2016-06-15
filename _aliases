@@ -31,8 +31,6 @@ alias sl='screen -ls'
 alias sx8='LANG=ko_KR.utf8 screen -U -x -r'
 
 # dtach
-#alias dC='env dC_sock_=.dtach.dC.sock dtach -c ~/.dtach.dC.sock -z -r winch'
-#alias dA='if [ -S ~/"$dC_sock_" ]; then echo "socket already attached"; else dtach -a ~/.dtach.dC.sock -z -r winch; fi'                                                                                                
 alias dC='d_=/tmp/dtach/$(id -u); mkdir -p $d_; env dC_sock_=$d_/sock dtach -c $d_/sock -z -r winch'
 alias dA='d_=/tmp/dtach/$(id -u); if [ -S "$dC_sock_" ]; then echo "socket already attached"; else dtach -a $d_/sock -z -r winch; fi'
 
@@ -567,6 +565,66 @@ alias rsync-mac='rsync --rsync-path="/usr/local/bin/rsync" --iconv=utf-8,utf-8-i
 
 alias i='. $HOME/.ishrc'
 alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
+
+
+# begin some common mac osx
+
+if [ "Darwin" = "$(uname -s)" ]; then
+
+alias macosx-wifi-off=macosx_wifi_off
+macosx_wifi_off(){(
+  intf=${1-en1}
+  LC_ALL=C networksetup -setairportpower $intf off
+)}
+
+alias macosx-wifi-on=macosx_wifi_on
+macosx_wifi_on(){(
+  intf=${1-en1}
+  LC_ALL=C networksetup -setairportpower $intf on
+)}
+
+alias macosx-get-volume='LC_ALL=C osascript -e "output volume of (get volume settings)"'
+
+alias macosx-set-volume=macosx_set_volume
+macosx_set_volume(){
+  LC_ALL=C osascript -e "set volume output volume $1"
+}
+
+alias macosx-get-mute='LC_ALL=C osascript -e "output muted of (get volume settings)"'
+
+# 'true' or 'false'
+alias macosx-set-mute=macosx_set_mute
+macosx_set_mute(){
+  LC_ALL=C osascript -e "set volume output muted $1"
+}
+
+alias macosx-get-selected-speaker='SwitchAudioSource -c'
+alias macosx-select-next-speaker='SwitchAudioSource -n;SwitchAudioSource -c'
+
+fi ### if [ "Darwin" = "$(uname -s)" ]
+
+# end mac osx
+
+# multitail goodies
+alias mt='multitail -p l'
+alias mtj='multitail -p l -j'
+
+# nosync
+alias sync='echo -n "Sync? "; read yn; case $yn in [Yy]) /bin/sync;; esac;'
+
+# prompt by git
+git_branch_name(){
+  git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3
+}
+git_branch_prompt(){
+  local branch=`git_branch_name`
+  if [ $branch ]; then printf " [%s]" $branch; fi
+}
+#PS1="\u@\h \[\033[0;36m\]\W\[\033[0m\]\[\033[0;32m\]\$(git_branch_prompt)\[\033[0m\] \$ "
+
+# bash/zsh completion behavior simulation
+alias zsh-like='if [ ! -z "$BASH_VERSION" ]; then bind "set show-all-if-ambiguous on" ; bind "TAB:menu-complete" ; fi'
+alias bash-like='setopt autolist; unsetopt menucomplete; setopt noautomenu'
 
 # /////////////////////////
 

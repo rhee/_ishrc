@@ -62,7 +62,7 @@
     (add-to-list 'tramp-default-proxies-alist '("sudo-sksvc" nil "/ssh:sksvc.safe4kid.co.kr:"))
     (add-to-list 'tramp-default-proxies-alist '("sudo-family" nil "/ssh:family.safe4kid.co.kr:"))
     (add-to-list 'tramp-default-proxies-alist '("sudo-school-1" nil "/ssh:www-1.safeschool.kr:"))
-  ))
+    ))
 
 
 (display-time)
@@ -73,28 +73,16 @@
 (if (fboundp 'cscope-minor-mode)
     (progn (defvar cscope-program "/usr/local/bin/cscope" )))
 
-(unwind-protect
-    nil ;;;(error "tramp proxy setting problem")
-  (progn
-    
-    ;;(setq inferior-R-program-name "/usr/bin/R")
-    ;;(setq inferior-R-program-name "~/.local/bin/R-wrapper")
-    ;;(setq inferior-R-program-name "jupyter console --kernel=ir --existing")
-    
-    ;;(setq-default inferior-ess-primary-prompt "In \\[[0-9]+\\]: ")
-    ;;(setq-default inferior-ess-secondary-prompt "\\.\\.\\.\\.: ")
-
+(add-hook
+ 'ess-mode-hook
+ '(lambda()
     (when t
-      (setq ess-r-customize-alist
-	    (append
-	     '((inferior-ess-primary-prompt . "In \\[[0-9]+\\]: ")
-	       (inferior-ess-secondary-prompt . "\\.\\.\\.\\.: "))
-	     ess-r-customize-alist)))
-
-    ))
-
-(if (fboundp 'ess-disable-smart-S-underscore)
-    (progn (ess-disable-smart-S-underscore nil)))
+      (let ((cust-alist ess-r-customize-alist))
+	(setcdr (assoc 'inferior-ess-primary-prompt cust-alist)
+		"In \\[[0-9]+\\]: ")
+	(setcdr (assoc 'inferior-ess-secondary-prompt cust-alist)
+		"\\.\\.\\.\\.: ")
+	nil))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
