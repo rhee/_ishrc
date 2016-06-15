@@ -1,6 +1,10 @@
 #!/bin/sh
 
-if [ ! -z "$1" ]; then host="$1"; shift; fi
+if [ ! -z "$1" ]; then
+  remote="$1"; shift
+  # add ':' if not already exists. e.g.: myserver => myserver:
+  case "$remote" in *:*);;*)remote=$remote:;;esac
+fi
 
 for f in _*; do
   case "$f" in
@@ -9,7 +13,7 @@ for f in _*; do
 	basename=$(echo "$f" |cut -c2-)
 	destfile=".$basename"
 	if [ -s "$f" ]; then
-	  if [ -z "$host" ]; then
+	  if [ -z "$remote" ]; then
 
 	    #( test ! -s "$HOME"/"$destfile" || \
 	    #  test "$f" -nt "$HOME"/"$destfile" ) && \
@@ -23,11 +27,10 @@ for f in _*; do
 
 	  else
 
-	    rsync -tP --backup "$f" "$host:$destfile"
+	    rsync -tP --backup "$f" "$remote$destfile"
 
 	  fi
 	fi
     ;;
   esac
 done
-
