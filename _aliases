@@ -626,6 +626,19 @@ git_branch_prompt(){
 alias zsh-like='if [ ! -z "$BASH_VERSION" ]; then bind "set show-all-if-ambiguous on" ; bind "TAB:menu-complete" ; fi'
 alias bash-like='setopt autolist; unsetopt menucomplete; setopt noautomenu'
 
+# lsof, find processes using a specific tcp port
+alias lsof-port-listeners='_lsof_port_listeners'
+_lsof_port_listeners(){(
+    port=$1
+    shift
+    # disable uid, dns, port name resolv
+    lsof -l -n -P -i:$port
+)}
+
+# multitail
+alias mt='multitail -p l'
+alias mtj='multitail -p l -j'
+
 # /////////////////////////
 
 esac #end of case $- in *i*|*l*)
