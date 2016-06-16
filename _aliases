@@ -1,15 +1,7 @@
 :
-
-# in .?shrc:
-# case $- in *i*|*l*) test -f ~/emacs/dotishrc && . ~/emacs/dotishrc;; esac
-
-case $- in *i*|*l*)
-
 \ls -F -w > /dev/null 2>&1 && alias ls='\ls -F -w' 
-\ls -NF --show-control-chars --color=auto > /dev/null 2>&1 && alias ls='\ls -NF --show-control-chars'
-
-findbin=/usr/bin/find
-if [ -x /usr/bin/find.cygwin ]; then findbin=/usr/bin/find.cygwin; fi
+\ls -NF --show-control-chars --color=auto > /dev/null 2>&1 && \
+  alias ls='\ls -NF --show-control-chars'
 
 alias ll='ls -al'
 alias lc='ls -NF --color=auto'
@@ -19,6 +11,8 @@ alias cp='\cp -i'
 alias mv='\mv -i'
 alias rm='\rm -i'
 alias Copy='\rsync -e ssh -avP'
+alias cpV='rsync --partial --progress --append'
+alias mvV='rsync --partial --progress --append --remove-sent-files'
 
 alias tart='tar tvvzf'
 alias tarx='tar xvvzf'
@@ -30,70 +24,13 @@ alias u8='export LANG=ko_KR.utf8'
 alias sl='screen -ls'
 alias sx8='LANG=ko_KR.utf8 screen -U -x -r'
 
-# dtach
 alias dC='d_=/tmp/dtach/$(id -u); mkdir -p $d_; env dC_sock_=$d_/sock dtach -c $d_/sock -z -r winch'
 alias dA='d_=/tmp/dtach/$(id -u); if [ -S "$dC_sock_" ]; then echo "socket already attached"; else dtach -a $d_/sock -z -r winch; fi'
 
-alias telnet='\telnet -L'
-alias vt100='export TERM=vt100; eval "tset -s vt100"'
-alias imputty='export TERM=putty; eval "tset -s putty"'
-
-alias 3cvs='CVS_RSH=ssh cvs -qz3'
-alias cvsdiff='cvs diff -itwubB'
-alias cvs='cvs -q'
-
-alias 8x='sh -c "exec startx \$* -- -depth 8" 8x'
-alias 16x='sh -c "exec startx \$* -- -depth 16" 16x'
-alias 24x='sh -c "exec startx \$* -- -depth 24" 24x'
-alias 32x='sh -c "exec startx \$* -- -depth 32" 32x'
-
-alias ka='killall'
-alias ka9='killall -9'
-alias kka='killall'
-alias ska='sh -c "su root -c \"killall \${1+\\\"\$@\\\"}\"" ska'
-alias ska9='sh -c "su root -c \"killall -9 \${1+\\\"\$@\\\"}\"" ska9'
-alias skka='sh -c "su root -c \"killall \${1+\\\"\$@\\\"}\"" skka'
-alias kk='kill -INT %%'
-
-#alias qq='rm -rf .qiv-trash; qiv *'
-
 alias ldpkg='less /var/lib/dpkg/available'
-alias agI='LANG=C sh -c "sudo apt-get -q install \$*" agI'
-alias agG='LANG=C sh -c "sudo apt-get -c=/etc/apt/apt.conf-unstable \$*" agG'
-alias agS='apt-get -q source'
-alias acS='apt-cache -q search'
-alias acW='apt-cache -q show'
-alias agR='sh -c '"'"'apt-get remove --purge $(for kwd in "$@"; do awk "/$kwd/{print \$1}" /tmp/dpkg-selections.txt; done)'"'"' gg'
-
-alias acU='LANG=C sh -c "su root -c \"apt-cache -o Dir::Etc::SourceList=/etc/apt/sources.list-unstable -o Dir::Cache::Archives=/var/cache/apt-unstable/archives/ -o Dir::State::Lists=/var/lib/apt-unstable/lists/ \$*\"" acU'
-alias agU='LANG=C sh -c "su root -c \"apt-get -o APT::Default-Release=testing -o Dir::Etc::SourceList=/etc/apt/sources.list-unstable -o Dir::Cache::Archives=/var/cache/apt-unstable/archives/ -o Dir::State::Lists=/var/lib/apt-unstable/lists/ \$*\"" agU'
-
-alias agO='LANG=C sh -c "su root -c \"base=\$1; shift; apt-get -o APT::Default-Release=testing -o Dir::Etc::SourceList=\$base/sources.list -o Dir::Cache::Archives=\$base/archives/ -o Dir::State::Lists=\$base/lists/ \$\"" agO'
-
-alias dpkg_hold='sh -c "dpkg --get-selections \$1 |sed s:install\$:hold: |su root -c \"dpkg --set-selections; dpkg --get-selections \$1\"" dpkg_hold'
-alias dpkg_unhold='sh -c "dpkg --get-selections \$1 |sed s:hold\$:install: |su root -c \"dpkg --set-selections; dpkg --get-selections \$1\"" dpkg_unhold'
-
-alias mA='sh -c "for d in \$*; do mount -s \$d; done" mA'
-alias uA='sh -c "su root -c \"for d in \$*; do umount -l \\\$d; (umount \\\$d &); done\"" uA'
-alias mroA='sh -c "su root -c \"sync; for d in \$*; do mount -s -o remount,ro \\\$d; done\"" mA'
-alias mrwA='sh -c "su root -c \"sync; for d in \$*; do mount -s -o remount,rw,sync \\\$d; done\"" mrwA'
-alias mrxA='sh -c "su root -c \"sync; for d in \$*; do mount -s -o remount,rw,dirsync,exec \\\$d; done\"" mrxA'
-
-alias mL='sudo mount -o loop'
-
-alias sM='sh -c "h=\$1; shift; su root -c \"for v in \$*; do smbmount //\${h}/\\\${v} /smbfs/\${h}/\\\${v} -o username=\${smbuser:-`id -u -n`},password=\${smbpass},uid=1000,fmask=0770,dmask=0770 ${smbopts}; done\"" sM'
-alias uAA='echo "Try unmounting all NFS/SMBFS mounted volumes. Close any processes using NFS/SMBFS while waiting"; while [ $(mount |egrep -e "(/smbfs/sonic|/nfs/sonic)" |wc -l) -gt 0 ]; do sh -c "for d in \$*; do umount \$d; done" uA /nfs/sonic/* /smbfs/sonic/* >/dev/null 2>&1; done'
-alias cM='sh -c '"'"'su root -c "smbmount $1 $2 -o username='${smbuser:-`id -u -n`}',uid=1000,gid=1000,fmask=0770,dmask=0770"'"'"' cM'
 
 alias w3x='w3m -v -no-proxy'
-alias ddwww='sh -c "exec w3m http://linux.dnip.net:8008/cgi-bin/dwww\?search=\$1" ddwww'
-alias dwman='sh -c "exec w3m http://linux.dnip.net:8008/cgi-bin/man2html\?\$1" dwman'
 alias fwman='sh -c "exec w3m http://www.FreeBSD.org/cgi/man.cgi\?query=\$1" fwman'
-alias lwman='sh -c "exec w3m http://localhost:800/cgi-bin/man2html\$1" lwman'
-alias ldwww='sh -c "exec w3m http://localhost:800/cgi-bin/dwww\?search=\$1" ldwww'
-alias wW='url=; while read line; do url=${url}`echo $line |sed "s/ \r\n//g"`; done; wmrun ${url}; echo URL was: ${url}'
-alias xA='sh -c '"'"'cmd=$1; shift; $cmd `echo ${1+"$@"} |sed "s/ \r\n//g"`'"'"' xA'
-alias wgX='python -c '"'"'import argv from sys; import urlretrieve from urllib; for i in range(argv[2]): urlretrieve(argv[1]%i)'"'"''
 
 alias unU='perl -p -e '"'"'tr/+/ /;s/%([0-9A-F]{2})/pack("C",hex($1))/egi;'"'"''
 alias unX='perl -p -e '"'"'s/\\([0-9]{3})/chr($1)/egi;'"'"
@@ -111,42 +48,14 @@ alias p6sD='python -c "import base64,sys; print len(sys.argv[1]),base64.decodest
 
 alias 47D='perl -MEncode -p -e '"'"'s/(=\?[^ \t]*)/encode("euc-kr",decode("MIME-Header",$1))/eg;'"'"''
 
-alias rrsync='RSYNC_RSH=ssh rsync -avr'
-alias smir='sh -c "ho=\$1; shift; tar cf - \$* | ssh \$ho tar xvf - " smir'
-alias dR0='sh -c "for ac in \$*; do echo Copying to \${ac}; tar hCcf $HOME - .gdbinit .profile .shrc .ishrc .screenrc .vimrc .inputrc .bash_profile .bash_logout .logout .siteshrc* | ssh \${ac} tar xvf - ; done" dR'
-alias dR='sh -c "for ac in \$*; do echo Copying to \${ac}; tar hCcf $HOME - .gdbinit .profile .shrc .ishrc .viper .emacs .emacs.full .xemacsrc .Xresources .screenrc .vimrc .inputrc .muttrc .menu .bash_profile .bash_logout .logout .siteshrc* ${more_rcfiles} | ssh \${ac} tar xvf - ; done" dR'
-alias dRX='sh -c "for ac in \$*; do echo Copying to \${ac}; tar hCcf $HOME - .gdbinit .profile .shrc .ishrc .bash_profile .bash_logout .logout .viper .emacs .emacs.full .xemacsrc .Xresources .screenrc .vimrc .w3m/mailcap .w3m/cookie .w3m/bookmark.html .wgetrc .lftp/rc .everybuddy/accounts .everybuddy/prefs .gnupg/pubring.gpg .gnupg/secring.gpg .netscape/bookmarks.html .inputrc .muttrc .menu env/src/wmrun.sh env/emacs .sources.list.unstable ${more_rcfiles} | ssh \${ac} tar xvf - ; done" dR2'
+alias dR='sh -c "for h in \$*; do tar c -f - -C ~ -L .bashrc .ishrc .aliases .vimrc .vim .emacs .gitconfig .screenrc .tmux.conf | ssh $h tar xvf -; done" dR'
 
 alias rN='perl -e '"'"'$pat=shift@ARGV;for$f(@ARGV){eval"(\$ff=\$f)=~\$pat";$f ne$ff&&(!-f$ff&&rename $f,$ff&&print"rNF $f $ff\n"||warn "skip $f->$ff\n");}'"'"
-
-alias wordpad='LANG=ko_KR.eucKR wine "C:\\Program Files\\Accessories\\wordpad.exe"'
-alias quikview='LANG=ko_KR.eucKR wine "C:\\windows\\system\\viewers\\quikview.exe"'
-alias exP='LANG=ko_KR.eucKR wine "C:\\Program Files\\Internet Explorer\\iexplore.exe"'
-
-alias vnc='nice -5 vncserver :9 -geometry 640x440 -depth 16 -alwaysshared'
-alias zvnc='vncviewer -bgr233 -depth 8 -compresslevel 9'
-alias fix_these_mp3s='mkdir fix && (ls *.mp3 |xargs -n1 sh -c "echo \$1; mp3asm -o fix/\$1 \$1" sh) && mv -vf fix/* . && rmdir fix'
-
-alias rT='rt -g 135x25-0-20 -font -sun-fixed-*--14-140-*-iso8859-1 /var/log/syslog,green /var/log/mail.log,yellow /var/log/auth.log,red,"ALERT"'
-alias xC='xconsole -file /dev/xconsole -geometry 800x200-24-24 -fn -sun-fixed-\*-16-160-\*-iso8859-1 -fg yellow -bg black -title console -verbose -exitOnFail -daemon'
-
-#http://superuser.com/questions/277990/how-do-i-swap-alt-and-windows-keys-with-xmodmap
-#! Exchange left Alt and left Win
-#remove mod1 = Alt_L
-#remove mod4 = Super_L
-#add mod1 = Super_L
-#add mod4 = Alt_L
-#! Exchange tilde and lesser/greater
-#keycode  94 = grave asciitilde dead_grave dead_tilde grave asciitilde
-#keycode  49 = less greater less greater bar brokenbar bar brokenbar
-#! Steve, your keyboard sucks
 
 alias xKS='xmodmap -e "remove Lock = Caps_Lock" -e "keycode 66 = Control_L" -e "add Control = Control_L" -e "keycode 9 = Escape asciitilde"'
 alias xKs='xmodmap -e "remove Control = Control_L" -e "keycode 66 = Caps_Lock" -e "add Lock = Caps_Lock" -e "add Control = Control_L" -e "keycode 9 = Escape"'
 alias xKM='xmodmap -e "clear Mod1" -e "clear Mod4" -e "keycode 64 = Alt_L" -e "keycode 49 = Alt_L" -e "keycode 115 = grave asciitilde" -e "add Mod1 = Alt_L Alt_R" -e "add Mod4 = Meta_L Meta_R"'
 alias xKm='xmodmap -e "clear Mod1" -e "clear Mod4" -e "keycode 64 = Alt_L" -e "keycode 49 = grave asciitilde" -e "keycode 115 = Meta_L" -e "add Mod1 = Alt_L Alt_R" -e "add Mod4 = Meta_L Meta_R"'
-#alias xKW='xmodmap -e "remove mod1 = Alt_L" -e "remove mod4 = Super_L" -e "add mod1 = Super_L" -e "add mod4 = Alt_L"'
-#alias xKw='xmodmap -e "remove mod1 = Super_L" -e "remove mod4 = Alt_L" -e "add mod1 = Alt_L" -e "add mod4 = Super_L"'
 alias xKW='xmodmap -e "remove mod1 = Alt_L" -e "remove mod4 = Super_L" -e "keycode 133 = Alt_L" -e "keycode 64 = Super_L" -e "add mod1 = Alt_L" -e "add mod4 = Super_L"'
 alias xKw='xmodmap -e "remove mod1 = Alt_L" -e "remove mod4 = Super_L" -e "keycode 133 = Super_L" -e "keycode 64 = Alt_L" -e "add mod1 = Alt_L" -e "add mod4 = Super_L"'
 
@@ -163,89 +72,80 @@ alias xtcR89='xtC black rgb:ff/e0/e0; xtS 27 89'
 alias xtcW137='xtC rgb:00/00/00 rgb:e0/e0/e0; xtS 39 137'
 alias xtcB137='xtC black rgb:d0/d0/ff; xtS 39 137'
 
-alias spo='sh -c "splay -fvvvs \${1+\"\$@\"} | osd_cat --bottom --font='"'"'*--24-240-*'"'"' --color=yellow -" spo'
-
-alias vM='sh -c "exec vim -c \"set ffs=mac\" -c \"edit \$1\"" mV'
-
 alias rM='sh -c "mkdir -p $HOME/.Trash; /bin/mv \$* $HOME/.Trash" rM'
 alias mkclean='echo -n "Purge " .#* *~ .??*~ " ?"; read ans; case "$ans" in [Yy]*) rm -fvr .\#* *~ .??*~; ;; esac'
-alias mkxclean='xf=${TMP:-/tmp}/mkxc-$$; echo "Purge-recursively:"; '$findbin' -L . -name .\#\* -o -name \*~ -o -name .\?\?\*~ |tee $xf; echo "Purge above files?"; read ans; case "$ans" in [Yy]*) xargs rm -fvr $xf < $xf; ;; esac'
+alias mkxclean='xf=${TMP:-/tmp}/mkxc-$$; echo "Purge-recursively:"; /usr/bin/find -L . -name .\#\* -o -name \*~ -o -name .\?\?\*~ |tee $xf; echo "Purge above files?"; read ans; case "$ans" in [Yy]*) xargs rm -fvr $xf < $xf; ;; esac'
 
 alias zap='perl -e "truncate \$ARGV[0],0"'
-#alias konq='QT_XFT=0 konqueror'
-#alias konqA='QT_XFT=1 konqueror'
-alias konq='sh -c "QT_XFT=0 exec kfmclient exec \${1+\"\$@\"} about:blank" konq'
-alias konqA='sh -c "QT_XFT=1 exec kfmclient exec \${1+\"\$@\"} about:blank" konq'
-
-alias sshT='sh -c "exec ssh -c blowfish -o '"'"'Compression no'"'"' -A -C -n -T -X -L 10025:127.0.0.1:25 -L 10800:127.0.0.1:800 -L 10873:127.0.0.1:873 -L 8000:127.0.0.1:8000 -L 8008:127.0.0.1:8008 -L 8080:127.0.0.1:8080 -L 2401:127.0.0.1:2401 -L 3128:127.0.0.1:3128 -L 5901:127.0.0.1:5901 -L 5909:127.0.0.1:5909 ${1-linux.dnip.net} exec sleep 999999" sshT'
-
-#alias Bash='SHELL=/usr/local/bin/bash exec /usr/local/bin/bash'
-alias Bash='if [ -x /bin/bash ]; then SHELL=/bin/bash; fi; if [ -x /usr/local/bin/bash ]; then SHELL=/usr/local/bin/bash; fi; exec $SHELL'
-
-alias sus='uAA; vpndown; echo sleeping 5 sec before shutdown; sleep 5 && su root -c "apm --suspend"'
-
-alias iCS='xboard -ncp -size 64 -sgf awknn -ics -icshost freechess.org -icslogon $HOME/.icsrc.freechess'
-alias hCS='xboard -ncp -size 64 -sgf awknn -ics -icshost hanchess.com -icslogon $HOME/.icsrc.hanchess'
-alias qxboard='xboard -xdrag -xanimate -xhighlight -xperiodic -xthinking -xflash'
-alias Crafty='cd $HOME/chess; CHESSDIR=$PWD crafty new display'
-alias phalA='xboard -sgf awknn.pgn -fcp "phalanx -e 0"'
-alias phalB='xboard -sgf awknn.pgn -fcp "phalanx -e 50"'
-alias phalC='xboard -sgf awknn.pgn -fcp "phalanx -e 100"'
 
 alias mpPP='sh -c '\''exec mplayer -autoq 100 -vf pp=de,hqdn3d,scale -vo vdpau -vfm ffmpeg -fs -shuffle -quiet "$@" </dev/null'\'' mpPP'
-#alias mpq='sh -c '\''exec mplayer -quiet -shuffle -fs -vo gl_nosw:yuv=0 "$@" </dev/null'\'' mpq'
-#alias mpq='sh -c '\''exec mplayer -noconfig user -quiet -osdlevel 3 -shuffle -fs "$@" -af-add volnorm -af-add scaletempo </dev/null'\'' mpq'
 alias mpq='sh -c '\''exec mplayer -noconfig user -quiet -osdlevel 3 -shuffle -ao pulse -vo gl_nosw "$@" </dev/null'\'' mpq'
-
-alias dcbk2tex='jade -d /usr/share/sgml/docbook/stylesheet/dsssl/modular/print/docbook.dsl -t tex /usr/lib/sgml/declaration/xml.dcl'
 
 alias efence='LD_PRELOAD=/usr/lib/libefence.so EF_PROTECT_BELOW=0'
 alias underfence='LD_PRELOAD=/usr/lib/libefence.so EF_PROTECT_BELOW=1'
 alias guard='DYLD_INSERT_LIBRARIES=/usr/lib/libgmalloc.dylib'
 alias underguard='DYLD_INSERT_LIBRARIES=/usr/lib/libgmalloc.dylib MALLOC_PROTECT_BEFORE=1'
+alias valddd='valgrind --db-attach=yes --db-command="ddd %f %p" '
 
-lssources(){
-
-  local not=""
-  #local action="-print"
-  local action="-print"
-  #local postproc='p'
-  local optdone="no"
-
+lssources(){(
+  not=""
+  action="-print"
+  optdone="no"
   while [ ! "xyes" = "x$optdone" ]; do
     case "$1" in
       -not) shift ; not="!" ;;
-      #-rm) shift ; action="-exec rm -fv {} ;" ;;
       -rm) shift ; action="-delete" ;;
-      #-nodot) shift ; postproc='s&^\./&&' ;;
       -0) shift ; action="-print0" ;;
       *) optdone=yes ;;
     esac
   done
-
-  #for f in "${@:-$PWD}"; do
   for f in "${@:-.}"; do
-    find -L "$f" -type f \
-    $not \
-    '(' \
-        -false \
-	-o -iname '*.h' -o -iname '*.c' -o -iname '*.hpp' -o -iname '*.cpp' \
-	-o -iname '*.inc' -o -iname '*.s' -o -iname '*.asm' \
-	-o -iname '*.m' -o -iname '*.mm' \
-	-o -iname '*.py' -o -iname '*.pyw' \
-	-o -iname '*.ml' \
-	-o -iname '*.mak' -o -iname 'makefile' -o -iname 'kbuild' \
-	-o -iname '*.java' -o -iname '*.jsp' \
-	-o -iname '*.js' -o -iname '*.css' -o -iname '*.html' -o -iname '*.htm' -o -iname '*.php' \
-	-o -iname '*.pde' -o -iname '*.ino' \
-    ')' \
-    $action \
-
-    #| sed -e $postproc
-    # no quote for last '$action' variable intentionally
+    find -L "$f" -type f $not \( -false \
+      -o -iname '*.h' -o -iname '*.c' -o -iname '*.hpp' -o -iname '*.cpp' \
+      -o -iname '*.inc' -o -iname '*.s' -o -iname '*.asm' \
+      -o -iname '*.m' -o -iname '*.mm' \
+      -o -iname '*.py' -o -iname '*.pyw' \
+      -o -iname '*.ml' \
+      -o -iname '*.mak' -o -iname 'makefile' -o -iname 'kbuild' \
+      -o -iname '*.java' -o -iname '*.jsp' \
+      -o -iname '*.js' -o -iname '*.css' -o -iname '*.html' -o -iname '*.htm' -o -iname '*.php' \
+      -o -iname '*.pde' -o -iname '*.ino' \
+    \) $action
   done
+)}
 
-}
+lsmovies(){(
+  not=""
+  action="-print"
+  optdone="no"
+  while [ ! "xyes" = "x$optdone" ]; do
+    case "$1" in
+      -not) shift ; not="!" ;;
+      -rm) shift ; action="-delete" ;;
+      -0) shift ; action="-print0" ;;
+      *) optdone=yes ;;
+    esac
+  done
+  for f in "${@:-.}"; do
+    find -L "$f" -type f $not \( -false \
+      -o -iname '*.avi' -o -iname '*.wmv' -o -iname '*.asf' \
+      -o -iname '*.asx' \
+      -o -iname '*.mpg' -o -iname '*.mpeg' -o -iname '*.mp4' -o -iname '*.m4v' -o -iname '*.mov' \
+      -o -iname '*.mpe' \
+      -o -iname '*.mp4v' \
+      -o -iname '*.3gp' \
+      -o -iname '*.skm' -o -iname '*.k3g' \
+      -o -iname '*.ogm' -o -iname '*.mkv' \
+      -o -iname '*.rm' -o -iname '*.rmv' -o -iname '*.rmvb' \
+      -o -iname '*.ram' \
+      -o -iname '*.flv' -o -iname '*.m2ts' \
+      -o -iname '*.divx' \
+      -o -iname '*.vob' \
+      -o -iname '*.zip' -o -iname '*.alz' -o -iname '*.rar' -o -iname '*.egg' \
+      -o -iname '*.morefiles' \
+    \) $action
+  done
+)}
 
 alias xG='lsS -0 | sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; xargs -0 grep -n \${1+\"\$@\"} /dev/null | sed '"'"'s&^\./&&'"'"' | tee \${log}" xG'
 
@@ -255,61 +155,38 @@ alias lsS='lssources'
 alias yG='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; cat -d ./.yginput |xargs grep -n \${1+\"\$@\"} /dev/null |tee \${log}" xG'
 alias yG0='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; cat ./.yginput |xargs grep -n \${1+\"\$@\"} /dev/null |tee \${log}" xG'
 
-alias lsR~=''$findbin' . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) '
-alias rmR~=''$findbin' . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) -print0 |xargs -0 rm -fv '
+alias lsR~='/usr/bin/find . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) '
+alias rmR~='/usr/bin/find . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) -print0 |xargs -0 rm -fv '
 
 which exuberant-ctags >/dev/null 2>&1 || alias exuberant-ctags=ctags
 which ctags-exuberant > /dev/null 2>&1 && alias exuberant-ctags=ctags-exuberant
 
 alias mT='CTAGSROOT=$PWD; export CTAGSROOT; lsS |exuberant-ctags --langmap=c++:+.ino,java:+.pde -L - -o tags.ctags'
 alias mTE='CTAGSROOT=$PWD; export CTAGSROOT; lsS |exuberant-ctags --langmap=c++:+.ino,java:+.pde -e -L - -o TAGS'
-alias fN=''$findbin' -L . -iname'
-alias fnG='sh -c '"'"'dirname -L $('$findbin' . -iname $1|head -1)'"'"' fnG'
-alias vF='sh -c '"'"'pattern=$1; shift; exec vim $('$findbin' -L . -iname "$pattern") "$@"'"'"' vF'
-
-alias gII=''$findbin' -L ${PWD}/ -type f -name \*.api -o -name \*.asc -o -name \*.doc -o -name \*.htm -o -name \*.html -o -name \*.pdf -o -name \*.txt -o -name \*.ini | glimpseindex -F -H ${PWD}/.glimpse'
-alias gI=''$findbin' -L ${PWD}/ -type f -name \*.api -o -name \*.asc -o -name \*.doc -o -name \*.htm -o -name \*.html -o -name \*.pdf -o -name \*.txt -o -name \*.ini | glimpseindex -F -H ${PWD}/.glimpse -f'
+alias fN='/usr/bin/find -L . -iname'
+alias fnG='sh -c '"'"'dirname -L $(/usr/bin/find . -iname $1|head -1)'"'"' fnG'
+alias vF='sh -c '"'"'pattern=$1; shift; exec vim $(/usr/bin/find -L . -iname "$pattern") "$@"'"'"' vF'
 
 alias mutt='LANG=ko_KR.utf8 LC_ALL=ko_KR.utf8 mutt -n -f $HOME/Maildir'
 alias muttkr='LANG=ko_KR.eucKR LC_ALL=ko_KR.eucKR mutt -F $HOME/.muttrc-euckr'
-alias z='fortune $HOME/fortune/polk-chollian'
-
-alias gg='sh -c '"'"'w3m -v "http://www.google.com/search?q=$1&ie=EUC-KR&hl=ko&btnG=Google+Search"'"'"' gg'
-
-alias ifcycle='sudo sh -c '"'"'/sbin/ifdown $1; /sbin/ifup $1'"'"' ifcycle'
 
 alias capmmf='sh -c '"'"'mplayer.static -vo null -ao null -dumpfile "cap_$(basename $1)" -dumpstream "$1"'"'"' capmmf'
 
-alias man='LANG=C man'
-
-alias valddd='valgrind --db-attach=yes --db-command="ddd %f %p" '
-
-alias lcreset='LANG=C; LC_ALL=C; export LANG LC_ALL'
-
+alias tnowrap='setterm -linewrap off'
 alias curon='setterm -cursor on'
 alias no-screen-saver='setterm -blank 15 -powersave powerdown -powerdown 60'
 
-#alias vi='vim -X'
-
 alias xc='perl -e '"'"'$r = eval($ARGV[0]); printf "%d\n0x%x\n",$r,$r;'"'"''
 
-alias xF='sh -c '"'"'pat=$1; shift; '$findbin' -L . -type f -iname "$pat" -print0 |xargs -0 "$@"'"'"' xF'
-alias xD='sh -c '"'"'pat=$1; shift; '$findbin' -L . -type d -iname "$pat" -print0 |xargs -0 "$@"'"'"' xD'
+alias xF='sh -c '"'"'pat=$1; shift; /usr/bin/find -L . -type f -iname "$pat" -print0 |xargs -0 "$@"'"'"' xF'
+alias xD='sh -c '"'"'pat=$1; shift; /usr/bin/find -L . -type d -iname "$pat" -print0 |xargs -0 "$@"'"'"' xD'
 
 alias gM='gcc -dM -E - < /dev/null'
-
-alias oA='open -a'
 
 alias 4cc='perl -e '"'"'$ARGV[0] =~ s/(.)/sprintf("%02x",ord($1))/egi; print $ARGV[0],"\n";'"'"''
 alias un4cc='perl -e '"'"'$ARGV[0] =~ s/([0-9A-F]{2})/chr(hex($1))/egi; print $ARGV[0],"\n";'"'"''
 
-alias aquamacs='open -a "Aquamacs Emacs"'
-
-alias dpkgli='dpkg -l |awk '"'"'/^i/{print $2}'"'"''
-
 alias vimless='/usr/share/vim/vim??/macros/less.sh'
-
-alias Rjgr='env LC_ALL=C /opt/R/lib/R/site-library/JGR/scripts/run'
 
 alias urlConvMV='for f in *%*; do n="$(echo $f|unU|iconv -c -f euc-kr -t utf-8)"; echo "mv \"$f\" \"$n\""; done'
 
@@ -324,47 +201,33 @@ alias L='sh -c '"'"'"$@" |less'"'"' L'
 alias bash_quine='s='"'"'s=\47%s\47; printf "$s" "$s"'"'"'; printf "$s" "$s"'
 alias pslist='sh -c '"'"'ps xa |grep "$1"'"'"' pslist'
 
+alias cvs='cvs -q'
 
-:
-cvd(){
+cvd(){(
+  revopts=
+  while [ ! -z "$1" ]; do
+    case "$1" in
+      -r|-D) revopts="$revopts '$1$2'"; shift; shift; ;;
+      -r*|-D*) revopts="$revopts '$1'"; shift; ;;
+      *) filename="$1"; shift; ;;
+    esac
+  done
+  if [ -f "${filename}" ]; then
+    tempname=$(echo ${filename} |sed -e "y/\/:/__/; s/^/cvd-/;")
+    tempdir=${TMP-'/tmp'}
+    mkdir -p ${tempdir}
+    cmd="cvs update -p ${revopts} ${filename}"
+    eval $cmd > ${tempdir}/${tempname}
+    vim -d ${tempdir}/${tempname} ${filename}
+  else
+    echo "file not found: ${filename}"
+  fi
+  echo "Done: $cmd"
+)}
 
-revopts=
-
-while [ ! -z "$1" ]; do
-	case "$1" in
-		-r|-D) revopts="$revopts '$1$2'"; shift; shift; ;;
-		-r*|-D*) revopts="$revopts '$1'"; shift; ;;
-		*) filename="$1"; shift; ;;
-	esac
-done
-
-if [ -f "${filename}" ]; then
-	tempname=$(echo ${filename} |sed -e "y/\/:/__/; s/^/cvd-/;")
-	tempdir=${TMP-'/tmp'}
-	mkdir -p ${tempdir}
-	cmd="cvs update -p ${revopts} ${filename}"
-	eval $cmd > ${tempdir}/${tempname}
-	vim -d ${tempdir}/${tempname} ${filename}
-else
-	echo "file not found: ${filename}"
-fi
-
-echo "Done: $cmd"
-
-}
-
-
-alias o='gnome-open '
-
-:
-#http://www.commandlinefu.com/commands/view/5374/temporary-replacement-for-cclive-youtube-dl-clive-etc.?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed:+Command-line-fu+(Command-Line-Fu)&utm_content=Google+Reader
 ytd() { ID=$1 ; curl www.youtube.com/watch?v="$1" |sed 's/http/\ &/g;s/ /<\CR|\n>&/g;s/\"\,//g;s/\,[0-9]*\|//g' |awk '/http\:\/\/.*.itag\='$2'/{print "curl -C- -L -vvv \42"$1"\42 -o '$PWD'/youtube_'$ID'.flv"}' |unvis -h | unvis -h|sort -u | sh ;}
 
-# /////////////////////////
-
 alias en2='enscript -2rj --line-numbers --media=A4 --margin=:36::72 -p output.ps '
-alias wgetL='wget -L'
-alias curlLO='curl -L -O'
 
 alias objD='sh -c '"'"'objdump -bbinary -marmv4 -EL -D "$1" |exec less '"'"' objD'
 alias objDB='sh -c '"'"'objdump -bbinary -marmv4 -EB -D "$1" |exec less '"'"' objD'
@@ -375,69 +238,20 @@ alias lddA='sh -c '"'"'readelf -d "$@" | grep NEEDED'"'"' lddA'
 
 alias lxargs="xargs -d '\n'"
 
-
-lsmovies(){
-
-  local not=""
-  local action="-print"
-  local optdone=no
-
-  while [ ! "xyes" = "x$optdone" ]; do
-    case "$1" in
-      -not) shift ; not="!" ;;
-      -rm) shift ; action="-exec rm -fv {} ;" ;;
-      *) optdone=yes ;;
-    esac
-  done
-
-  for f in "${@:-$PWD}"; do
-    find -L "$f" -type f \
-    $not \
-    '(' \
-        -false \
-        -o -iname '*.avi' -o -iname '*.wmv' -o -iname '*.asf' \
-        -o -iname '*.asx' \
-        -o -iname '*.mpg' -o -iname '*.mpeg' -o -iname '*.mp4' -o -iname '*.m4v' -o -iname '*.mov' \
-        -o -iname '*.mpe' \
-        -o -iname '*.mp4v' \
-        -o -iname '*.3gp' \
-        -o -iname '*.skm' -o -iname '*.k3g' \
-        -o -iname '*.ogm' -o -iname '*.mkv' \
-        -o -iname '*.rm' -o -iname '*.rmv' -o -iname '*.rmvb' \
-        -o -iname '*.ram' \
-        -o -iname '*.flv' -o -iname '*.m2ts' \
-        -o -iname '*.divx' \
-        -o -iname '*.vob' \
-        -o -iname '*.zip' -o -iname '*.alz' -o -iname '*.rar' -o -iname '*.egg' \
-        -o -iname '*.morefiles' \
-    ')' \
-    $action
-    # no quote for last '$action' variable intentionally
-  done
-
-}
-
 alias gitdiffyesterday='git diff "@{yesterday}" --'
 
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 
-#alias sqltime='php -r '\''echo date("Y-m-d H:i:s",$argv[1]) .PHP_EOL;'\'''
-alias sqltime=' sh -c '\'' sqlite /dev/null "SELECT datetime($3,$1,$2)" '\'' sqltime "'\''unixepoch'\''" "'\''localtime'\''" '
-# test: sqltime $(date +%s)
-
-alias cpV='rsync --partial --progress --append'
-alias mvV='rsync --partial --progress --append --remove-sent-files'
+alias sqltime-php='php -r '\''echo date("Y-m-d H:i:s",$argv[1]) .PHP_EOL;'\'''
+alias sqltime='sh -c '\'' sqlite /dev/null "SELECT datetime($3,$1,$2)" '\'' sqltime "'\''unixepoch'\''" "'\''localtime'\''"'
 
 pdf2pngs(){
   local input="$1"
   local b=$(basename "$input" .pdf)
   local d="$b"
   local output="$b/$b-%03d.png"
-
   mkdir -p "$b"
-
-  #gs -q -P- -dBATCH -dNOPAUSE -sPAPERSIZE=a4 -sDEVICE=pngalpha -sOutputFile=- -r300 "$input" |convert -background transparent - "$output"
   gs -q -P- -dBATCH -dNOPAUSE -sPAPERSIZE=a4 -sDEVICE=pngalpha -sOutputFile="$output" -r300 "$input"
 }
 
@@ -472,26 +286,49 @@ alias g='pushd '
 alias b='popd '
 alias psx='sh -c '"'"'ps x "$@" |exec grep "^"'"'"' psx'
 
-
-
-
 alias gtts='sh -c '"'"'curl -s -o- -A Mozilla --data-urlencode "q=$*" --data "ie=UTF-8" --data "tl=ko" "http://translate.google.com/translate_tts" |mpg123 -q -'"'"' gtts'
 alias vimdirdiff='sh -c '\''vim -c "DirDiff $1 $2" '\'' vimdirdiff'
-
-
-
 
 alias ff='sh -c '\''exec fgrep -nH "$@" * */* */*/* 2>/dev/null | tee /tmp/tt.$USER.log | fgrep --colour "$@" '\'' ff'
 alias tt='sh -c '\''"$@" |exec tee /tmp/tt.$USER.log'\'' tt'
 
-alias no-screensavers='setterm -blank 15 -powersave powerdown -powerdown 60'
+alias git-sync='git up;git commit -m. -a&&git push'
 
-alias tnowrap='setterm -linewrap off'
+#XXX# incompatible, missing obs=, #alias dd='dc3dd --help >/dev/null 2>&1 && alias dd="dc3dd" ; dd'
+#XXX# incompatible#alias dd='ddrescue --help >/dev/null 2>&1 && alias dd="ddrescue" ; dd'
+alias dd='dcfldd --help >/dev/null 2>&1 && alias dd="dcfldd" ; dd'
 
+alias rename-files=_rename_files
+_rename_files(){(
+  setopt shwordsplit 2>/dev/null
+  dry_run=echo
+  if [ "--no-dry-run" = "$1" ]; then dry_run="sh -x -c" ; shift ; fi
+  if [ -z "$3" ]; then echo "Usage: rename_files [--no-dry-run] pattern replace files" 1>&2; return; fi
+  pattern="$1"; shift
+  replace="$1"; shift
+  for f in "$@" ; do
+    n="$( echo "$f" | sed -e 's#'"$pattern"'#'"$replace"'#g;' )"
+    $dry_run "mv '$f' '$n'"
+  done
+  if [ "echo" == "$dry_run" ]; then
+    echo "Dry-run completed: run with --no-dry-run at the first of the command line arguments to rename files really" 1>&2
+  fi
+)}
 
-#alias git-sync=' git pull ; git commit -m. -a '
+alias kor='export LANG=$(locale -a |grep -i ko_KR.utf)'
 
-nshistoff(){
+alias rsync-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
+
+# begin some common mac osx
+
+alias rsync-mac='rsync --rsync-path="/usr/local/bin/rsync" --iconv=utf-8,utf-8-iconv '
+alias convmv-mac-to-other='convmv -r -f utf-8 -t utf-8 --nfc --notest'
+alias convmv-other-to-mac='convmv -r -f utf-8 -t utf-8 --nfd --notest'
+
+if [ "Darwin" = "$(uname -s)" ]; then
+
+alias macosx-nshistoff=_macosx_nshistoff
+_macosx_nshistoff(){
   local app=${1}
   if [ -z "$app" -o ! -d "$app" ]; then
     echo "Usage: nshistoff <apppath>"
@@ -503,85 +340,30 @@ nshistoff(){
   fi
 }
 
-
-#XXX# incompatible, missing obs=, #alias dd='dc3dd --help >/dev/null 2>&1 && alias dd="dc3dd" ; dd'
-#XXX# incompatible#alias dd='ddrescue --help >/dev/null 2>&1 && alias dd="ddrescue" ; dd'
-alias dd='dcfldd --help >/dev/null 2>&1 && alias dd="dcfldd" ; dd'
-
-
-alias convmv-mac-to-other='convmv -r -f utf-8 -t utf-8 --nfc --notest'
-alias convmv-other-to-mac='convmv -r -f utf-8 -t utf-8 --nfd --notest'
-
-
-
-
-rename_files(){(
-
-  if [ "--no-dry-run" = "$1" ]; then dryrun="no" ; shift ; fi
-
-  if [ -z "$3" ]; then
-    echo "Usage: rename_files [--no-dry-run] pattern replace files" 1>&2
-    return
-  fi
-
-  pattern="$1"
-  replace="$2"
-  shift
-  shift
-
-  for f in "$@" ; do
-    n="$( echo "$f" | sed -e 's#'"$pattern"'#'"$replace"'#g;' )"
-    if [ "no" = "$dryrun" ]; then
-      \mv -v "$f" "$n"
-    else
-      echo mv "'$f'" "'$n'"
-    fi
-  done
-
-  if [ "no" != "$dryrun" ]; then
-    echo "Dry-run completed: run with --no-dry-run at the first of the command line arguments to rename files really" 1>&2
-  fi
-
-)}
-
-alias rename-files='rename_files'
-
-alias kor='export LANG=$(locale -a |grep -i ko_KR.utf)'
-alias rsync-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
-alias rsync-mac='rsync --rsync-path="/usr/local/bin/rsync" --iconv=utf-8,utf-8-iconv '
-
-alias i='. $HOME/.ishrc'
-alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
-
-
-# begin some common mac osx
-
-if [ "Darwin" = "$(uname -s)" ]; then
-
-alias macosx-wifi-off=macosx_wifi_off
-macosx_wifi_off(){(
+alias macosx-wifi-off=_macosx_wifi_off
+_macosx_wifi_off(){(
   intf=${1-en1}
   LC_ALL=C networksetup -setairportpower $intf off
 )}
 
-alias macosx-wifi-on=macosx_wifi_on
-macosx_wifi_on(){(
+alias macosx-wifi-on=_macosx_wifi_on
+_macosx_wifi_on(){(
   intf=${1-en1}
   LC_ALL=C networksetup -setairportpower $intf on
 )}
 
 alias macosx-get-volume='LC_ALL=C osascript -e "output volume of (get volume settings)"'
 
-alias macosx-set-volume=macosx_set_volume
-macosx_set_volume(){
+alias macosx-set-volume=_macosx_set_volume
+_macosx_set_volume(){
   LC_ALL=C osascript -e "set volume output volume $1"
 }
 
 alias macosx-get-mute='LC_ALL=C osascript -e "output muted of (get volume settings)"'
 
 # 'true' or 'false'
-alias macosx-set-mute=macosx_set_mute
-macosx_set_mute(){
+alias macosx-set-mute=_macosx_set_mute
+_macosx_set_mute(){
   LC_ALL=C osascript -e "set volume output muted $1"
 }
 
@@ -589,7 +371,6 @@ alias macosx-get-selected-speaker='SwitchAudioSource -c'
 alias macosx-select-next-speaker='SwitchAudioSource -n;SwitchAudioSource -c'
 
 fi ### if [ "Darwin" = "$(uname -s)" ]
-
 # end mac osx
 
 # multitail goodies
@@ -629,7 +410,7 @@ alias mtj='multitail -p l -j'
 # /////////////////////////
 
 make_source_file_template(){
-  cat <<EOB
+  cat <<'EOB'
 // Emacs:
 // Local Variables:
 // mode: javascript
@@ -640,12 +421,14 @@ EOB
 }
 
 make_rprofile_template(){(
-
-  date=$(date +%Y-%m-%d)
-
-  cat <<EOB
-##### BEGIN generated Rprofile ${date} #####
-
+  cat <<'EOB'
+#paste(
+#Sys.setlocale(category = "LC_MESSAGES", locale = "C"),
+#Sys.setlocale(category = "LC_MEASUREMENT", locale = "C"),
+#Sys.setlocale(category = "LC_MONETARY", locale = "C"),
+#Sys.setlocale(category = "LC_TIME", locale = "C"),
+#Sys.setlocale(category = "LC_CTYPE", locale = "C")
+#)
 ### # ipak() from https://gist.github.com/stevenworthington/3178163
 ### ipak<- function(pkg){
 ###   new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
@@ -653,52 +436,12 @@ make_rprofile_template(){(
 ###     install.packages(new.pkg, dependencies = TRUE)
 ###   sapply(pkg, require, character.only = TRUE)
 ### }
-### 
 ### ipak(c("ggplot2","ggthemes","extrafont"))
-
-### #시스템에 설치된 나눔고딕을 사용하기 위해 extrafont 패키지를 설치했다. 
-### #관련 내용은 http://blog.revolutionanalytics.com/2012/09/how-to-use-your-favorite-fonts-in-r-charts.html 참고
-### 
-### suppressPackageStartupMessages({
-###     library(ggplot2)
-###     library(ggthemes)
-###     library(extrafont)
-### })
-### 
-### 
-### #개인화된 테마 작업
-### theme_gogamza<- function(base_size = 12, base_family = "NanumGothic"){
-###      (theme_foundation(base_size = base_size, base_family = base_family) +
-###         theme(line = element_line(colour = "black"), rect = element_rect(fill = ggthemes_data$fivethirtyeight["ltgray"],
-###             linetype = 0, colour = NA), text = element_text(colour = ggthemes_data$fivethirtyeight["dkgray"]),
-###             axis.title = element_text(), axis.text = element_text(),
-###             axis.ticks = element_blank(), axis.line = element_blank(),
-###             legend.background = element_rect(), legend.position = "bottom",
-###             legend.direction = "horizontal", legend.box = "vertical",
-###             panel.grid = element_line(colour = NULL), panel.grid.major = element_line(colour = ggthemes_data$fivethirtyeight["medgray"]),
-###             panel.grid.minor = element_blank(), plot.title = element_text(hjust = 0,
-###                 size = rel(1.5), face = "bold"), plot.margin = grid::unit(c(1,
-###                 1, 0.5, 0.5), "lines"), strip.background = element_rect(), panel.margin.x=NULL, panel.margin.y=NULL))
-### }
-### 
-### #ggplot2 메인 테마로 설정
-### theme_set(theme_gogamza())
-### 
-### #기본 테마에서 한글 폰트 정의를 하고 싶다면 아래 코드만 실행한다. 
-### #theme_set(theme_gray(base_family='NanumGothic'))
-
-
-##### END generated Rprofile ${date} #####
 EOB
-
 )}
 
 make_privoxy_config_template(){
-  cat <<EOF
-# cat >> /opt/proxy/etc/privoxy/config
-# or
-# docker exec -i proxy tee -a /opt/proxy/etc/privoxy/config
-#
+  cat <<'EOB'
 # NOTE: last match wins
 forward-socks5		.onion			172.30.1.111:9050 .
 forward-socks5		gelbooru.com		172.30.1.111:9050 .
@@ -706,18 +449,13 @@ forward-socks5		konachan.com		172.30.1.111:9050 .
 forward-socks5		bitsnoop.com		172.30.1.111:9050 .
 forward-socks5		extratorrent.cc		172.30.1.111:9050 .
 forward-socks5		torcache.net		172.30.1.111:9050 .
-EOF
+EOB
 }
 
 make_screenrc_template(){(
-  date=$(date +%Y-%m-%d)
-  cat <<EOB
-##### BEGIN generated screenrc ${date} #####
-
-## if EUC-KR
+  cat <<'EOB'
 # defutf8 off
 # defencoding EUC-KR
-
 defutf8 on
 defencoding UTF-8
 bind ^a meta
@@ -736,73 +474,52 @@ maptimeout 0
 hardstatus on
 hardstatus alwayslastline
 hardstatus string "%w"
-
 ## ESC delay??
-
 maptimeout 0
 defc1 off
-
-## ^\
 bind ^\\ meta
 bind \\ other
-
-##### END generated screenrc ${date} #####
-
 EOB
 )}
 
 make_tmuxconf_template(){(
-  date=$(date +%Y-%m-%d)
-  cat <<EOB
-##### BEGIN generated tmux.conf ${date} #####
-
+  cat <<'EOB'
 set-option -g prefix C-a
 unbind-key C-a
 bind-key C-a send-prefix
-
 #set -g status off
 set -s escape-time 0
-
 #run-shell "$HOME/.local/bin/powerline-daemon -q"
 #source "$HOME/.local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf"
-
-##### END generated tmux.conf ${date} #####
 EOB
 )}
 
 make_gitconfig_template(){
   cat <<'EOB'
-[color]                                                                                                                                                                                   
-        ui = auto                                                                                                                                                                         
+[color]
+ui = auto
 [diff]
-	external = sh -c 'vimdiff $2 $5' git_diff_wrapper
-[pager]                                                                                                                                                                                   
-        diff =                                                                                                                                                                                  
+external = sh -c 'vimdiff $2 $5' git_diff_wrapper
+[pager]
+diff =
 [push]
-	default = simple
+default = simple
 [pull]
-	ff = only
+ff = only
 [alias]
-	up = "!git remote update -p; git merge --ff-only @{u}"
+up = "!git remote update -p; git merge --ff-only @{u}"
 EOB
 }
 
 make_vimrc_template(){
   cat <<'EOB'
-"
-set fencs=ucs-bom,utf-8,euc-kr
-set enc=utf8
-
-set noai nosi
-set sw=4 sts=4 ts=8 ai nows
+set enc=utf8 fencs=ucs-bom,utf-8,euc-kr
+set sw=4 sts=4 ts=8 set noai nosi
+set nu nowrap nows
 "set et
-
-set noai nosi
 set tags=tags.ctags,./tags.ctags,../tags.ctags,../../tags.ctags,../../../tags.ctags,../../../../tags.ctags,$CTAGSROOT/tags.ctags,~/src/tags.ctags,~/.ctags/*
 
 set nobackup noswapfile
-set nu nowrap nows
-
 se bufhidden=unload
 se undolevels=5
 
@@ -813,11 +530,8 @@ set diffopt+=filler
 
 let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,.*.swp"
 
-
-" for ant
-" see :help errorformat-javac :help errorformat-ant
+"for ant see :help errorformat-javac :help errorformat-ant
 set efm+=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,\%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
-
 
 if has("multi_byte")
   if &termencoding == ""
@@ -836,9 +550,6 @@ au BufEnter *.py set ai sw=4 sts=4 ts=8 et
 :hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 :nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
 
-map ;; :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !tee -a check.txt.x >/dev/null
-map ;a :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !transmission-remote -a $(perl -ne 's@^([0-9A-F]{40}).*$@magnet:?xt=urn:btih:\L\1\&tr=udp\%3A\%2F\%2Ftracker.publicbt.com\%3A80\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.publicbt.com\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.torrentbox.com\%3A2710\%2Fannounce@ && print;') -ph all
-
 map  :tp
 map  :tn
 map  :cp
@@ -850,19 +561,15 @@ map  :sy on:TlistToggle
 map  :set guifont=Lucida_Sans_Typewriter:h9:cANSI columns=119 lines=43 nu nowrap
 map  :set guifont=GulimChe:h10:cHANGEUL columns=89 lines=29 nonu wrap sw=8
 
+map ;; :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !tee -a check.txt.x >/dev/null
+map ;a :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !transmission-remote -a $(perl -ne 's@^([0-9A-F]{40}).*$@magnet:?xt=urn:btih:\L\1\&tr=udp\%3A\%2F\%2Ftracker.publicbt.com\%3A80\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.publicbt.com\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.torrentbox.com\%3A2710\%2Fannounce@ && print;') -ph all
+
 EOB
 }
 
 make_dotemacs_template(){
   cat <<'EOB'
-;; .emacs
-
 (global-set-key "\C-c;" 'set-mark-command)
-
-;;; uncomment this line to disable loading of "default.el" at startup
-;; (setq inhibit-default-init t)
-
-;; turn on font-lock mode
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -870,31 +577,12 @@ make_dotemacs_template(){
 ;; You may delete these explanatory comments.
 (package-initialize)
 
+(setq diff-switches "-u") ;; default to unified diffs
+(setq transient-mark-mode t)
 (when (fboundp 'global-font-lock-mode)
   (global-font-lock-mode t))
 
-;; enable visual feedback on selections
-(setq transient-mark-mode t)
-
-;; default to better frame titles
-(setq frame-title-format
-      (concat  "%b - emacs@" (system-name)))
-
-;; default to unified diffs
-(setq diff-switches "-u")
-
-;; always end a file with a newline
-;;(setq require-final-newline 'query)
-
-(setq package-archives '( ("marmalade" . "http://marmalade-repo.org/packages/")
-			  ("gnu" . "http://elpa.gnu.org/packages/")
-			  ("melpa" . "http://melpa.milkbox.net/packages/")))
-
-;;;(load "~/.emacs-gdb-bindings")
-
 ;; tramp ssh and sudo
-
-
 (unwind-protect
     nil ;;;(error "tramp proxy setting problem")
   (progn
@@ -919,10 +607,12 @@ make_dotemacs_template(){
     (add-to-list 'tramp-default-proxies-alist '("sudo-sksvc" nil "/ssh:sksvc.safe4kid.co.kr:"))
     (add-to-list 'tramp-default-proxies-alist '("sudo-family" nil "/ssh:family.safe4kid.co.kr:"))
     (add-to-list 'tramp-default-proxies-alist '("sudo-school-1" nil "/ssh:www-1.safeschool.kr:"))
-    ))
+    nil))
 
-
-(display-time)
+(setq package-archives
+  '(("marmalade" . "http://marmalade-repo.org/packages/")
+    ("gnu" . "http://elpa.gnu.org/packages/")
+    ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
@@ -940,6 +630,8 @@ make_dotemacs_template(){
 	(setcdr (assoc 'inferior-ess-secondary-prompt cust-alist)
 		"\\.\\.\\.\\.: ")
 	nil))))
+
+(display-time)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -983,6 +675,21 @@ Host *
 EOB
 }
 
-# /////////////////////////
+make_profile_template(){
+  cat <<'EOB'
+:
+if [ -d "/opt/go/" ]; then GOROOT="/opt/go"; fi
+if [ -d "/usr/local/go/" ]; then GOROOT="/usr/local/go"; fi
+if [ ! -z "$GOROOT" ]; then
+  GOPATH=~/go
+  case :$PATH: in *:$GOROOT/bin:*);;*)PATH=$GOROOT/bin:$PATH;;esac
+  case :$PATH: in *:$GOPATH/bin:*);;*)PATH=$GOPATH/bin:$PATH;;esac
+  export PATH GOROOT GOPATH
+fi
+EOB
+}
 
-esac #end of case $- in *i*|*l*)
+##########
+
+alias i='. $HOME/.ishrc'
+alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
