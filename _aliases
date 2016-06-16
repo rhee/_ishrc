@@ -956,6 +956,31 @@ make_dotemacs_template(){
 EOB
 }
 
+make_sshconfig_template(){
+  cat <<'EOB'
+#
+# NOTE: first match wins
+#
+Host *
+        #TCPKeepAlive yes
+        Compression no
+        #Cipher blowfish
+        Ciphers arcfour,blowfish-cbc,aes128-ctr,aes256-ctr,aes128-cbc,3des-cbc,aes256-cbc
+	#CheckHostIP no
+        StrictHostKeyChecking no
+        #ServerAliveInterval 300
+        #ServerAliveCountMax 2
+
+#Host hubtunnel real.hubtunnel.domain 1.2.3.4
+#	HostName	1.2.3.4
+#	User		username
+#	Port		2222
+#	DynamicForward	19050
+#	LocalForward	13389 10.0.0.110:3389
+#	LocalForward	15900 10.0.0.150:5900
+EOB
+}
+
 # /////////////////////////
 
 esac #end of case $- in *i*|*l*)
