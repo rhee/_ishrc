@@ -315,7 +315,9 @@ _rename_files(){(
   fi
 )}
 
-alias kor='export LANG=$(locale -a |grep -i ko_KR.utf)'
+#alias kor='export LANG=$(locale -a |grep -i ko_KR.utf)'
+alias kor='export LANG=ko_KR.UTF-8'
+alias moshk='LANG=ko_KR.UTF-8 mosh'
 
 alias rsync-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
 
