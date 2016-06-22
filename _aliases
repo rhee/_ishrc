@@ -373,8 +373,9 @@ alias macosx-get-selected-speaker='SwitchAudioSource -c'
 alias macosx-select-next-speaker='SwitchAudioSource -n;SwitchAudioSource -c'
 
 
-macosx_free_mem(){
-  python <(cat <<'EOB'
+alias macosx-freemem=_macosx_freemem
+_macosx_freemem(){
+  python <<-'EOB'
 #!/usr/bin/python
 
 import subprocess
@@ -450,9 +451,85 @@ _lsof_port_listeners(){(
     lsof -l -n -P -i:$port
 )}
 
+alias unzip-perl=_unzip_perl
+_unzip_perl(){
+  perl <<'EOB'
+#!/usr/bin/perl
+use strict;
+use Encode;
+use Archive::Zip;
+binmode(STDOUT, ":utf8");
+my $zip = Archive::Zip->new();
+$zip->read($ARGV[0]) == 0 or
+   die "$0: couldn't read $ARGV[0]\n";
+foreach my $mref ($zip->members) {
+    my $n = decode("cp949",$mref->fileName);
+    print "Extracting $n\n";
+    $zip->extractMember($mref,$n) == 0 or
+   die "$0: couldn't extract $n\n";
+}
+EOB
+}
+
 # multitail
 alias mt='multitail -p l'
 alias mtj='multitail -p l -j'
+
+
+ifbw(){(
+
+  delay=5
+  if='eth0'
+  capture='/tmp/net-dev-eth0.txt'
+  netdev='/proc/net/dev'
+
+  curr_rx=
+  curr_tx=
+  last_rx=
+  last_tx=
+
+  capture(){
+
+      cat $netdev | fgrep $if':' | cut -c8- | awk '{print $1 " " $9}' > $capture
+      curr_rx=$( cut -d' ' -f1 /tmp/net-dev-eth0.txt )
+      curr_tx=$( cut -d' ' -f1 /tmp/net-dev-eth0.txt )
+
+      if [ "--show" = "$1" ]; then
+	  clear 2>/dev/null
+
+	  echo '['$( date '+%Y-%m-%d %H:%M:%S' )']' $if':' \
+	      rx: $( echo 'scale=1;' '(' $curr_rx - $last_rx ')' '*' 8 / 1024 / $delay | bc -l ) Kbps \
+	      tx: $( echo 'scale=1;' '(' $curr_tx - $last_tx ')' '*' 8 / 1024 / $delay | bc -l ) Kbps
+      fi
+
+      last_rx=$curr_rx
+      last_tx=$curr_tx
+
+  }
+
+  capture
+  sleep $delay
+  capture --show
+  while [ "--loop" = "$1" ] ; do
+      sleep $delay
+      capture --show
+  done
+
+)}
+
+alias chrome-debug-9222=_chrome_debug_9222
+_chrome_debug_9222(){(
+  mkdir -p /tmp/chrome
+  google-chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome --incognito
+)}
+
+alias chrome-proxy-5555=_chrome_proxy_5555
+_chrome_proxy_5555(){(
+  #google-chrome --proxy-server="http=http://127.0.0.1:5555;https=http://127.0.0.1:5555" "$@"
+  env all_proxy=127.0.0.1:5555 google-chrome "$@"
+)}
+
+
 
 # /////////////////////////
 
