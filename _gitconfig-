@@ -1,0 +1,13 @@
+[color]
+        ui = auto
+[diff]
+	external = sh -c 'vimdiff $2 $5' git_diff_wrapper
+[pager]
+	diff =
+[push]
+	default = simple
+[pull]
+#	ff = only
+	ff =
+[alias]
+	up = "!git remote update -p; git merge --ff-only @{u}"

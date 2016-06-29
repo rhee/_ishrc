@@ -1,0 +1,15 @@
+#paste(
+#Sys.setlocale(category = "LC_MESSAGES", locale = "C"),
+#Sys.setlocale(category = "LC_MEASUREMENT", locale = "C"),
+#Sys.setlocale(category = "LC_MONETARY", locale = "C"),
+#Sys.setlocale(category = "LC_TIME", locale = "C"),
+#Sys.setlocale(category = "LC_CTYPE", locale = "C")
+#)
+### # ipak() from https://gist.github.com/stevenworthington/3178163
+### ipak<- function(pkg){
+###   new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+###   if (length(new.pkg)) 
+###     install.packages(new.pkg, dependencies = TRUE)
+###   sapply(pkg, require, character.only = TRUE)
+### }
+### ipak(c("ggplot2","ggthemes","extrafont"))

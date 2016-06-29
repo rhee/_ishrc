@@ -1,0 +1,35 @@
+##### BEGIN generated screenrc 2016-06-16 #####
+
+## if EUC-KR
+# defutf8 off
+# defencoding EUC-KR
+
+defutf8 on
+defencoding UTF-8
+bind ^a meta
+bind a other
+startup_message off
+vbell off
+defscrollback 1000
+defautonuke on
+zombie KR
+obuflimit 8192
+deflogin off
+defflow auto interrupt
+defc1 off
+defgr off
+maptimeout 0
+hardstatus on
+hardstatus alwayslastline
+hardstatus string "%w"
+
+## ESC delay??
+
+maptimeout 0
+defc1 off
+
+#bind ^\\ meta
+#bind \\ other
+
+##### END generated screenrc 2016-06-16 #####
+
