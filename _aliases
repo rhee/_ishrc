@@ -246,14 +246,39 @@ alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.
 alias sqltime-php='php -r '\''echo date("Y-m-d H:i:s",$argv[1]) .PHP_EOL;'\'''
 alias sqltime='sh -c '\'' sqlite /dev/null "SELECT datetime($3,$1,$2)" '\'' sqltime "'\''unixepoch'\''" "'\''localtime'\''"'
 
-pdf2pngs(){
-  local input="$1"
-  local b=$(basename "$input" .pdf)
-  local d="$b"
-  local output="$b/$b-%03d.png"
+pdf2pngs(){(
+  input="$1"
+  b=$(basename "$input" .pdf)
+  d="$b"
+  output="$b/$b-%03d.png"
   mkdir -p "$b"
   gs -q -P- -dBATCH -dNOPAUSE -sPAPERSIZE=a4 -sDEVICE=pngalpha -sOutputFile="$output" -r300 "$input"
-}
+)}
+
+pdftune(){(
+
+  if [ -z "$2" ]; then
+    echo Usage: pdf_tune input_file output_file 1>&2
+    return
+  fi
+
+  input="$1"
+  output="$2"
+
+  if [ ! -f "$input" ]; then
+    echo Input file "$input" not found. stop. 1>&2
+    return 1
+  fi
+  if [ -s "$output" ]; then
+    echo Output file "$output" already exists. stop. 1>&2
+    return 1
+  fi
+
+  gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/default \
+    -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages \
+    -dCompressFonts=true -r150 -sOutputFile="$output" "$input"
+
+)}
 
 ### bashy_basename(){
 ###   local name="${1##*/}"
@@ -368,6 +393,52 @@ foreach my $mref ($zip->members) {
     $zip->extractMember($mref,$n) == 0 or
    die "$0: couldn't extract $n\n";
 }
+EOB
+}
+
+alias unzip-py=_unzip_py
+_unzip_py(){
+  python - <<-"EOB"
+#!/usr/bin/env python
+
+# copied from http://stackoverflow.com/a/14981125/496899
+from __future__ import print_function
+import sys
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+# copied from http://stackoverflow.com/a/12886818/496899
+import zipfile,os.path
+
+def unzip(source_filename, dest_dir):
+    with zipfile.ZipFile(source_filename) as zf:
+        zf.debug = 3
+        if False: ### if sys.version_info >= (2, 7, 4):
+            # if python 2.7.4+, safe to use 'extractall'
+            zf.extractall(dest_dir)  
+        else:
+            # iterate to avoid '..' security issue
+            for member in zf.infolist():
+                # Path traversal defense copied from
+                # http://hg.python.org/cpython/file/tip/Lib/http/server.py#l789
+                words = member.filename.split('/')
+                path = dest_dir
+                for word in words[:-1]:
+                    drive, word = os.path.splitdrive(word)
+                    head, word = os.path.split(word)
+                    if word in (os.curdir, os.pardir, ''): continue
+                    path = os.path.join(path, word)
+                if not member.filename.endswith('/'):
+                    eprint(member.filename)
+                zf.extract(member, path)
+
+if __name__ == '__main__':
+    import sys
+    if len(sys.argv)>2:
+        unzip(sys.argv[1],sys.argv[2])
+    else:
+        unzip(sys.argv[1],'')
 EOB
 }
 
