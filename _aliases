@@ -255,32 +255,26 @@ pdf2pngs(){
   gs -q -P- -dBATCH -dNOPAUSE -sPAPERSIZE=a4 -sDEVICE=pngalpha -sOutputFile="$output" -r300 "$input"
 }
 
-bashy_basename(){
-  local name="${1##*/}"
-  echo "${name%$2}"
-}
-
-bashy_dirname(){
-  local dir="${1%${1##*/}}"
-  "${dir:=./}" != "/" && dir="${dir%?}"
-  echo "$dir"
-}
-
-# Two additional functions:
-# 1) namename prints the basename without extension
-# 2) ext prints extension of a file, including "."
-
-bashy_namename(){
-  local name=${1##*/}
-  local name0="${name%.*}"
-  echo "${name0:-$name}"
-}
-bashy_ext(){
-  local name=${1##*/}
-  local name0="${name%.*}"
-  local ext=${name0:+${name#$name0}}
-  echo "${ext:-.}"
-}
+### bashy_basename(){
+###   local name="${1##*/}"
+###   echo "${name%$2}"
+### }
+### bashy_dirname(){
+###   local dir="${1%${1##*/}}"
+###   "${dir:=./}" != "/" && dir="${dir%?}"
+###   echo "$dir"
+### }
+### bashy_namename(){
+###   local name=${1##*/}
+###   local name0="${name%.*}"
+###   echo "${name0:-$name}"
+### }
+### bashy_ext(){
+###   local name=${1##*/}
+###   local name0="${name%.*}"
+###   local ext=${name0:+${name#$name0}}
+###   echo "${ext:-.}"
+### }
 
 alias g='pushd '
 alias b='popd '
@@ -434,290 +428,6 @@ _chrome_proxy_5555(){(
   #google-chrome --proxy-server="http=http://127.0.0.1:5555;https=http://127.0.0.1:5555" "$@"
   env all_proxy=127.0.0.1:5555 google-chrome "$@"
 )}
-
-
-
-# /////////////////////////
-
-make_source_file_template(){
-  cat <<'EOB'
-// Emacs:
-// Local Variables:
-// mode: javascript
-// c-basic-offset: 4
-// End:
-// vim: sw=4 sts=4 ts=8 et
-EOB
-}
-
-make_rprofile_template(){(
-  cat <<'EOB'
-#paste(
-#Sys.setlocale(category = "LC_MESSAGES", locale = "C"),
-#Sys.setlocale(category = "LC_MEASUREMENT", locale = "C"),
-#Sys.setlocale(category = "LC_MONETARY", locale = "C"),
-#Sys.setlocale(category = "LC_TIME", locale = "C"),
-#Sys.setlocale(category = "LC_CTYPE", locale = "C")
-#)
-### # ipak() from https://gist.github.com/stevenworthington/3178163
-### ipak<- function(pkg){
-###   new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
-###   if (length(new.pkg)) 
-###     install.packages(new.pkg, dependencies = TRUE)
-###   sapply(pkg, require, character.only = TRUE)
-### }
-### ipak(c("ggplot2","ggthemes","extrafont"))
-EOB
-)}
-
-make_privoxy_config_template(){
-  cat <<'EOB'
-# NOTE: last match wins
-forward-socks5		.onion			172.30.1.111:9050 .
-forward-socks5		gelbooru.com		172.30.1.111:9050 .
-forward-socks5		konachan.com		172.30.1.111:9050 .
-forward-socks5		bitsnoop.com		172.30.1.111:9050 .
-forward-socks5		extratorrent.cc		172.30.1.111:9050 .
-forward-socks5		torcache.net		172.30.1.111:9050 .
-EOB
-}
-
-make_screenrc_template(){(
-  cat <<'EOB'
-# defutf8 off
-# defencoding EUC-KR
-defutf8 on
-defencoding UTF-8
-bind ^a meta
-bind a other
-startup_message off
-vbell off
-defscrollback 1000
-defautonuke on
-zombie KR
-obuflimit 8192
-deflogin off
-defflow auto interrupt
-defc1 off
-defgr off
-maptimeout 0
-hardstatus on
-hardstatus alwayslastline
-hardstatus string "%w"
-## ESC delay??
-maptimeout 0
-defc1 off
-bind ^\\ meta
-bind \\ other
-EOB
-)}
-
-make_tmuxconf_template(){(
-  cat <<'EOB'
-set-option -g prefix C-a
-unbind-key C-a
-bind-key C-a send-prefix
-#set -g status off
-set -s escape-time 0
-#run-shell "$HOME/.local/bin/powerline-daemon -q"
-#source "$HOME/.local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf"
-EOB
-)}
-
-make_gitconfig_template(){
-  cat <<'EOB'
-[color]
-ui = auto
-[diff]
-external = sh -c 'vimdiff $2 $5' git_diff_wrapper
-[pager]
-diff =
-[push]
-default = simple
-[pull]
-ff = only
-[alias]
-up = "!git remote update -p; git merge --ff-only @{u}"
-EOB
-}
-
-make_vimrc_template(){
-  cat <<'EOB'
-set enc=utf8 fencs=ucs-bom,utf-8,euc-kr
-set sw=4 sts=4 ts=8 set noai nosi
-set nu nowrap nows
-"set et
-set tags=tags.ctags,./tags.ctags,../tags.ctags,../../tags.ctags,../../../tags.ctags,../../../../tags.ctags,$CTAGSROOT/tags.ctags,~/src/tags.ctags,~/.ctags/*
-
-set nobackup noswapfile
-se bufhidden=unload
-se undolevels=5
-
-sy on
-
-set diffopt=iwhite 
-set diffopt+=filler
-
-let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,.*.swp"
-
-"for ant see :help errorformat-javac :help errorformat-ant
-set efm+=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,\%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
-
-if has("multi_byte")
-  if &termencoding == ""
-    let &termencoding = &encoding
-  endif
-  set encoding=utf-8                     " better default than latin1
-  setglobal fileencoding=utf-8           " change default file encoding when writing new files
-endif
-
-autocmd FileType java set sw=4 sts=4 ts=8 et
-au BufEnter *.java set ai sw=4 sts=4 ts=8 et
-autocmd FileType python set sw=4 sts=4 ts=8 et
-au BufEnter *.py set ai sw=4 sts=4 ts=8 et
-
-:hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
-:hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
-:nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
-
-map  :tp
-map  :tn
-map  :cp
-map  :cn
-map t i_T(f"f"a)F"F"F_
-map  i_TCHAR(f'f'a)F'F'F_
-map  :sy on:TlistToggle
-
-map  :set guifont=Lucida_Sans_Typewriter:h9:cANSI columns=119 lines=43 nu nowrap
-map  :set guifont=GulimChe:h10:cHANGEUL columns=89 lines=29 nonu wrap sw=8
-
-map ;; :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !tee -a check.txt.x >/dev/null
-map ;a :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !transmission-remote -a $(perl -ne 's@^([0-9A-F]{40}).*$@magnet:?xt=urn:btih:\L\1\&tr=udp\%3A\%2F\%2Ftracker.publicbt.com\%3A80\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.publicbt.com\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.torrentbox.com\%3A2710\%2Fannounce@ && print;') -ph all
-
-EOB
-}
-
-make_dotemacs_template(){
-  cat <<'EOB'
-(global-set-key "\C-c;" 'set-mark-command)
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
-
-(setq diff-switches "-u") ;; default to unified diffs
-(setq transient-mark-mode t)
-(when (fboundp 'global-font-lock-mode)
-  (global-font-lock-mode t))
-
-;; tramp ssh and sudo
-(unwind-protect
-    nil ;;;(error "tramp proxy setting problem")
-  (progn
-    (require 'tramp)
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push001" nil "/ssh:push001.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push002" nil "/ssh:push002.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push003" nil "/ssh:push003.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push004" nil "/ssh:push004.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push005" nil "/ssh:push005.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push007" nil "/ssh:push007.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push008" nil "/ssh:push008.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push009" nil "/ssh:push009.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push010" nil "/ssh:push010.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push011" nil "/ssh:push011.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push012" nil "/ssh:push012.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push012-101" nil "/ssh:push012-101:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-push012-103" nil "/ssh:push012-103:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-xcentos6" nil "/ssh:push012-101:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-xcentos5" nil "/ssh:push012-103:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-loc" nil "/ssh:loc.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-wrdb" nil "/ssh:wrdb.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-sksvc" nil "/ssh:sksvc.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-family" nil "/ssh:family.safe4kid.co.kr:"))
-    (add-to-list 'tramp-default-proxies-alist '("sudo-school-1" nil "/ssh:www-1.safeschool.kr:"))
-    nil))
-
-(setq package-archives
-  '(("marmalade" . "http://marmalade-repo.org/packages/")
-    ("gnu" . "http://elpa.gnu.org/packages/")
-    ("melpa" . "http://melpa.milkbox.net/packages/")))
-
-(let ((default-directory "/usr/local/share/emacs/site-lisp/"))
-  (normal-top-level-add-subdirs-to-load-path))
-
-(if (fboundp 'cscope-minor-mode)
-    (progn (defvar cscope-program "/usr/local/bin/cscope" )))
-
-(add-hook
- 'ess-mode-hook
- '(lambda()
-    (when t
-      (let ((cust-alist ess-r-customize-alist))
-	(setcdr (assoc 'inferior-ess-primary-prompt cust-alist)
-		"In \\[[0-9]+\\]: ")
-	(setcdr (assoc 'inferior-ess-secondary-prompt cust-alist)
-		"\\.\\.\\.\\.: ")
-	nil))))
-
-(display-time)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (js2-mode php-mode))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-EOB
-}
-
-make_sshconfig_template(){
-  cat <<'EOB'
-#
-# NOTE: first match wins
-#
-Host *
-        #TCPKeepAlive yes
-        Compression no
-        #Cipher blowfish
-        Ciphers arcfour,blowfish-cbc,aes128-ctr,aes256-ctr,aes128-cbc,3des-cbc,aes256-cbc
-	#CheckHostIP no
-        StrictHostKeyChecking no
-        #ServerAliveInterval 300
-        #ServerAliveCountMax 2
-
-#Host hubtunnel real.hubtunnel.domain 1.2.3.4
-#	HostName	1.2.3.4
-#	User		username
-#	Port		2222
-#	IdentityFile ~/.ssh/extra-keys/some-extra-key.pem
-#	IdentitiesOnly yes
-#	DynamicForward	19050
-#	LocalForward	13389 10.0.0.110:3389
-#	LocalForward	15900 10.0.0.150:5900
-EOB
-}
-
-make_profile_template(){
-  cat <<'EOB'
-:
-if [ -d "/opt/go/" ]; then GOROOT="/opt/go"; fi
-if [ -d "/usr/local/go/" ]; then GOROOT="/usr/local/go"; fi
-if [ ! -z "$GOROOT" ]; then
-  GOPATH=~/go
-  case :$PATH: in *:$GOROOT/bin:*);;*)PATH=$GOROOT/bin:$PATH;;esac
-  case :$PATH: in *:$GOPATH/bin:*);;*)PATH=$GOPATH/bin:$PATH;;esac
-  export PATH GOROOT GOPATH
-fi
-EOB
-}
 
 ##########
 
