@@ -1,0 +1,66 @@
+:
+docker -v >/dev/null 2>&1 || return 0
+
+alias docker-clean=_docker_clean
+_docker_clean(){(
+
+    CMD='docker'
+
+    if [ "--aggressive" = "$1" ]; then
+	aggressive=yes
+    fi
+
+    if [ xyes = x$aggressive ]; then
+	# rm if not running
+	containers=$( $CMD ps -a -q )
+	[ -z "$containers" ] || $CMD rm $containers
+    fi
+
+    if [ xyes = x$aggressive ]; then
+	# volume rm if not used
+	volumes=$( $CMD volume ls -q )
+	[ -z "$volumes" ] || $CMD volume rm $volumes
+    fi
+
+    # rmi if no tag
+    images=$( $CMD images | awk '/<none>/{print$3}' )
+    [ -z "$images" ] || $CMD rmi $images
+
+    if [ xyes != x$aggressive ]; then
+	echo "docker_clean completed: re-run with --aggressive option to clear stopped ps and volumes too" 1>&2
+    fi
+
+)}
+
+alias docker-ipaddr='docker inspect --format "{{.NetworkSettings.IPAddress}}"'
+alias docker-vbox-listnat='VBoxManage showvminfo default |grep NIC'
+
+alias docker-vbox-nat=_docker_vbox_nat
+_docker_vbox_nat(){
+    VBoxManage controlvm default natpf1 tcp-$1,tcp,,$1,,$1
+}
+
+alias docker-vbox-unnat=_docker_vbox_unnat
+_docker_vbox_unnat(){
+    VBoxManage controlvm default natpf1 delete tcp-$1
+}
+
+alias docker-run='docker run -ti'
+
+alias docker-exec=_docker_exec
+_docker_exec(){(
+  container="$1"; shift
+  cmd="$1"; shift
+  docker exec -ti "$container" "${cmd-/bin/sh}" "$@"
+)}
+
+alias docker-rm='docker rm -f'
+alias docker-logs='docker logs --follow --tail=50'
+
+alias docker-hykit-term='screen -e  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty'
+alias docker-ps='docker ps --format "{{printf \"%22s:\" .Names}}\t{{.ID}}\t{{.Status}}\t{{.Image}}"'
+
+if test ! -z "$(docker ps -q -f 'name=dropbox' 2>/dev/null)" ; then
+  alias dropbox-status='docker exec dropbox /dropbox.sh status'
+  alias dropbox-filestatus='docker exec dropbox /dropbox.sh filestatus'
+fi

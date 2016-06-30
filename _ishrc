@@ -42,6 +42,7 @@ case :$PATH: in *:$HOME/.local/bin:*);;*)PATH=$HOME/.local/bin:$PATH;;esac
 export PATH
 
 test -f $HOME/.aliases && . $HOME/.aliases
+test -f $HOME/.docker-aliases && . $HOME/.docker-aliases
 
 for rc in $HOME/.local/etc/profile.d/*.sh; do
   case $rc in *~|*.bak|*.orig|*.old|*/make.sh);; # skip backup files
