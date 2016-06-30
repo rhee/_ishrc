@@ -1,9 +1,13 @@
 #!/bin/sh
 
+### # debug
+### set -x
+
 # zsh-workaround
 setopt shwordsplit >/dev/null 2>&1
 # bash nullglob
 shopt nullglob >/dev/null 2>&1
+
 # backup suffix type #1: e.g.: 2016-06-30.2a5e9b
 suffix=$(git log --pretty=format:'%ad.%h' --abbrev-commit --date=short -1 2>/dev/null)
 # backup suffix type #2: e.g.: 2016-06-30_15-39-28
@@ -39,7 +43,7 @@ for f in _*; do
 	    srcfile="$PWD/$f"
 	    destfile="$remote.$basename"
 
-	    rsync -tP --backup --suffix=-"$suffix"~ "$srcfile" "$remote$destfile"
+	    rsync -tP --backup --suffix=-"$suffix"~ "$srcfile" "$destfile"
 
 	  fi
 	fi
