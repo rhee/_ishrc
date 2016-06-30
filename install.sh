@@ -8,8 +8,8 @@ setopt shwordsplit >/dev/null 2>&1
 # bash nullglob
 shopt nullglob >/dev/null 2>&1
 
-### # backup suffix type #1: e.g.: 2016-06-30.2a5e9b
-### suffix=$(git log --pretty=format:'%ad.%h' --abbrev-commit --date=short -1 2>/dev/null)
+# backup suffix type #1: e.g.: 2016-06-30.2a5e9b
+suffix=$(git log --pretty=format:'%ad.%h' --abbrev-commit --date=short -1 2>/dev/null)
 # backup suffix type #2: e.g.: 2016-06-30_15-39-28
 if [ -z "$suffix" ]; then suffix=$(date +%Y-%m-%d_%H-%M-%S); fi
 
