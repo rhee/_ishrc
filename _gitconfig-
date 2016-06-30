@@ -6,6 +6,8 @@
 	diff =
 [push]
 	default = simple
+[core]
+        autocrlf = input
 [pull]
 #	ff = only
 	ff =
