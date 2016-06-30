@@ -248,35 +248,76 @@ alias sqltime='sh -c '\'' sqlite /dev/null "SELECT datetime($3,$1,$2)" '\'' sqlt
 
 pdf2pngs(){(
   input="$1"
+  if [ ! -f "$input" ]; then
+    echo "$0:" Input file "$input" not found. stop. 1>&2
+    return 1
+  fi
   b=$(basename "$input" .pdf)
   d="$b"
   output="$b/$b-%03d.png"
+  if [ -s "$output" ]; then
+    echo "$0:" Output file "$output" already exists. stop. 1>&2
+    return 1
+  fi
   mkdir -p "$b"
   gs -q -P- -dBATCH -dNOPAUSE -sPAPERSIZE=a4 -sDEVICE=pngalpha -sOutputFile="$output" -r300 "$input"
 )}
 
 pdftune(){(
-
   if [ -z "$2" ]; then
     echo Usage: pdf_tune input_file output_file 1>&2
     return
   fi
-
   input="$1"
   output="$2"
-
   if [ ! -f "$input" ]; then
-    echo Input file "$input" not found. stop. 1>&2
+    echo "$0:" Input file "$input" not found. stop. 1>&2
     return 1
   fi
   if [ -s "$output" ]; then
-    echo Output file "$output" already exists. stop. 1>&2
+    echo "$0:" Output file "$output" already exists. stop. 1>&2
     return 1
   fi
 
-  gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/default \
-    -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages \
-    -dCompressFonts=true -r150 -sOutputFile="$output" "$input"
+### # excerpt from: http://askubuntu.com/a/626301
+### gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/default \
+###     -dNOPAUSE -dQUIET -dBATCH -dDetectDuplicateImages \
+###     -dCompressFonts=true -r150 \
+###     -sOutputFile="$output" "$input"
+
+# excerpt from: http://stackoverflow.com/a/10453202
+# + http://stackoverflow.com/a/3387 + http://stackoverflow.com/a/626301
+gs  -q -dNOPAUSE -dBATCH -dSAFER -dQUIET \
+    -sDEVICE=pdfwrite \
+    -dCompatibilityLevel=1.3 \
+    -dPDFSETTINGS=/screen \
+    -dCompressFonts=true -r150 \
+    -dEmbedAllFonts=true \
+    -dSubsetFonts=true \
+    -dDownsampleColorImages=true \
+    -dDownsampleGrayImages=true \
+    -dDownsampleMonoImages=true \
+    -dColorImageDownsampleType=/Bicubic \
+    -dColorImageResolution=150 \
+    -dGrayImageDownsampleType=/Bicubic \
+    -dGrayImageResolution=150 \
+    -dMonoImageDownsampleType=/Bicubic \
+    -dMonoImageResolution=150 \
+    -dDetectDuplicateImages=true \
+    -sOutputFile="$output" \
+     "$input"
+
+
+## to extract embedded font:
+##  -dEmbedAllFonts=false \
+##  -dSubsetFonts=true \
+##  -dConvertCMYKImagesToRGB=true \
+##  -dCompressFonts=true \
+##  -c ".setpdfwrite <</AlwaysEmbed [ ]>> setdistillerparams" \
+##  -c ".setpdfwrite <</NeverEmbed [/Courier /Courier-Bold /Courier-Oblique /Courier-BoldOblique /Helvetica /Helvetica-Bold /Helvetica-Oblique /Helvetica-BoldOblique /Times-Roman /Times-Bold /Times-Italic /Times-BoldItalic /Symbol /ZapfDingbats /Arial]>> setdistillerparams" \
+
+
+# to check more options later, see: http://ghostscript.com/doc/current/Ps2pdf.htm
 
 )}
 
