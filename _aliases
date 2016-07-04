@@ -541,6 +541,17 @@ _chrome_proxy_5555(){(
   env all_proxy=127.0.0.1:5555 google-chrome "$@"
 )}
 
+alias clear-menus=_clear_menus
+_clear_menus(){(
+set -e
+cd ~/.local/share
+mkdir -p applications.bak
+mv -v applications/wine-*.desktop applications.bak
+cd ~/.config
+mkdir -p menus.bak
+mv -v menus/* menus.bak
+)}
+
 ##########
 
 alias i='. $HOME/.ishrc'
