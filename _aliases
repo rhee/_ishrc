@@ -552,6 +552,9 @@ mkdir -p menus.bak
 mv -v menus/* menus.bak
 )}
 
+#alias psc='ps xawf -eo pid,user,cgroup,args'
+alias psc='ps xaw -eo pid,user,cgroup,args'
+
 ##########
 
 alias i='. $HOME/.ishrc'
