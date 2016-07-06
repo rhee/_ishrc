@@ -61,6 +61,16 @@
 		"\\.\\.\\.\\.: ")
 	nil))))
 
+(add-hook
+ 'go-mode-hook
+ '(lambda()
+    (flycheck-mode)))
+
+(add-hook
+ 'js2-mode-hook
+ '(lambda()
+    (flycheck-mode)))
+
 (let ((list (directory-files "~/.local/etc/profile.d/" t ".*\.el$")))
     (while list
     (message (format "loading %s" (car list)))
@@ -69,6 +79,10 @@
 
 
 (display-time)
+
+(menu-bar-mode -1)
+;;(toggle-scroll-bar -1)
+(tool-bar-mode -1)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

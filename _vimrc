@@ -46,7 +46,7 @@ map  :sy on:TlistToggle
 map  :set guifont=Lucida_Sans_Typewriter:h9:cANSI columns=119 lines=43 nu nowrap
 map  :set guifont=GulimChe:h10:cHANGEUL columns=89 lines=29 nonu wrap sw=8
 
-"so ~/.vimrc-vundle
+so ~/.vimrc-vundle
 
 map ;; :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !tee -a check.txt.x >/dev/null
 map ;a :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !transmission-remote -a $(perl -ne 's@^([0-9A-F]{40}).*$@magnet:?xt=urn:btih:\L\1\&tr=udp\%3A\%2F\%2Ftracker.publicbt.com\%3A80\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.publicbt.com\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.torrentbox.com\%3A2710\%2Fannounce@ && print;') -ph all
