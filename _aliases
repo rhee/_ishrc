@@ -60,11 +60,35 @@ alias xKW='xmodmap -e "remove mod1 = Alt_L" -e "remove mod4 = Super_L" -e "keyco
 alias xKw='xmodmap -e "remove mod1 = Alt_L" -e "remove mod4 = Super_L" -e "keycode 133 = Super_L" -e "keycode 64 = Alt_L" -e "add mod1 = Alt_L" -e "add mod4 = Super_L"'
 
 alias lrgb='less /etc/X11/rgb.txt'
-alias xtN='sh -c "echo -n \"@]1;\$1%\"|sed -e '"'"'y/@%//'"'"'" xtN'
+
+alias  xtN='sh -c "echo -n \"@]1;\$1%\"|sed -e '"'"'y/@%//'"'"'" xtN'
 alias xtT_='sh -c "echo -n \"@]2;\$1%@]1;\$1%\"|sed -e '"'"'y/@%//'"'"'" xtT'
-alias xtT='sh -c "echo -n \"@]2;\$1%@]1;\$1%\"|sed -e '"'"'y/@%//'"'"'" xtT'
-alias xtC='sh -c "echo -n \"@]10;\$1%@]11;\$2%\"|sed -e '"'"'y/@%//'"'"'" xtC'
-alias xtS='sh -c "echo -n \"@[8;\$1;\$2t\"|sed -e '"'"'y/@%//'"'"'" xtS'
+alias  xtT='sh -c "echo -n \"@]2;\$1%@]1;\$1%\"|sed -e '"'"'y/@%//'"'"'" xtT'
+
+if printf 1 >/dev/null 2>&1 ; then
+
+    alias xtC=_xtC
+    _xtC(){(
+	osc="\e]" # or 0x9d
+	fg=$1
+	bg=$2
+	printf "${osc}10;${fg}\007""\e]11;${bg}\007"
+    )}
+    alias xtS=_xtS
+    _xtS(){(
+	csi="\e[" # or 0x9b
+	lines=$1
+	columns=$2
+	printf "${csi}8;${lines};${columns}t"
+    )}
+
+else
+
+    alias xtC='sh -c "echo -n \"@]10;\$1%@]11;\$2%\"|sed -e '"'"'y/@%//'"'"'" xtC'
+    alias xtS='sh -c "echo -n \"@[8;\$1;\$2t\"|sed -e '"'"'y/@%//'"'"'" xtS'
+
+fi
+
 alias xtcW89='xtC rgb:00/00/00 rgb:e0/e0/e0; xtS 27 89'
 alias xtcB89='xtC black rgb:d0/d0/ff; xtS 27 89'
 alias xtcG89='xtC black rgb:e0/ff/e0; xtS 27 89'

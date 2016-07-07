@@ -1,4 +1,5 @@
 ;; .emacs
+;;; Code:
 
 ;;; uncomment this line to disable loading of "default.el" at startup
 ;; (setq inhibit-default-init t)
@@ -59,6 +60,9 @@
 
 (ignore-errors ;;;(with-demoted-errors "Error: %S"
   (add-hook 'after-init-hook #'global-flycheck-mode))
+
+(with-eval-after-load 'flycheck
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 ;; (add-hook
 ;;  'go-mode-hook
@@ -203,27 +207,27 @@
        (set (make-local-variable 'compile-command)
 	    (format "go run %s" file)))
      ;;)
-  )) )
+     )) )
 
 ;;; user specific sub init scripts
 
-  (let ((list (directory-files "~/.local/etc/profile.d/" t ".*\.el$")))
-    (while list
-      (message (format "loading %s" (car list)))
-      (ignore-errors ;;;    (with-demoted-errors "Error: %S"
-	(load-library (car list)))
-      (setq list (cdr list))))
+(let ((list (directory-files "~/.local/etc/profile.d/" t ".*\.el$")))
+  (while list
+    (message (format "loading %s" (car list)))
+    (ignore-errors ;;;    (with-demoted-errors "Error: %S"
+      (load-library (car list)))
+    (setq list (cdr list))))
 
 
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(package-selected-packages (quote (js2-mode php-mode))))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (js2-mode php-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
