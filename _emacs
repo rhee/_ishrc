@@ -61,8 +61,21 @@
 (ignore-errors ;;;(with-demoted-errors "Error: %S"
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
+(ignore-errors
+  (add-hook 'after-init-hook #'global-company-mode))
+
 (with-eval-after-load 'flycheck
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+
+;; enable company mode for autocompletion
+(add-hook
+ 'go-mode-hook
+ (lambda ()
+   (set (make-local-variable 'company-backends) '(company-go))
+   (company-mode)))
+
+(add-hook 'go-mode-hook 'flycheck-mode)
 
 ;; (add-hook
 ;;  'go-mode-hook
