@@ -366,6 +366,18 @@ gs  -q -dNOPAUSE -dBATCH -dSAFER -dQUIET \
 ###   echo "${ext:-.}"
 ### }
 
+
+if pushd >/dev/null 2>&1; then
+    alias cd='pushd'
+#    alias cd='eval _cd'
+#    _cd(){
+#	if [ -z "$0" ]; then echo cd;
+#	elif [ "-" = "$1" ]; then echo popd;
+#	else echo pushd "'$1'";
+#	fi
+#    }
+fi
+
 alias g='pushd '
 alias b='popd '
 alias psx='sh -c '"'"'ps x "$@" |exec grep "^"'"'"' psx'

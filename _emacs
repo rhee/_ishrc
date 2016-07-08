@@ -18,6 +18,21 @@
 	("melpa" . "http://melpa.milkbox.net/packages/")))
 
 
+;; https://www.emacswiki.org/emacs/InstallingPackages
+;;
+;; You may want to start by installing the paradox package. This will
+;; allow you to use the command paradox-list-packages, which among other
+;; things gives the ability to sort package list by GitHub
+;; popularity. Starting with the most popular packages is a good way to
+;; find the most useful and effective ones.
+
+;; If you move to a different system and you would like to quickly
+;; install all of your previously installed packages, look into ‘M-x
+;; package-install-selected-packages’. If you use UsePackage, the :ensure
+;; t property will tell Emacs to install a package if it hasn’t already
+;; been installed.
+
+
 ;;;;;;;;;;;;;
 
 (global-set-key (kbd "C-c ;") 'set-mark-command)
