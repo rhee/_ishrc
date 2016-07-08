@@ -367,8 +367,8 @@ gs  -q -dNOPAUSE -dBATCH -dSAFER -dQUIET \
 ### }
 
 
-if pushd >/dev/null 2>&1; then
-    alias cd='pushd'
+#if pushd >/dev/null 2>&1; then
+#    alias cd='pushd'
 #    alias cd='eval _cd'
 #    _cd(){
 #	if [ -z "$0" ]; then echo cd;
@@ -376,7 +376,7 @@ if pushd >/dev/null 2>&1; then
 #	else echo pushd "'$1'";
 #	fi
 #    }
-fi
+#fi
 
 alias g='pushd '
 alias b='popd '
