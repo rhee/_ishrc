@@ -73,7 +73,7 @@
 (let ((list (directory-files "~/.local/etc/profile.d/" t ".*\.el$")))
   (while list
     (message (format "loading %s" (car list)))
-    (ignore-errors ;;;    (with-demoted-errors "Error: %S"
+    (with-demoted-errors "Error: %S"
       (load-library (car list)))
     (setq list (cdr list))))
 
