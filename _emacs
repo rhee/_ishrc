@@ -40,7 +40,9 @@
 
 (display-time)
 (menu-bar-mode -1)
-(tool-bar-mode -1)
+
+(ignore-errors
+  (tool-bar-mode -1))
 
 (ignore-errors ;;;(with-demoted-errors "Error: %S"
   (toggle-scroll-bar -1))
