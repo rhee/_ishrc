@@ -1,0 +1,123 @@
+if [ "Darwin" != "$(uname -s)" ]; then return; fi
+
+alias macosx-nshistoff=_macosx_nshistoff
+_macosx_nshistoff(){
+  local app=${1}
+  if [ -z "$app" -o ! -d "$app" ]; then
+    echo "Usage: nshistoff <apppath>"
+  else
+    local bundle=$(defaults read $app/Contents/Info CFBundleIdentifier)
+    defaults delete $bundle.LSSharedFileList RecentDocuments
+    defaults write $bundle NSRecentDocumentsLimit 0
+    defaults write $bundle.LSSharedFileList RecentDocuments -dict-add MaxAmount 0
+  fi
+}
+
+#:::::::::::::::::::::::::
+
+alias macosx-wifi-off=_macosx_wifi_off
+_macosx_wifi_off(){(
+  intf=${1-en1}
+  LC_ALL=C networksetup -setairportpower $intf off
+)}
+
+alias macosx-wifi-on=_macosx_wifi_on
+_macosx_wifi_on(){(
+  intf=${1-en1}
+  LC_ALL=C networksetup -setairportpower $intf on
+)}
+
+alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport'
+alias macosx-wifi-scan='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport scan'
+
+alias macosx-wifi-connected=_macosx_wifi_connected
+_macosx_wifi_connected(){(
+  bssid=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I | awk '/ BSSID: /{print$2}')
+  test "0:0:0:0:0:0" != "$bssid"
+)}
+
+alias macosx-wifi-join=_macosx_wifi_join
+_macosx_wifi_join(){(
+  if [ -z "$2" ]; then echo "Usage: _macosx_wifi_join <ssid> <pass> [<interface>]" 1>&2; return; fi
+  ssid="$1"
+  pass="$2"
+  intf=${3-en1}
+  networksetup -setairportnetwork $intf "$ssid" "$pass"
+)}
+
+alias macosx-wifi-interface='networksetup -listallhardwareports'
+
+#:::::::::::::::::::::::::
+
+alias macosx-get-volume='LC_ALL=C osascript -e "output volume of (get volume settings)"'
+
+alias macosx-set-volume=_macosx_set_volume
+_macosx_set_volume(){
+  LC_ALL=C osascript -e "set volume output volume $1"
+}
+
+alias macosx-get-mute='LC_ALL=C osascript -e "output muted of (get volume settings)"'
+
+# 'true' or 'false'
+alias macosx-set-mute=_macosx_set_mute
+_macosx_set_mute(){
+  LC_ALL=C osascript -e "set volume output muted $1"
+}
+
+alias macosx-get-selected-speaker='SwitchAudioSource -c'
+alias macosx-select-next-speaker='SwitchAudioSource -n;SwitchAudioSource -c'
+
+
+alias macosx-freemem=_macosx_freemem
+_macosx_freemem(){
+  python <<-'EOB'
+#!/usr/bin/python
+
+import subprocess
+import re
+
+# Get process info
+ps = subprocess.Popen(['ps', '-caxm', '-orss,comm'], stdout=subprocess.PIPE).communicate()[0]
+vm = subprocess.Popen(['vm_stat'], stdout=subprocess.PIPE).communicate()[0]
+
+# Iterate processes
+processLines = ps.split('\n')
+sep = re.compile('[\s]+')
+rssTotal = 0 # kB
+for row in range(1,len(processLines)):
+    rowText = processLines[row].strip()
+    rowElements = sep.split(rowText)
+    try:
+        rss = float(rowElements[0]) * 1024
+    except:
+        rss = 0 # ignore...
+    rssTotal += rss
+
+# Process vm_stat
+vmLines = vm.split('\n')
+sep = re.compile(':[\s]+')
+vmStats = {}
+for row in range(1,len(vmLines)-2):
+    rowText = vmLines[row].strip()
+    rowElements = sep.split(rowText)
+    vmStats[(rowElements[0])] = int(rowElements[1].strip('\.')) * 4096
+
+print 'Wired Memory:\t\t%d MB' % ( vmStats["Pages wired down"]/1024/1024 )
+print 'Active Memory:\t\t%d MB' % ( vmStats["Pages active"]/1024/1024 )
+print 'Inactive Memory:\t%d MB' % ( vmStats["Pages inactive"]/1024/1024 )
+print 'Free Memory:\t\t%d MB' % ( vmStats["Pages free"]/1024/1024 )
+print 'Real Mem Total (ps):\t%.1f MB' % ( rssTotal/1024/1024 )
+EOB
+}
+
+alias macosx-clear-recent-items=_macosx_cler_recent_items
+_macosx_cler_recent_items(){
+    rm -fv ~/Library/Preferences/*LSSharedFileList.plist
+    #defaults delete NSGlobalDomain NSNavRecentPlaces
+    defaults delete -g NSNavRecentPlaces
+    defaults write -g NSNavRecentPlacesLimit -int 0
+}
+
+if [ "Darwin" = "$(uname -s)" -a -d /opt/local/bin ];then
+  alias enable-macport='PATH=/opt/local/bin:$PATH;export PATH'
+fi

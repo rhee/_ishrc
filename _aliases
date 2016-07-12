@@ -593,5 +593,10 @@ alias psc='ps xaw -eo pid,user,cgroup,args'
 
 ##########
 
+if test -f $HOME/.mac-aliases; then . $HOME/.mac-aliases; fi
+if test -f $HOME/.docker-aliases; then . $HOME/.docker-aliases; fi
+
+##########
+
 alias i='. $HOME/.ishrc'
 alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
