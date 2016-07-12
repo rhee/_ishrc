@@ -30,11 +30,38 @@ _macosx_wifi_on(){(
 alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport'
 alias macosx-wifi-scan='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport scan'
 
-alias macosx-wifi-connected=_macosx_wifi_connected
+alias macosx-wifi-connected='_macosx_wifi_connected && echo true'
 _macosx_wifi_connected(){(
   bssid=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I | awk '/ BSSID: /{print$2}')
   test "0:0:0:0:0:0" != "$bssid"
 )}
+
+alias macosx-wifi-reconnect-if-disconnected=_macosx_wifi_reconnect_if_disconnected
+# make this as a script, and then run
+# every 5 minutes using cron table
+_macosx_wifi_reconnect_if_disconnected(){(
+
+#!/bin/sh
+LC_ALL=C
+export LC_ALL
+
+# wifi interface
+intf=en1
+
+# airport binary executable
+airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
+
+# get current connected AP bssid
+bssid=$($airport -I | awk '/ BSSID: /{print $2}')
+
+# if not connected, try reconnect
+if [ "0:0:0:0:0:0" = "$bssid" ]; then
+  /usr/sbin/networksetup -setairportpower "$intf" off
+  /usr/sbin/networksetup -setairportpower "$intf" on
+fi
+
+)}
+
 
 alias macosx-wifi-join=_macosx_wifi_join
 _macosx_wifi_join(){(
@@ -45,7 +72,7 @@ _macosx_wifi_join(){(
   networksetup -setairportnetwork $intf "$ssid" "$pass"
 )}
 
-alias macosx-wifi-interface='networksetup -listallhardwareports'
+alias macosx-list-network-interfaces='networksetup -listallhardwareports'
 
 #:::::::::::::::::::::::::
 
