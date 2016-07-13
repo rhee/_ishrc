@@ -415,13 +415,7 @@ _rename_files(){(
 alias kor='export LANG=ko_KR.UTF-8'
 alias mosh='mosh --server='"'"'env LANG="$(locale -a|grep ko_KR.UTF-8||locale -a|grep .UTF-8|head -1)" mosh-server'"'"''
 
-alias rsync-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
-
-# begin some common mac osx
-
-alias rsync-mac='rsync --rsync-path="/usr/local/bin/rsync" --iconv=utf-8,utf-8-iconv '
-alias convmv-mac-to-other='convmv -r -f utf-8 -t utf-8 --nfc --notest'
-alias convmv-other-to-mac='convmv -r -f utf-8 -t utf-8 --nfd --notest'
+alias rsync-to-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
 
 # multitail goodies
 alias mt='multitail -p l'
@@ -431,14 +425,16 @@ alias mtj='multitail -p l -j'
 alias sync='echo -n "Sync? "; read yn; case $yn in [Yy]) /bin/sync;; esac;'
 
 # prompt by git
-git_branch_name(){
+alias git-branch-name=_git_branch_name
+_git_branch_name(){
   git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3
 }
-git_branch_prompt(){
-  local branch=`git_branch_name`
+alias git-branch-prompt=_git_branch_prompt
+_git_branch_prompt(){
+  local branch=`_git_branch_name`
   if [ $branch ]; then printf " [%s]" $branch; fi
 }
-#PS1="\u@\h \[\033[0;36m\]\W\[\033[0m\]\[\033[0;32m\]\$(git_branch_prompt)\[\033[0m\] \$ "
+#PS1="\u@\h \[\033[0;36m\]\W\[\033[0m\]\[\033[0;32m\]\$(_git_branch_prompt)\[\033[0m\] \$ "
 
 # bash/zsh completion behavior simulation
 alias zsh-like='if [ ! -z "$BASH_VERSION" ]; then bind "set show-all-if-ambiguous on" ; bind "TAB:menu-complete" ; fi'
@@ -455,8 +451,11 @@ _lsof_port_listeners(){(
 
 alias unzip-perl=_unzip_perl
 _unzip_perl(){
-  perl <<'EOB'
-#!/usr/bin/perl
+
+if [ ! -z "$BASH_VERSION" ]; then
+  # alt 1 - try bash <( ... )
+
+  perl <(cat <<'EOF'
 use strict;
 use Encode;
 use Archive::Zip;
@@ -470,12 +469,35 @@ foreach my $mref ($zip->members) {
     $zip->extractMember($mref,$n) == 0 or
    die "$0: couldn't extract $n\n";
 }
-EOB
+EOF
+) "$@"
+
+else
+  # alt 2 - try using literal
+
+  perl -e '
+use strict;
+use Encode;
+use Archive::Zip;
+binmode(STDOUT, ":utf8");
+my $zip = Archive::Zip->new();
+$zip->read($ARGV[0]) == 0 or
+   die "$0: couldn't read $ARGV[0]\n";
+foreach my $mref ($zip->members) {
+    my $n = decode("cp949",$mref->fileName);
+    print "Extracting $n\n";
+    $zip->extractMember($mref,$n) == 0 or
+   die "$0: couldn't extract $n\n";
+}
+' "$@"
+fi
+
 }
 
 alias unzip-py=_unzip_py
 _unzip_py(){
-  python - <<-"EOB"
+  # use <<- heredoc, to keep tab/indentation
+  python - "@$" <<-"EOB"
 #!/usr/bin/env python
 
 # copied from http://stackoverflow.com/a/14981125/496899
@@ -518,11 +540,6 @@ if __name__ == '__main__':
         unzip(sys.argv[1],'')
 EOB
 }
-
-# multitail
-alias mt='multitail -p l'
-alias mtj='multitail -p l -j'
-
 
 ifbw(){(
 
@@ -579,13 +596,13 @@ _chrome_proxy_5555(){(
 
 alias clear-menus=_clear_menus
 _clear_menus(){(
-set -e
-cd ~/.local/share
-mkdir -p applications.bak
-mv -v applications/wine-*.desktop applications.bak
-cd ~/.config
-mkdir -p menus.bak
-mv -v menus/* menus.bak
+  set -e
+  cd ~/.local/share
+  mkdir -p applications.bak
+  mv -v applications/wine-*.desktop applications.bak
+  cd ~/.config
+  mkdir -p menus.bak
+  mv -v menus/* menus.bak
 )}
 
 #alias psc='ps xawf -eo pid,user,cgroup,args'

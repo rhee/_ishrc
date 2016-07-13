@@ -1,5 +1,11 @@
 if [ "Darwin" != "$(uname -s)" ]; then return; fi
 
+# begin some common mac osx
+
+alias rsync-from-mac='rsync --iconv=utf-8-mac,utf-8'
+alias convmv-mac-to-other='convmv -r -f utf-8 -t utf-8 --nfc --notest'
+alias convmv-other-to-mac='convmv -r -f utf-8 -t utf-8 --nfd --notest'
+
 alias macosx-nshistoff=_macosx_nshistoff
 _macosx_nshistoff(){
   local app=${1}
