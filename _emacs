@@ -61,6 +61,16 @@
 ;; default to unified diffs
 (setq diff-switches "-u")
 
+;; extend regex to handle password prompt for github
+
+;; Not a good idea. default comint-password-prompt-regexp
+;; is complex enough, and I cannot recomment to replace it
+;; with simple one line this.
+;; Let's use git-credential-store --file ~/.git-credentials <cmd> ...
+;; (setq comint-password-prompt-regexp
+;;       (concat comint-password-prompt-regexp
+;; 	      "\\|^Enter passphrase for .*:\\s *\\'"))
+
 ;; always end a file with a newline
 ;;(setq require-final-newline 'query)
 
