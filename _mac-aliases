@@ -2,108 +2,113 @@ if [ "Darwin" != "$(uname -s)" ]; then return; fi
 
 # begin some common mac osx
 
-alias rsync-from-mac='rsync --iconv=utf-8-mac,utf-8'
-alias convmv-mac-to-other='convmv -r -f utf-8 -t utf-8 --nfc --notest'
-alias convmv-other-to-mac='convmv -r -f utf-8 -t utf-8 --nfd --notest'
+alias mac-rsync-mac-iconv='rsync --iconv=utf-8-mac,utf-8'
+alias mac-convmv-to-normal='convmv -r -f utf-8 -t utf-8 --nfc --notest'
+alias mac-convmv-from-normal='convmv -r -f utf-8 -t utf-8 --nfd --notest'
 
-alias macosx-nshistoff=_macosx_nshistoff
-_macosx_nshistoff(){
-  local app=${1}
+alias mac-clear-history=_mac_clear_history
+_mac_clear_history(){(
+  app=${1}
   if [ -z "$app" -o ! -d "$app" ]; then
-    echo "Usage: nshistoff <apppath>"
+    echo "Usage: _mac_clear_history <apppath>"
+  elif [ "--all" = "$app" ]; then
+    rm -fv ~/Library/Preferences/*LSSharedFileList.plist
+    #defaults delete NSGlobalDomain NSNavRecentPlaces
+    defaults delete -g NSNavRecentPlaces
+    defaults write -g NSNavRecentPlacesLimit -int 0
   else
-    local bundle=$(defaults read $app/Contents/Info CFBundleIdentifier)
+    bundle=$(defaults read $app/Contents/Info CFBundleIdentifier)
     defaults delete $bundle.LSSharedFileList RecentDocuments
     defaults write $bundle NSRecentDocumentsLimit 0
     defaults write $bundle.LSSharedFileList RecentDocuments -dict-add MaxAmount 0
   fi
-}
+)}
 
 #:::::::::::::::::::::::::
 
-alias macosx-wifi-off=_macosx_wifi_off
-_macosx_wifi_off(){(
+alias mac-wifi-off=_mac_wifi_off
+_mac_wifi_off(){(
   intf=${1-en1}
   LC_ALL=C networksetup -setairportpower $intf off
 )}
 
-alias macosx-wifi-on=_macosx_wifi_on
-_macosx_wifi_on(){(
+alias mac-wifi-on=_mac_wifi_on
+_mac_wifi_on(){(
   intf=${1-en1}
   LC_ALL=C networksetup -setairportpower $intf on
 )}
 
 alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport'
-alias macosx-wifi-scan='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport scan'
+alias mac-wifi-scan='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport scan'
 
-alias macosx-wifi-connected='_macosx_wifi_connected && echo true'
-_macosx_wifi_connected(){(
+alias mac-wifi-connected='_mac_wifi_connected && echo true'
+_mac_wifi_connected(){(
   bssid=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I | awk '/ BSSID: /{print$2}')
   test "0:0:0:0:0:0" != "$bssid"
 )}
 
-alias macosx-wifi-reconnect-if-disconnected=_macosx_wifi_reconnect_if_disconnected
+alias mac-wifi-reconnect-if-disconnected=_mac_wifi_reconnect_if_disconnected
 # make this as a script, and then run
 # every 5 minutes using cron table
-_macosx_wifi_reconnect_if_disconnected(){(
+_mac_wifi_reconnect_if_disconnected(){(
 
-#!/bin/sh
-LC_ALL=C
-export LC_ALL
+  #!/bin/sh
+  LC_ALL=C
+  export LC_ALL
 
-# wifi interface
-intf=en1
+  # wifi interface
+  intf=en1
 
-# airport binary executable
-airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
+  # airport binary executable
+  airport=/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport
 
-# get current connected AP bssid
-bssid=$($airport -I | awk '/ BSSID: /{print $2}')
+  # get current connected AP bssid
+  bssid=$($airport -I | awk '/ BSSID: /{print $2}')
 
-# if not connected, try reconnect
-if [ "0:0:0:0:0:0" = "$bssid" ]; then
-  /usr/sbin/networksetup -setairportpower "$intf" off
-  /usr/sbin/networksetup -setairportpower "$intf" on
-fi
+  # if not connected, try reconnect
+  if [ "0:0:0:0:0:0" = "$bssid" ]; then
+    /usr/sbin/networksetup -setairportpower "$intf" off
+    /usr/sbin/networksetup -setairportpower "$intf" on
+  fi
 
 )}
 
 
-alias macosx-wifi-join=_macosx_wifi_join
-_macosx_wifi_join(){(
-  if [ -z "$2" ]; then echo "Usage: _macosx_wifi_join <ssid> <pass> [<interface>]" 1>&2; return; fi
+alias mac-wifi-join=_mac_wifi_join
+_mac_wifi_join(){(
+  if [ -z "$2" ]; then echo "Usage: _mac_wifi_join <ssid> <pass> [<interface>]" 1>&2; return; fi
   ssid="$1"
   pass="$2"
   intf=${3-en1}
   networksetup -setairportnetwork $intf "$ssid" "$pass"
 )}
 
-alias macosx-list-network-interfaces='networksetup -listallhardwareports'
+alias mac-list-network-interfaces='networksetup -listallhardwareports'
 
 #:::::::::::::::::::::::::
 
-alias macosx-get-volume='LC_ALL=C osascript -e "output volume of (get volume settings)"'
+alias mac-get-volume='LC_ALL=C osascript -e "output volume of (get volume settings)"'
 
-alias macosx-set-volume=_macosx_set_volume
-_macosx_set_volume(){
+alias mac-set-volume=_mac_set_volume
+_mac_set_volume(){
   LC_ALL=C osascript -e "set volume output volume $1"
 }
 
-alias macosx-get-mute='LC_ALL=C osascript -e "output muted of (get volume settings)"'
+alias mac-get-mute='LC_ALL=C osascript -e "output muted of (get volume settings)"'
 
 # 'true' or 'false'
-alias macosx-set-mute=_macosx_set_mute
-_macosx_set_mute(){
+alias mac-set-mute=_mac_set_mute
+_mac_set_mute(){
   LC_ALL=C osascript -e "set volume output muted $1"
 }
 
-alias macosx-get-selected-speaker='SwitchAudioSource -c'
-alias macosx-select-next-speaker='SwitchAudioSource -n;SwitchAudioSource -c'
+alias mac-get-selected-speaker='SwitchAudioSource -c'
+alias mac-select-next-speaker='SwitchAudioSource -n;SwitchAudioSource -c'
 
 
-alias macosx-freemem=_macosx_freemem
-_macosx_freemem(){
-  python <<-'EOB'
+alias mac-freemem=_mac_freemem
+_mac_freemem(){
+  python - "$@" <<-'EOB'
 #!/usr/bin/python
 
 import subprocess
@@ -141,14 +146,6 @@ print 'Inactive Memory:\t%d MB' % ( vmStats["Pages inactive"]/1024/1024 )
 print 'Free Memory:\t\t%d MB' % ( vmStats["Pages free"]/1024/1024 )
 print 'Real Mem Total (ps):\t%.1f MB' % ( rssTotal/1024/1024 )
 EOB
-}
-
-alias macosx-clear-recent-items=_macosx_cler_recent_items
-_macosx_cler_recent_items(){
-    rm -fv ~/Library/Preferences/*LSSharedFileList.plist
-    #defaults delete NSGlobalDomain NSNavRecentPlaces
-    defaults delete -g NSNavRecentPlaces
-    defaults write -g NSNavRecentPlacesLimit -int 0
 }
 
 if [ "Darwin" = "$(uname -s)" -a -d /opt/local/bin ];then
