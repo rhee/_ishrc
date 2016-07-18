@@ -13,3 +13,7 @@
 	ff =
 [alias]
 	up = "!git remote update -p; git merge --ff-only @{u}"
+[credential]
+        helper = store --file ~/.git-credentials
+        helper = cache --timeout 30000
+
