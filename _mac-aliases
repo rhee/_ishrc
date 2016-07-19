@@ -148,6 +148,15 @@ print 'Real Mem Total (ps):\t%.1f MB' % ( rssTotal/1024/1024 )
 EOB
 }
 
+# mac os el capitan do not permit me to change
+# symlink in /usr/bin/vi /usr/bin/vim, so I
+# must set EDITOR environment variable to work-around
+
+if [ -x /usr/local/bin/vim ]; then
+    EDITOR=/usr/local/bin/vim
+    export EDITOR
+fi
+
 if [ "Darwin" = "$(uname -s)" -a -d /opt/local/bin ];then
   alias enable-macport='PATH=/opt/local/bin:$PATH;export PATH'
 fi
