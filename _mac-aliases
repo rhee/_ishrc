@@ -10,7 +10,7 @@ alias mac-clear-history=_mac_clear_history
 _mac_clear_history(){(
   app=${1}
   if [ -z "$app" -o ! -d "$app" ]; then
-    echo "Usage: _mac_clear_history <apppath>"
+    echo "Usage: _mac_clear_history [--all|<apppath>]"
   elif [ "--all" = "$app" ]; then
     rm -fv ~/Library/Preferences/*LSSharedFileList.plist
     #defaults delete NSGlobalDomain NSNavRecentPlaces
