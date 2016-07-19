@@ -389,6 +389,8 @@ alias ff='sh -c '\''exec fgrep -nH "$@" * */* */*/* 2>/dev/null | tee /tmp/tt.$U
 alias tt='sh -c '\''"$@" |exec tee /tmp/tt.$USER.log'\'' tt'
 
 alias git-sync='git up;git commit -m. -a&&git push'
+alias git-forget-and-sync='git fetch --all; git reset --hard origin/master; git pull'
+
 
 #XXX# incompatible, missing obs=, #alias dd='dc3dd --help >/dev/null 2>&1 && alias dd="dc3dd" ; dd'
 #XXX# incompatible#alias dd='ddrescue --help >/dev/null 2>&1 && alias dd="ddrescue" ; dd'
