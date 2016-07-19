@@ -77,6 +77,15 @@
 (ignore-errors ;;;(with-demoted-errors "Error: %S"
   (defvar cscope-program "/usr/local/bin/cscope" ))
 
+
+;; ;; python-mode with ipython
+;; (setq python-shell-interpreter "ipython"
+;;       python-shell-interpreter-args "-i")
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;; add all site-lisp subdirectory to load-path
 (let ((default-directory "/usr/local/share/emacs/site-lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
