@@ -3,6 +3,15 @@ if v:version < 704
     finish
 endif
 
+
+"
+" to install neobundle to a new computer:
+"
+" $ curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh > install.sh
+" $ sh ./install.sh
+"
+
+
 if &compatible
   set nocompatible               " Be iMproved
 endif
