@@ -12,11 +12,29 @@
 ;; You may delete these explanatory comments.
 
 
-(package-initialize)
-(setq package-archives
-      '(("marmalade" . "http://marmalade-repo.org/packages/")
-	("gnu" . "http://elpa.gnu.org/packages/")
-	("melpa" . "http://melpa.milkbox.net/packages/")))
+;; wrap for emacs-22
+(unless (fboundp 'ignore-errors)
+  (defmacro ignore-errors (&rest body)
+    `(condition-case
+       nil
+       ,body
+       (error nil)))
+  (defmacro with-demoted-errors (message &rest body)
+    `(condition-case
+       err
+       ,body
+       (error (message ,message err))))
+  nil)
+
+(ignore-errors ;;;(with-demoted-errors "Error: %S"
+  (progn
+    (package-initialize)
+    (setq package-archives
+	  '(("marmalade" . "http://marmalade-repo.org/packages/")
+	    ("gnu" . "http://elpa.gnu.org/packages/")
+	    ("melpa" . "http://melpa.milkbox.net/packages/")))
+  nil)
+    (error nil))
 
 ;; https://www.emacswiki.org/emacs/InstallingPackages
 ;;
