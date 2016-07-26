@@ -157,6 +157,9 @@ if [ -x /usr/local/bin/vim ]; then
     export EDITOR
 fi
 
+#alias mac-faster-keyboard='defaults write NSGlobalDomain KeyRepeat -int 0'
+alias mac-faster-keyboard='defaults write NSGlobalDomain KeyRepeat -int 1'
+
 if [ "Darwin" = "$(uname -s)" -a -d /opt/local/bin ];then
   alias enable-macport='PATH=/opt/local/bin:$PATH;export PATH'
 fi
