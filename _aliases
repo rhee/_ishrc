@@ -579,6 +579,8 @@ _clear_menus(){(
 #alias psc='ps xawf -eo pid,user,cgroup,args'
 alias psc='ps xaw -eo pid,user,cgroup,args'
 
+alias wttr='curl http://wttr.in/ | less -r'
+
 ##########
 
 if test -f $HOME/.mac-aliases; then . $HOME/.mac-aliases; fi

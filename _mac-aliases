@@ -38,7 +38,7 @@ _mac_wifi_on(){(
   LC_ALL=C networksetup -setairportpower $intf on
 )}
 
-alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport'
+alias mac-airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport'
 alias mac-wifi-scan='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport scan'
 
 alias mac-wifi-connected='_mac_wifi_connected && echo true'
@@ -98,9 +98,10 @@ alias mac-get-mute='LC_ALL=C osascript -e "output muted of (get volume settings)
 
 # 'true' or 'false'
 alias mac-set-mute=_mac_set_mute
-_mac_set_mute(){
-  LC_ALL=C osascript -e "set volume output muted $1"
-}
+_mac_set_mute(){(
+  true_or_false=$1
+  LC_ALL=C osascript -e "set volume output muted $true_or_false"
+)}
 
 alias mac-get-selected-speaker='SwitchAudioSource -c'
 alias mac-select-next-speaker='SwitchAudioSource -n;SwitchAudioSource -c'
@@ -160,6 +161,41 @@ fi
 #alias mac-faster-keyboard='defaults write NSGlobalDomain KeyRepeat -int 0'
 alias mac-faster-keyboard='defaults write NSGlobalDomain KeyRepeat -int 1'
 
+alias mac-sysinfo='(uname -a; sw_vers; system_profiler) |less'
+alias mac-pbcopy=pbcopy
+alias mac-pbpaste=pbpaste
+alias mac-mdfind=mdfind
+
+alias mac-lockscreen='/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend'
+alias mac-sleep-1='echo pmset sleepnow'
+alias mac-sleep-2='echo osascript -e '"'"'tell application "Finder" to sleep'"'"''
+alias mac-sleep-3='echo osascript -e '"'"'tell application "System Events" to sleep'"'"''
+alias mac-secure-rm=srm
+alias mac-lsbom=lsbom
+alias mac-say=say
+alias mac-softwareupdate=softwareupdate
+alias mac-lipo=lipo
+alias mac-screencapture=screencapture
+alias mac-sips=sips
+alias mac-verify-packages='sudo sudo /usr/libexec/repair_packages --verify --standard-pkgs /'
+alias mac-repair-packages='sudo /usr/libexec/repair_packages --repair --standard-pkgs --volume /'
+alias mac-nvram-print='nvram -xp'
+alias mac-nvram-delete='nvram -d '
+alias mac-mkfile=mkfile
+alias mac-dsenableroot=dsenableroot
+
+alias mac-quit-app=_mac_quit_app
+_mac_quit_app(){(
+  app="$1"
+  osascript -e 'quit app "$app"'
+)}
+
+alias mac-wifi-password=_mac_wifi_password
+_mac_wifi_password(){(
+  your_router="$1"
+  security find-generic-password -ga "$your_router"
+)}
+
 if [ "Darwin" = "$(uname -s)" -a -d /opt/local/bin ];then
-  alias enable-macport='PATH=/opt/local/bin:$PATH;export PATH'
+  alias mac-enable-macport='PATH=/opt/local/bin:$PATH;export PATH'
 fi
