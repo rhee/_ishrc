@@ -138,39 +138,6 @@ lssources(){(
   done
 )}
 
-lsmovies(){(
-  not=""
-  action="-print"
-  optdone="no"
-  while [ ! "xyes" = "x$optdone" ]; do
-    case "$1" in
-      -not) shift ; not="!" ;;
-      -rm) shift ; action="-delete" ;;
-      -0) shift ; action="-print0" ;;
-      *) optdone=yes ;;
-    esac
-  done
-  for f in "${@:-.}"; do
-    find -L "$f" -type f $not \( -false \
-      -o -iname '*.avi' -o -iname '*.wmv' -o -iname '*.asf' \
-      -o -iname '*.asx' \
-      -o -iname '*.mpg' -o -iname '*.mpeg' -o -iname '*.mp4' -o -iname '*.m4v' -o -iname '*.mov' \
-      -o -iname '*.mpe' \
-      -o -iname '*.mp4v' \
-      -o -iname '*.3gp' \
-      -o -iname '*.skm' -o -iname '*.k3g' \
-      -o -iname '*.ogm' -o -iname '*.mkv' \
-      -o -iname '*.rm' -o -iname '*.rmv' -o -iname '*.rmvb' \
-      -o -iname '*.ram' \
-      -o -iname '*.flv' -o -iname '*.m2ts' \
-      -o -iname '*.divx' \
-      -o -iname '*.vob' \
-      -o -iname '*.zip' -o -iname '*.alz' -o -iname '*.rar' -o -iname '*.egg' \
-      -o -iname '*.morefiles' \
-    \) $action
-  done
-)}
-
 alias xG='lsS -0 | sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; xargs -0 grep -n \${1+\"\$@\"} /dev/null | sed '"'"'s&^\./&&'"'"' | tee \${log}" xG'
 
 alias vG='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; ( [ ! -z \"\${TERM}\" -a \"dumb\" != \"\${TERM}\" ] && vim -q \${log} -c cl) || cat \${log}" vG'
