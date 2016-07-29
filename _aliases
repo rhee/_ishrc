@@ -7,7 +7,7 @@ alias ll='ls -al'
 alias lc='ls -NF --color=auto'
 alias tF='sh -c '"'"'for f in "$@"; do echo "-F" "$f"; done |exec xargs tail'"'"' tF '
 
-alias lsof='lsof -n -P'
+alias lsof='sudo lsof -n -P'
 
 alias cp='\cp -i'
 alias mv='\mv -i'
