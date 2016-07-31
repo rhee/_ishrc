@@ -360,6 +360,11 @@ alias tt='sh -c '\''"$@" |exec tee /tmp/tt.$USER.log'\'' tt'
 alias git-sync='git up;git commit -m. -a&&git push'
 alias git-forget-and-sync='git fetch --all; git reset --hard origin/master; git pull'
 
+alias git-sync-aliases=_git_sync_aliases
+_git_sync_aliases(){(
+  test -d ~/.local/etc/_ishrc && cd ~/.local/etc/_ishrc; git-sync
+  test -d ~/.local/etc/profile.d && cd ~/.local/etc/profile.d; git-sync
+)}
 
 #XXX# incompatible, missing obs=, #alias dd='dc3dd --help >/dev/null 2>&1 && alias dd="dc3dd" ; dd'
 #XXX# incompatible#alias dd='ddrescue --help >/dev/null 2>&1 && alias dd="ddrescue" ; dd'
@@ -582,6 +587,17 @@ _clear_menus(){(
 alias psc='ps xaw -eo pid,user,cgroup,args'
 
 alias wttr='curl http://wttr.in/ | less -r'
+
+alias socat-forward-to-local=_socat_forward_to_local
+_socat_forward_to_local(){(
+  if [ -z "$2" ]; then
+    echo "Usage: socat-forward-to-local port bind-addr" 1>&2
+    return 1
+  fi
+  port=$1
+  bind=$2
+  socat TCP4-LISTEN:$port,bind=$bind,reuseaddr,fork TCP4:127.0.0.1:$port
+)}
 
 ##########
 
