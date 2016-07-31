@@ -599,6 +599,8 @@ _socat_forward_to_local(){(
   socat TCP4-LISTEN:$port,bind=$bind,reuseaddr,fork TCP4:127.0.0.1:$port
 )}
 
+alias shuf-perl='perl -MList::Util=shuffle -e "print shuffle(<STDIN>);"'
+
 ##########
 
 if test -f $HOME/.mac-aliases; then . $HOME/.mac-aliases; fi
