@@ -425,8 +425,8 @@ _lsof_port_listeners(){(
     lsof -l -n -P -i:$port
 )}
 
-alias unzip-perl=_unzip_perl
-_unzip_perl(){
+alias unzip-pl=_unzip_pl
+_unzip_pl(){
 
 ### if [ ! -z "$BASH_VERSION" ]; then
 ###   # alt 1 - try bash <( ... )
@@ -599,7 +599,7 @@ _socat_forward_to_local(){(
   socat TCP4-LISTEN:$port,bind=$bind,reuseaddr,fork TCP4:127.0.0.1:$port
 )}
 
-alias shuf-perl='perl -MList::Util=shuffle -e "print shuffle(<STDIN>);"'
+alias shuf-pl='perl -MList::Util=shuffle -e "print shuffle(<STDIN>);"'
 
 ##########
 
