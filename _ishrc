@@ -1,6 +1,21 @@
 :
-case $- in *i*|*l*)
 
+# locale preference
+LC_MESSAGES=C
+LC_TIME=C
+LC_NUMERIC=C
+LC_COLLATE=ko_KR.UTF-8
+export LC_MESSAGES LC_TIME LC_NUMERIC LC_COLLATE
+
+# user path
+case :"$PATH": in *:"$HOME"/bin:*);;*)PATH="$HOME"/bin:"$PATH";;esac
+case :"$PATH": in *:"$HOME"/.local/bin:*);;*)PATH="$HOME"/.local/bin:"$PATH";;esac
+export PATH
+
+# return if not interactive
+case $- in *i*|*l*);;*)return 0;;esac
+
+# guess shell type from '$0'
 case $0 in
   -zsh|-zsh-static|zsh|zsh-static|*/zsh|*/zsh-static) _ishrc_flavour=zsh ;;
   -kzh|ksh|*/ksh) _ishrc_flavour=ksh ;;
@@ -29,25 +44,23 @@ case $_ishrc_flavour in
     _h=`hostname`; PS1='${_h%%.*}:${PWD##*/}${_r-$} '; unset _r _h ;;
 esac
 
-unset HISTFILE # slight performance
+# slight performance
+unset HISTFILE
 IGNOREEOF=4
 
-LC_MESSAGES=C
-LC_TIME=C
-LC_NUMERIC=C
-LC_COLLATE=ko_KR.UTF-8
-export LC_MESSAGES LC_TIME LC_NUMERIC LC_COLLATE
+_red=`tput setaf 1`
+_green=`tput setaf 2`
+_nocolor=`tput sgr0`
+#echo "${red}red text ${green}green text${reset}"
 
-case :$PATH: in *:$HOME/.local/bin:*);;*)PATH=$HOME/.local/bin:$PATH;;esac
-export PATH
-
+echo "$(date +%s.%N) ${_green}[Loading .aliases ...]${_nocolor}" 1>&2
 if test -f $HOME/.aliases; then . $HOME/.aliases; fi
 
 for rc in $HOME/.local/etc/profile.d/*.sh; do
   case $rc in *~|*.bak|*.orig|*.old|*/make.sh);; # skip backup files
-    *) if test -f $rc; then . $rc; fi;;
+    *) if test -f $rc; then
+         echo "$(date +%s.%N) ${_green}[Loading $(basename $rc) ...]${_nocolor}" 1>&2
+	 . $rc
+       fi;;
   esac
 done
-
-;;
-esac
