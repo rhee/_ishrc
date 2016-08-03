@@ -603,6 +603,8 @@ _socat_forward_to_local(){(
 
 alias shuf-pl='perl -MList::Util=shuffle -e "print shuffle(<STDIN>);"'
 
+alias sudo='sudo --set-home'
+
 ##########
 
 if test -f $HOME/.mac-aliases; then . $HOME/.mac-aliases; fi
