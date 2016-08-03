@@ -603,7 +603,7 @@ _socat_forward_to_local(){(
 
 alias shuf-pl='perl -MList::Util=shuffle -e "print shuffle(<STDIN>);"'
 
-alias sudo='sudo --set-home'
+alias sudo='sudo -H'
 
 ##########
 
