@@ -384,7 +384,7 @@ _rename_files(){(
     n="$( echo "$f" | sed -e 's#'"$pattern"'#'"$replace"'#g;' )"
     $dry_run "mv '$f' '$n'"
   done
-  if [ "echo" == "$dry_run" ]; then
+  if [ "echo" = "$dry_run" ]; then
     echo "Dry-run completed: run with --no-dry-run at the first of the command line arguments to rename files really" 1>&2
   fi
 )}
