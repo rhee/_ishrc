@@ -109,12 +109,15 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 ;;; user specific sub init scripts
-(let ((list (directory-files "~/.local/etc/profile.d/" t ".*\.el$")))
-  (while list
-    (message (format "loading %s" (car list)))
-    (with-demoted-errors "Error: %S"
-      (load-library (car list)))
-    (setq list (cdr list))))
+(with-demoted-errors
+  "Error: %S"
+  (let ((list
+	 (directory-files "~/.local/etc/profile.d/" t ".*\.el$")))
+    (while list
+      (message (format "loading %s" (car list)))
+      (with-demoted-errors "Error: %S"
+			   (load-library (car list)))
+      (setq list (cdr list)))))
 
 ;;; auto-generated codes
 (custom-set-variables

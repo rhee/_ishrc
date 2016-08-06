@@ -1,5 +1,5 @@
 :
-docker -v >/dev/null 2>&1 || return 0
+\docker -v >/dev/null 2>&1 || return 0
 
 alias docker-clean=_docker_clean
 _docker_clean(){(
