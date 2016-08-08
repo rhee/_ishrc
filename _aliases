@@ -586,6 +586,18 @@ alias psc='ps xaw -eo pid,user,cgroup,args'
 
 alias wttr='curl http://wttr.in/ | less -r'
 
+alias socat-forward-to=_socat_forward_to
+_socat_forward_to(){(
+  if [ -z "$3" ]; then
+    echo "Usage: socat-forward-to port bind-addr remote-addr" 1>&2
+    return 1
+  fi
+  port=$1
+  bind=$2
+  remote=$3
+  socat TCP4-LISTEN:$port,bind=$bind,reuseaddr,fork TCP4:$remote:$port
+)}
+
 alias socat-forward-to-local=_socat_forward_to_local
 _socat_forward_to_local(){(
   if [ -z "$2" ]; then
