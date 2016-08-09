@@ -586,27 +586,17 @@ alias psc='ps xaw -eo pid,user,cgroup,args'
 
 alias wttr='curl http://wttr.in/ | less -r'
 
-alias socat-forward-to=_socat_forward_to
-_socat_forward_to(){(
-  if [ -z "$3" ]; then
-    echo "Usage: socat-forward-to port bind-addr remote-addr" 1>&2
+alias socat-forward=_socat_forward
+_socat_forward(){(
+  if [ -z "$4" ]; then
+    echo "Usage: socat-forward-to addr port remote-addr remote-port" 1>&2
     return 1
   fi
-  port=$1
-  bind=$2
-  remote=$3
-  socat TCP4-LISTEN:$port,bind=$bind,reuseaddr,fork TCP4:$remote:$port
-)}
-
-alias socat-forward-to-local=_socat_forward_to_local
-_socat_forward_to_local(){(
-  if [ -z "$2" ]; then
-    echo "Usage: socat-forward-to-local port bind-addr" 1>&2
-    return 1
-  fi
-  port=$1
-  bind=$2
-  socat TCP4-LISTEN:$port,bind=$bind,reuseaddr,fork TCP4:127.0.0.1:$port
+  addr=$1
+  port=$2
+  remoteaddr=$3
+  remoteport=$4
+  socat TCP4-LISTEN:$port,bind=$addr,reuseaddr,fork TCP4:$remoteaddr:$remoteport
 )}
 
 alias shuf-pl='perl -MList::Util=shuffle -e "print shuffle(<STDIN>);"'
