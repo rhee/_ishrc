@@ -391,7 +391,12 @@ _rename_files(){(
 
 #alias kor='export LANG=$(locale -a |grep -i ko_KR.utf)'
 alias kor='export LANG=ko_KR.UTF-8'
-alias mosh='mosh --server='"'"'env LANG="$(locale -a|grep ko_KR.UTF-8||locale -a|grep .UTF-8|head -1)" mosh-server'"'"''
+
+alias moshk='mosh --server='"'"'env LANG=ko_KR.UTF-8 mosh-server'"'"''
+alias mosh=_mosh
+_mosh(){
+  \mosh --server='env LANG="$(locale -a|grep ko_KR\.UTF-8||locale -a|grep \.UTF-8|head -1)" mosh-server' "$@"
+}
 
 alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
 
