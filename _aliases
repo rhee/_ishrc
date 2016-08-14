@@ -359,7 +359,8 @@ alias vimdirdiff='sh -c '\''vim -c "DirDiff $1 $2" '\'' vimdirdiff'
 alias ff='sh -c '\''exec fgrep -nH "$@" * */* */*/* 2>/dev/null | tee /tmp/tt.$USER.log | fgrep --colour "$@" '\'' ff'
 alias tt='sh -c '\''"$@" |exec tee /tmp/tt.$USER.log'\'' tt'
 
-alias git-sync='git up;git commit -m. -a&&git push'
+#alias git-sync='git up;git commit -m. -a&&git push'
+alias git-sync='git remote update -p; git merge --ff-only @{u}; git commit -m. -a&&git push'
 alias git-forget-and-sync='git fetch --all; git reset --hard origin/master; git pull'
 
 alias git-sync-dotfiles=_git_sync_dotfiles
@@ -384,15 +385,15 @@ _rename_files(){(
     n="$( echo "$f" | sed -e 's#'"$pattern"'#'"$replace"'#g;' )"
     $dry_run "mv '$f' '$n'"
   done
-  if [ "echo" == "$dry_run" ]; then
+  if [ "echo" = "$dry_run" ]; then
     echo "Dry-run completed: run with --no-dry-run at the first of the command line arguments to rename files really" 1>&2
   fi
 )}
 
 #alias kor='export LANG=$(locale -a |grep -i ko_KR.utf)'
 alias kor='export LANG=ko_KR.UTF-8'
-alias mosh='mosh --server='"'"'env LANG="$(locale -a|grep -i .UTF-8|head -1)" mosh-server'"'"''
-alias mosh-mac='mosh --server='"'"'env LANG="$(locale -a|grep -i .utf8|head -1)" mosh-server'"'"''
+#alias mosh='mosh --server='"'"'env LANG="$(locale -a|grep -i .UTF-8|head -1)" mosh-server'"'"''
+#alias mosh-mac='mosh --server='"'"'env LANG="$(locale -a|grep -i .utf8|head -1)" mosh-server'"'"''
 
 alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
 
@@ -587,18 +588,22 @@ alias psc='ps xaw -eo pid,user,cgroup,args'
 
 alias wttr='curl http://wttr.in/ | less -r'
 
-alias socat-forward-to-local=_socat_forward_to_local
-_socat_forward_to_local(){(
-  if [ -z "$2" ]; then
-    echo "Usage: socat-forward-to-local port bind-addr" 1>&2
+alias socat-forward=_socat_forward
+_socat_forward(){(
+  if [ -z "$4" ]; then
+    echo "Usage: socat-forward-to addr port remote-addr remote-port" 1>&2
     return 1
   fi
-  port=$1
-  bind=$2
-  socat TCP4-LISTEN:$port,bind=$bind,reuseaddr,fork TCP4:127.0.0.1:$port
+  addr=$1
+  port=$2
+  remoteaddr=$3
+  remoteport=$4
+  socat TCP4-LISTEN:$port,bind=$addr,reuseaddr,fork TCP4:$remoteaddr:$remoteport
 )}
 
 alias shuf-pl='perl -MList::Util=shuffle -e "print shuffle(<STDIN>);"'
+
+alias myip="curl -s http://myip.dnsomatic.com | grep '[\d.]'"
 
 alias sudo='sudo -H'
 
