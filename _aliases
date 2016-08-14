@@ -359,7 +359,8 @@ alias vimdirdiff='sh -c '\''vim -c "DirDiff $1 $2" '\'' vimdirdiff'
 alias ff='sh -c '\''exec fgrep -nH "$@" * */* */*/* 2>/dev/null | tee /tmp/tt.$USER.log | fgrep --colour "$@" '\'' ff'
 alias tt='sh -c '\''"$@" |exec tee /tmp/tt.$USER.log'\'' tt'
 
-alias git-sync='git up;git commit -m. -a&&git push'
+#alias git-sync='git up;git commit -m. -a&&git push'
+alias git-sync='git remote update -p; git merge --ff-only @{u}; git commit -m. -a&&git push'
 alias git-forget-and-sync='git fetch --all; git reset --hard origin/master; git pull'
 
 alias git-sync-dotfiles=_git_sync_dotfiles
