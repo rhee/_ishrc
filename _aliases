@@ -238,8 +238,18 @@ alias gitdiffyesterday='git diff "@{yesterday}" --'
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 
-alias sqltime-php='php -r '\''echo date("Y-m-d H:i:s",$argv[1]) .PHP_EOL;'\'''
-alias sqltime='sh -c '\'' sqlite /dev/null "SELECT datetime($3,$1,$2)" '\'' sqltime "'\''unixepoch'\''" "'\''localtime'\''"'
+alias sqltime=_sqltime
+_sqltime(){(
+    ts="$1"; shift
+    if which sqlite3 >/dev/null 2>&1; then
+	sqlite3 /dev/null "SELECT datetime('$ts','unixepoch','localtime')"
+    elif php -v >/dev/null 2>&1; then
+	php -r 'echo date("Y-m-d H:i:s",$argv[1]) .PHP_EOL;' "$ts"
+    else
+	echo "sqlite3 or php-cli required" 1>&2
+	return 1
+    fi
+)}
 
 pdf2pngs(){(
   input="$1"
