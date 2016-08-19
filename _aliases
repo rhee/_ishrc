@@ -625,6 +625,9 @@ alias sudo='sudo -H'
 alias zsh-like='if [ ! -z "$BASH_VERSION" ]; then bind "set show-all-if-ambiguous on" ; bind "TAB:menu-complete" ; fi'
 alias bash-like='autoload -U compinit; compinit; zstyle ":completion:*:*:*:*:*" menu select; setopt autolist; unsetopt menucomplete; setopt noautomenu'
 
+alias y2j='python -c "import sys, yaml, json; json.dump(yaml.load(sys.stdin), sys.stdout, indent=4)"'
+alias j2y='python -c "import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)"'
+
 ##########
 
 if test -f $HOME/.mac-aliases; then . $HOME/.mac-aliases; fi
