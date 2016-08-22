@@ -104,10 +104,9 @@ alias mkxclean='xf=${TMP:-/tmp}/mkxc-$$; echo "Purge-recursively:"; /usr/bin/fin
 
 alias zap='perl -e "truncate \$ARGV[0],0"'
 
-#alias mpPP='sh -c '\''exec mplayer -autoq 100 -vf pp=de,hqdn3d,scale -vo vdpau -vfm ffmpeg -fs -shuffle -quiet "$@" </dev/null'\'' mpPP'
-#alias mpq='sh -c '\''exec mplayer -noconfig user -quiet -osdlevel 3 -shuffle -ao pulse -vo gl_nosw "$@" </dev/null'\'' mpq'
+alias capmmf='sh -c '\''mplayer.static -vo null -ao null -dumpfile "cap_$(basename $1)" -dumpstream "$1"'\'' capmmf'
 alias mpPP='sh -c '\''exec mplayer -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -shuffle -quiet "$@" </dev/null'\'' mpPP'
-alias mpq='sh -c '\''exec mplayer -noconfig user -quiet -osdlevel 3 -shuffle -ao pulse "$@" </dev/null'\'' mpq'
+alias mpq='sh -c '\''exec mplayer -noconfig user -quiet -osdlevel 3 -shuffle "$@" </dev/null'\'' mpq'
 
 alias efence='LD_PRELOAD=/usr/lib/libefence.so EF_PROTECT_BELOW=0'
 alias underfence='LD_PRELOAD=/usr/lib/libefence.so EF_PROTECT_BELOW=1'
@@ -164,8 +163,6 @@ alias vF='sh -c '"'"'pattern=$1; shift; exec vim $(/usr/bin/find -L . -iname "$p
 
 alias mutt='LANG=ko_KR.utf8 LC_ALL=ko_KR.utf8 mutt -n -f $HOME/Maildir'
 alias muttkr='LANG=ko_KR.eucKR LC_ALL=ko_KR.eucKR mutt -F $HOME/.muttrc-euckr'
-
-alias capmmf='sh -c '"'"'mplayer.static -vo null -ao null -dumpfile "cap_$(basename $1)" -dumpstream "$1"'"'"' capmmf'
 
 alias tnowrap='setterm -linewrap off'
 alias curon='setterm -cursor on'
