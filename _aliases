@@ -410,6 +410,7 @@ _mosh(){
 }
 
 alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
+alias rsync-with-mac='rsync --iconv=utf-8,utf-8-mac'
 
 # multitail goodies
 alias mt='multitail -p l'
