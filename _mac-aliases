@@ -2,6 +2,8 @@ if [ "Darwin" != "$(uname -s)" ]; then return; fi
 
 # begin some common mac osx
 
+alias code='open -a /Applications/Visual\ Studio\ Code.app'
+
 alias mac-rsync-with-linux='rsync --iconv=utf-8-mac,utf-8'
 
 alias mac-rsync=_mac_rsync
