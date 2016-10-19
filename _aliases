@@ -633,6 +633,11 @@ _less_csv(){
   cat "$@" | column -s, -t | less -#2 -N -S
 }
 
+alias sshfs-safe=_sshfs_safe
+_sshfs_safe(){
+    sshfs "$@" -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3
+}
+
 ##########
 
 if test -f $HOME/.mac-aliases; then . $HOME/.mac-aliases; fi
