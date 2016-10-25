@@ -3,4 +3,4 @@
 // mode: your-file-type
 // c-basic-offset: 4
 // End:
-// vim: sw=4 sts=4 ts=8 et ft=you-file-type
+// vim: sw=4 sts=4 ts=8 et ft=you-file-type :
