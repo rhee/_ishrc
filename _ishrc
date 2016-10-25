@@ -65,6 +65,6 @@ for rc in $HOME/.local/etc/profile.d/_*.sh; do
   esac
 done
 
-stty quit undef
+stty erase  quit undef
 
 echo ""

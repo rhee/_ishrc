@@ -633,9 +633,27 @@ _less_csv(){
   cat "$@" | column -s, -t | less -#2 -N -S
 }
 
-alias sshfs-safe=_sshfs_safe
-_sshfs_safe(){
+alias sshfs-better=_sshfs_better
+_sshfs_better(){
     sshfs "$@" -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3
+}
+
+alias openssl-showcerts=_openssl_showcerts
+_openssl_showcerts(){
+  test ! -z "$1" || ( echo "Usage: openssl-showcerts <file-path|host[:port]>" 1>&2; return )
+  if [ -f "$1" ] # is file?
+  then
+    case "$1" in
+      *.pfx|*.p12) # pkcs#12 format
+        openssl pkcs12 -info -in "$1"
+        ;;
+      *) # assume pem format
+        openssl x509 -in "$1" -text
+        ;;
+    esac
+  else
+    openssl s_client -showcerts -connect "$1" < /dev/null | less
+  fi
 }
 
 ##########
