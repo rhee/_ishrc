@@ -17,3 +17,6 @@
         helper = store --file ~/.git-credentials
         helper = cache --timeout 30000
 
+[user]
+	email = shr386+github@hotmail.com
+	name = Sang-Hoon RHEE
