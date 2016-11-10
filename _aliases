@@ -137,7 +137,7 @@ lssources(){(
       -o -iname '*.java' -o -iname '*.jsp' \
       -o -iname '*.js' -o -iname '*.css' -o -iname '*.html' -o -iname '*.htm' -o -iname '*.php' \
       -o -iname '*.pde' -o -iname '*.ino' \
-    \) $action
+    \) -a \! -path '*/.??*' $action
   done
 )}
 
@@ -627,6 +627,34 @@ alias y2j='python -c "import sys, yaml, json; json.dump(yaml.load(sys.stdin), sy
 alias j2y='python -c "import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)"'
 
 alias dmps-disable='xset -dpms; xset s noblank;'
+
+alias less-csv=_less_csv
+_less_csv(){
+  cat "$@" | column -s, -t | less -#2 -N -S
+}
+
+alias sshfs-better=_sshfs_better
+_sshfs_better(){
+    sshfs "$@" -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3
+}
+
+alias openssl-showcerts=_openssl_showcerts
+_openssl_showcerts(){
+  test ! -z "$1" || ( echo "Usage: openssl-showcerts <file-path|host[:port]>" 1>&2; return )
+  if [ -f "$1" ] # is file?
+  then
+    case "$1" in
+      *.pfx|*.p12) # pkcs#12 format
+        openssl pkcs12 -info -in "$1"
+        ;;
+      *) # assume pem format
+        openssl x509 -in "$1" -text
+        ;;
+    esac
+  else
+    openssl s_client -showcerts -connect "$1" < /dev/null | less
+  fi
+}
 
 ##########
 

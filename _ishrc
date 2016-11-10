@@ -65,6 +65,11 @@ for rc in $HOME/.local/etc/profile.d/_*.sh; do
   esac
 done
 
-stty quit undef
+# disable touchpad
+alias notouch='synclient TouchpadOff=1'
+# remap key capslock as control
+alias nocaps='setxkbmap -layout us -option ctrl:nocaps'
+# erase = del, disable ^\
+alias noquit='stty erase  quit undef'
 
 echo ""

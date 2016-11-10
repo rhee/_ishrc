@@ -65,3 +65,12 @@ function! AppendModeline()
   call append(line("$"), l:modeline)
 endfunction
 nnoremap <silent> <Leader>ml :call AppendModeline()<CR>
+
+" netwr trouble
+" nasty NetrwMessage [RO] window with message:
+" **error** (netrw) there are no marked files in this window (:help netrw-mf)
+" http://stackoverflow.com/questions/21686729/vim-how-to-remove-netrw
+"let loaded_netrwPlugin = 1
+let g:netrw_banner = 0
+
+set bg=dark
