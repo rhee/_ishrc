@@ -150,7 +150,7 @@ alias yG='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdi
 alias yG0='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; cat ./.yginput |xargs grep -n \${1+\"\$@\"} /dev/null |tee \${log}" xG'
 
 gR(){
-  find . '(' -type d -path '*/node_modules/*' -o -path '*/.git/*' ')' -prune -o \
+  find . '(' -type d -path '*/node_modules/*' -o -path '*/.git/*' ')' -prune -o '(' \
     -type f '(' -false \
       -o -iname '*.h' -o -iname '*.c' -o -iname '*.hpp' -o -iname '*.cpp' \
       -o -iname '*.inc' -o -iname '*.s' -o -iname '*.asm' \
@@ -161,7 +161,7 @@ gR(){
       -o -iname '*.java' -o -iname '*.jsp' \
       -o -iname '*.js' -o -iname '*.css' -o -iname '*.html' -o -iname '*.htm' -o -iname '*.php' \
       -o -iname '*.pde' -o -iname '*.ino' \
-    ')' -print0 | xargs -0 -n 10 fgrep -nH "$@"
+    ')' ')' -print0 | xargs -0 -n 10 fgrep -nH "$@"
 }
 
 alias lsR~='/usr/bin/find . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) '
