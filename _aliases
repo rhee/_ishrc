@@ -618,7 +618,7 @@ alias wttr='curl http://wttr.in/ | less -r'
 alias socat-forward=_socat_forward
 _socat_forward(){(
   if [ -z "$4" ]; then
-    echo "Usage: socat-forward-to addr port remote-addr remote-port" 1>&2
+    echo "Usage: socat-forward addr port remote-addr remote-port" 1>&2
     return 1
   fi
   addr=$1
@@ -626,6 +626,20 @@ _socat_forward(){(
   remoteaddr=$3
   remoteport=$4
   socat TCP4-LISTEN:$port,bind=$addr,reuseaddr,fork TCP4:$remoteaddr:$remoteport
+)}
+
+alias ipt-forward=_ipt_forward
+_ipt_forward(){(
+  if [ -z "$4" ]; then
+    echo "Usage: ipt-forward addr port remote-addr remote-port" 1>&2
+    return 1
+  fi
+  addr=$1
+  port=$2
+  remoteaddr=$3
+  remoteport=$4
+  sudo -H iptables -t nat -A PREROUTING -p tcp -d $addr --dport $port -j DNAT --to $remoteaddr:$remoteport
+  sudo -H iptables -A FORWARD -p tcp -d $remoteaddr --dport $remoteport -j ACCEPT
 )}
 
 alias shuf-pl='perl -MList::Util=shuffle -e "print shuffle(<STDIN>);"'
