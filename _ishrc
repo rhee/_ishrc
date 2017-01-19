@@ -72,4 +72,6 @@ alias nocaps='setxkbmap -layout us -option ctrl:nocaps'
 # erase = del, disable ^\
 alias noquit='stty erase  quit undef'
 
+noquit
+
 echo ""
