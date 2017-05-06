@@ -40,8 +40,8 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " --- begin shr ---
 NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'rdnetto/YCM-Generator'
-NeoBundle 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
-NeoBundle 'fatih/vim-go'
+" NeoBundle 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
+" NeoBundle 'fatih/vim-go'
 " --- end shr ---
 
 " Required:

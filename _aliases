@@ -108,6 +108,18 @@ alias capmmf='sh -c '\''mplayer.static -vo null -ao null -dumpfile "cap_$(basena
 alias mpPP='sh -c '\''exec mplayer -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -shuffle -quiet "$@" </dev/null'\'' mpPP'
 alias mpq='sh -c '\''exec mplayer -noconfig user -quiet -osdlevel 3 -shuffle "$@" </dev/null'\'' mpq'
 
+alias flac2mp3=_flac2mp3
+_flac2mp3(){(
+  if [ -z "$2" ]
+  then
+    echo "Usage: flac2mp3 input.flac output.mp3" 1>&2
+    return -1
+  fi
+  input="$1"
+  output="$2"
+  ffmpeg -i "$input" -ab 320k -map_metadata 0 -id3v2_version 3 "$output"
+)}
+
 alias efence='LD_PRELOAD=/usr/lib/libefence.so EF_PROTECT_BELOW=0'
 alias underfence='LD_PRELOAD=/usr/lib/libefence.so EF_PROTECT_BELOW=1'
 alias guard='DYLD_INSERT_LIBRARIES=/usr/lib/libgmalloc.dylib'
@@ -685,6 +697,27 @@ _openssl_showcerts(){
   fi
 }
 
+
+
+# reload-chrome-nix from: http://stackoverflow.com/a/31040369/496899
+alias reload-chrome=_reload_chrome
+_reload_chrome(){(
+  BROWSER=google-chrome
+  echo "$(date --rfc-3339=seconds) Refresh: $FILE"
+  CUR_WID=$(xdotool getwindowfocus)
+  #gets the first $BROWSER window, if you have more than one
+  #$BROWSER window open, it might not refresh the right one,
+  #as an alternative you can search by the window/html title
+  WID=$(xdotool search --onlyvisible --class $BROWSER|head -1)
+  #TITLE="window/html file title"
+  #WID=$(xdotool search --title "$TITLE"|head -1)
+  xdotool windowactivate $WID
+  xdotool key 'ctrl+r'
+  xdotool windowactivate $CUR_WID
+)}
+
+
+
 ##########
 
 alias no_cuda='env CUDA_VISIBLE_DEVICES= USE_CUDA= /bin/bash -i'
@@ -698,3 +731,7 @@ if test -f $HOME/.docker-aliases; then . $HOME/.docker-aliases; fi
 
 alias i='. $HOME/.ishrc'
 alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
+
+###
+
+alias docker-tf='/data/docker-run-tensorflow.sh '
