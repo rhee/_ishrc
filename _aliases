@@ -388,7 +388,12 @@ alias b='popd '
 alias psx='sh -c '"'"'ps x "$@" |exec grep "^"'"'"' psx'
 
 alias gtts='sh -c '"'"'curl -s -o- -A Mozilla --data-urlencode "q=$*" --data "ie=UTF-8" --data "tl=ko" "http://translate.google.com/translate_tts" |mpg123 -q -'"'"' gtts'
-alias vimdirdiff='sh -c '\''vim -c "DirDiff $1 $2" '\'' vimdirdiff'
+_DirDiff(){(
+  lfile="$1"
+  rfile="$2"
+  vim -c 'DirDiff '"$1"' '"$2"' '
+)}
+alias DirDiff=_DirDiff
 
 alias ff='sh -c '\''exec fgrep -nH "$@" * */* */*/* 2>/dev/null | tee /tmp/tt.$USER.log | fgrep --colour "$@" '\'' ff'
 alias tt='sh -c '\''"$@" |exec tee /tmp/tt.$USER.log'\'' tt'
@@ -735,3 +740,4 @@ alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
 ###
 
 alias docker-tf='/data/docker-run-tensorflow.sh '
+
