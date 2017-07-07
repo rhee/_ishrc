@@ -108,6 +108,18 @@ alias capmmf='sh -c '\''mplayer.static -vo null -ao null -dumpfile "cap_$(basena
 alias mpPP='sh -c '\''exec mplayer -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -shuffle -quiet "$@" </dev/null'\'' mpPP'
 alias mpq='sh -c '\''exec mplayer -noconfig user -quiet -osdlevel 3 -shuffle "$@" </dev/null'\'' mpq'
 
+alias flac2mp3=_flac2mp3
+_flac2mp3(){(
+  if [ -z "$2" ]
+  then
+    echo "Usage: flac2mp3 input.flac output.mp3" 1>&2
+    return -1
+  fi
+  input="$1"
+  output="$2"
+  ffmpeg -i "$input" -ab 320k -map_metadata 0 -id3v2_version 3 "$output"
+)}
+
 alias efence='LD_PRELOAD=/usr/lib/libefence.so EF_PROTECT_BELOW=0'
 alias underfence='LD_PRELOAD=/usr/lib/libefence.so EF_PROTECT_BELOW=1'
 alias guard='DYLD_INSERT_LIBRARIES=/usr/lib/libgmalloc.dylib'
@@ -148,6 +160,21 @@ alias lsS='lssources'
 
 alias yG='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; cat -d ./.yginput |xargs grep -n \${1+\"\$@\"} /dev/null |tee \${log}" xG'
 alias yG0='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; cat ./.yginput |xargs grep -n \${1+\"\$@\"} /dev/null |tee \${log}" xG'
+
+gR(){
+  find . '(' -type d -path '*/node_modules/*' -o -path '*/.git/*' ')' -prune -o '(' \
+    -type f '(' -false \
+      -o -iname '*.h' -o -iname '*.c' -o -iname '*.hpp' -o -iname '*.cpp' \
+      -o -iname '*.inc' -o -iname '*.s' -o -iname '*.asm' \
+      -o -iname '*.m' -o -iname '*.mm' \
+      -o -iname '*.py' -o -iname '*.pyw' \
+      -o -iname '*.ml' \
+      -o -iname '*.mak' -o -iname 'makefile' -o -iname 'kbuild' \
+      -o -iname '*.java' -o -iname '*.jsp' \
+      -o -iname '*.js' -o -iname '*.css' -o -iname '*.html' -o -iname '*.htm' -o -iname '*.php' \
+      -o -iname '*.pde' -o -iname '*.ino' \
+    ')' ')' -print0 | xargs -0 -n 10 fgrep -nH "$@"
+}
 
 alias lsR~='/usr/bin/find . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) '
 alias rmR~='/usr/bin/find . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) -print0 |xargs -0 rm -fv '
@@ -361,7 +388,12 @@ alias b='popd '
 alias psx='sh -c '"'"'ps x "$@" |exec grep "^"'"'"' psx'
 
 alias gtts='sh -c '"'"'curl -s -o- -A Mozilla --data-urlencode "q=$*" --data "ie=UTF-8" --data "tl=ko" "http://translate.google.com/translate_tts" |mpg123 -q -'"'"' gtts'
-alias vimdirdiff='sh -c '\''vim -c "DirDiff $1 $2" '\'' vimdirdiff'
+_DirDiff(){(
+  lfile="$1"
+  rfile="$2"
+  vim -c 'DirDiff '"$1"' '"$2"' '
+)}
+alias DirDiff=_DirDiff
 
 alias ff='sh -c '\''exec fgrep -nH "$@" * */* */*/* 2>/dev/null | tee /tmp/tt.$USER.log | fgrep --colour "$@" '\'' ff'
 alias tt='sh -c '\''"$@" |exec tee /tmp/tt.$USER.log'\'' tt'
@@ -670,6 +702,40 @@ _openssl_showcerts(){
   fi
 }
 
+
+
+# reload-chrome-nix from: http://stackoverflow.com/a/31040369/496899
+alias reload-chrome=_reload_chrome
+_reload_chrome(){(
+  BROWSER=google-chrome
+  echo "$(date --rfc-3339=seconds) Refresh: $FILE"
+  CUR_WID=$(xdotool getwindowfocus)
+  #gets the first $BROWSER window, if you have more than one
+  #$BROWSER window open, it might not refresh the right one,
+  #as an alternative you can search by the window/html title
+  WID=$(xdotool search --onlyvisible --class $BROWSER|head -1)
+  #TITLE="window/html file title"
+  #WID=$(xdotool search --title "$TITLE"|head -1)
+  xdotool windowactivate $WID
+  xdotool key 'ctrl+r'
+  xdotool windowactivate $CUR_WID
+)}
+
+##########
+
+# switch sink for already launched apps
+_pa_sink_to(){(
+    new_sink="$1"
+    pulseaudio -k
+    pactl info
+    pactl set-default-sink "$new_sink"
+)}
+alias pa-sink-to=_pa_sink_to
+
+##########
+
+alias no_cuda='env CUDA_VISIBLE_DEVICES= USE_CUDA= /bin/bash -i'
+
 ##########
 
 if test -f $HOME/.mac-aliases; then . $HOME/.mac-aliases; fi
@@ -679,3 +745,39 @@ if test -f $HOME/.docker-aliases; then . $HOME/.docker-aliases; fi
 
 alias i='. $HOME/.ishrc'
 alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
+
+###
+
+_docker_tf(){(
+    LD_PRELOAD="/usr/lib/libtcmalloc_minimal.so.4" 
+    export LD_PRELOAD
+
+    IMAGE=tensorflow
+
+    nvidia-docker run -ti --rm --pid=host \
+	-v /data:/data \
+	-v /etc/localtime:/etc/localtime:ro \
+	-w "$(pwd)" \
+	"$IMAGE" \
+	"$@"
+)}
+alias docker-tf=_docker_tf
+
+###
+
+_nv_docker(){(
+docker run \
+    --device /dev/nvidia0:/dev/nvidia0 \
+    --device /dev/nvidia0:/dev/nvidia1 \
+    --device /dev/nvidia0:/dev/nvidia2 \
+    --device /dev/nvidia0:/dev/nvidia3 \
+    --device /dev/nvidiactl:/dev/nvidiactl \
+    --device /dev/nvidia-uvm:/dev/nvidia-uvm \
+    "$@"
+)}
+alias nv-docker=_nv_docker
+
+###
+
+test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-gpu'
+

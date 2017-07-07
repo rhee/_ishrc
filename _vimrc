@@ -10,7 +10,7 @@ se undolevels=5
 
 sy on
 
-set diffopt=iwhite 
+"set diffopt=iwhite 
 set diffopt+=filler
 
 let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,.*.swp"
