@@ -376,7 +376,12 @@ alias b='popd '
 alias psx='sh -c '"'"'ps x "$@" |exec grep "^"'"'"' psx'
 
 alias gtts='sh -c '"'"'curl -s -o- -A Mozilla --data-urlencode "q=$*" --data "ie=UTF-8" --data "tl=ko" "http://translate.google.com/translate_tts" |mpg123 -q -'"'"' gtts'
-alias vimdirdiff='sh -c '\''vim -c "DirDiff $1 $2" '\'' vimdirdiff'
+_DirDiff(){(
+  lfile="$1"
+  rfile="$2"
+  vim -c 'DirDiff '"$1"' '"$2"' '
+)}
+alias DirDiff=_DirDiff
 
 alias ff='sh -c '\''exec fgrep -nH "$@" * */* */*/* 2>/dev/null | tee /tmp/tt.$USER.log | fgrep --colour "$@" '\'' ff'
 alias tt='sh -c '\''"$@" |exec tee /tmp/tt.$USER.log'\'' tt'
@@ -704,7 +709,16 @@ _reload_chrome(){(
   xdotool windowactivate $CUR_WID
 )}
 
+##########
 
+# switch sink for already launched apps
+_pa_sink_to(){(
+    new_sink="$1"
+    pulseaudio -k
+    pactl info
+    pactl set-default-sink "$new_sink"
+)}
+alias pa-sink-to=_pa_sink_to
 
 ##########
 
@@ -723,3 +737,5 @@ alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
 ###
 
 alias docker-tf='/data/docker-run-tensorflow.sh '
+
+test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-gpu'
