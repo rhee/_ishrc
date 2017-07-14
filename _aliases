@@ -779,5 +779,10 @@ alias nv-docker=_nv_docker
 
 ###
 
+alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data jare/vim-bundle'
+
+
+###
+
 test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-gpu'
 
