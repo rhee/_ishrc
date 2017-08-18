@@ -208,3 +208,5 @@ _mac_wifi_password(){(
 if [ "Darwin" = "$(uname -s)" -a -d /opt/local/bin ];then
   alias mac-enable-macport='PATH=/opt/local/bin:$PATH;export PATH'
 fi
+
+alias pa-start-mac='pulseaudio -D --start --disallow-exit --exit-idle-time=86400'
