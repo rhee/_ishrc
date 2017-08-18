@@ -721,7 +721,16 @@ _reload_chrome(){(
   xdotool windowactivate $CUR_WID
 )}
 
+##########
 
+# switch sink for already launched apps
+_pa_sink_to(){(
+    new_sink="$1"
+    pulseaudio -k
+    pactl info
+    pactl set-default-sink "$new_sink"
+)}
+alias pa-sink-to=_pa_sink_to
 
 ##########
 
@@ -739,5 +748,46 @@ alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
 
 ###
 
-alias docker-tf='/data/docker-run-tensorflow.sh '
+_docker_tf(){(
+    LD_PRELOAD="/usr/lib/libtcmalloc_minimal.so.4" 
+    export LD_PRELOAD
+
+    IMAGE=tensorflow
+
+    nvidia-docker run -ti --rm --pid=host \
+	-v /data:/data \
+	-v /etc/localtime:/etc/localtime:ro \
+	-w "$(pwd)" \
+	"$IMAGE" \
+	"$@"
+)}
+alias docker-tf=_docker_tf
+
+###
+
+_nv_docker(){(
+docker run \
+    --device /dev/nvidia0:/dev/nvidia0 \
+    --device /dev/nvidia0:/dev/nvidia1 \
+    --device /dev/nvidia0:/dev/nvidia2 \
+    --device /dev/nvidia0:/dev/nvidia3 \
+    --device /dev/nvidiactl:/dev/nvidiactl \
+    --device /dev/nvidia-uvm:/dev/nvidia-uvm \
+    "$@"
+)}
+alias nv-docker=_nv_docker
+
+###
+
+#alias vim8='docker run -ti --rm -v $HOME:$HOME -v /data:/data -v $PWD:$PWD -w $PWD jare/vim-bundle vim'
+#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data vim vim'
+#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data -e HOME=$HOME -w $PWD haron/vim-with-plugins vim'
+#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data -e HOME=$HOME -w $PWD --entrypoint vim ${VIMIMAGE-jare/vim-bundle}'
+#alias vim8='docker run -ti --rm -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${VIMIMAGE-jare/vim-bundle}'
+alias vim8='docker run -ti --rm -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${IMAGE_VIM_CB-vim-codebreak}'
+
+
+###
+
+test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-gpu'
 

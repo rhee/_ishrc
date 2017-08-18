@@ -65,6 +65,11 @@ for rc in $HOME/.local/etc/profile.d/_*.sh; do
   esac
 done
 
+
+
+# disable ls color
+alias ls='ls -F'
+
 # disable touchpad
 alias notouch='synclient TouchpadOff=1'
 # remap key capslock as control
