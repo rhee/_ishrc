@@ -191,7 +191,14 @@ alias vF='sh -c '"'"'pattern=$1; shift; exec vim $(/usr/bin/find -L . -iname "$p
 alias mutt='LANG=ko_KR.utf8 LC_ALL=ko_KR.utf8 mutt -n -f $HOME/Maildir'
 alias muttkr='LANG=ko_KR.eucKR LC_ALL=ko_KR.eucKR mutt -F $HOME/.muttrc-euckr'
 
-alias tnowrap='setterm -linewrap off'
+# alias tnowrap='setterm -linewrap off'
+
+# # alternate 'tnowrap' (for use with both linux and mac os.x)
+# # http://heyrod.com/snippets/toggle-line-wrapping-in-terminal.html
+# # This seems to known as "automatic margin" mode, hence smam is enter_am_mode and rmam is exit_am_mode.
+alias tnowrap='tput rmam'
+alias twrap='tput smam'
+
 alias curon='setterm -cursor on'
 alias no-screen-saver='setterm -blank 15 -powersave powerdown -powerdown 60'
 
