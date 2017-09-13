@@ -67,3 +67,7 @@ if test ! -z "$(docker ps -q -f 'name=dropbox' 2>/dev/null)" ; then
   alias dropbox-status='docker exec dropbox /dropbox.sh status'
   alias dropbox-filestatus='docker exec dropbox /dropbox.sh filestatus'
 fi
+
+alias docker_clean_images='docker rmi $(docker images -a --filter=dangling=true -q)'
+alias docker_clean_ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
+
