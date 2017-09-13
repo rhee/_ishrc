@@ -793,6 +793,45 @@ alias nv-docker=_nv_docker
 #alias vim8='docker run -ti --rm -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${VIMIMAGE-jare/vim-bundle}'
 alias vim8='docker run -ti --rm -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${IMAGE_VIM_CB-vim-codebreak}'
 
+###
+
+# BEGIN shr-mbp aliases
+_start_rstudio(){(
+    docker run --name rstudio -d -p 8787:8787 -v $PWD:/home/rstudio -e ROOT=TRUE rocker/rstudio "$@"
+)}
+
+_start_pulseaudio{(
+    if test ! -s "$HOME"/.config/pulse/default.pa
+    then
+	mkdir -p "$HOME"/.config/pulse
+	cat <<EEE > "$HOME"/.config/pulse/default.pa
+#.nofail
+.include /usr/local/etc/pulse/default.pa
+#load-module module-remap-sink sink_name=rpi3-analog-stereo master=alsa_output.0.analog-mono channels=1 channel_map=left sink_properties="device.description='라즈베리파이 스피커 스테레오인척'"
+#set-default-sink rpi3-analog-stereo
+#set-default-source alsa_input.usb-_Webcam_C170-02-C170.analog-mono
+#load-module module-native-protocol-tcp cookie=/home/pi/.pulse-cookie auth-ip-acl=127.0.0.1/32;172.30.0.0/16 auth-anonymous=1
+##load-module module-rtp-recv
+#load-module module-zeroconf-publish
+load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1/32;10.100.0.0/24 auth-anonymous=1
+EEE
+    fi
+    pulseaudio -D --start --disallow-exit --exit-idle-time=86400
+)}
+
+_pa_to_mbp(){(
+    PULSE_SERVER= pulseaudio -k
+    PULSE_SERVER= pacmd set-default-sink mbp-spk
+)}
+alias pa-to-mbp='_pa_to_mbp; PULSE_SERVER=10.100.0.105; export PULSE_SERVER'
+
+# # env-mkl (ref)
+# . /opt/intel/bin/compilervars.sh intel64
+# _num_threads=$(expr $(cat /proc/cpuinfo  | grep ^processor| wc -l) - 1)
+# MKL_NUM_THREADS=$_num_threads
+# MKL_DOMAIN_NUM_THREADS="MKL_DOMAIN_ALL=1,MKL_DOMAIN_BLAS=$_num_threads"
+# MKL_DYNAMIC=FALSE
+# export MKL_NUM_THREADS MKL_DOMAIN_NUM_THREADS MKL_DYNAMIC
 
 ###
 
