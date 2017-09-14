@@ -800,7 +800,7 @@ _start_rstudio(){(
     docker run --name rstudio -d -p 8787:8787 -v $PWD:/home/rstudio -e ROOT=TRUE rocker/rstudio "$@"
 )}
 
-_start_pulseaudio{(
+_start_pulseaudio(){(
     if test ! -s "$HOME"/.config/pulse/default.pa
     then
 	mkdir -p "$HOME"/.config/pulse
