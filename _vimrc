@@ -76,3 +76,5 @@ nnoremap <silent> <Leader>ml :call AppendModeline()<CR>
 let g:netrw_banner = 0
 
 set bg=dark
+set wrap
+

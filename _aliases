@@ -445,7 +445,8 @@ _mosh(){
   \mosh --server='env LANG="$(locale -a|grep ko_KR\.UTF-8||locale -a|grep \.UTF-8|head -1||locale -a|grep \.utf8|head -1)" mosh-server' "$@"
 }
 
-alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
+#alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
+alias rsync-with-openelec='rsync --rsync-path="./rsync" '
 alias rsync-with-mac='rsync --iconv=utf-8,utf-8-mac'
 
 # multitail goodies
