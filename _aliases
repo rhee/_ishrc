@@ -442,10 +442,11 @@ alias kor='export LANG=ko_KR.UTF-8'
 alias moshk='mosh --server='"'"'env LANG=ko_KR.UTF-8 mosh-server'"'"''
 alias mosh=_mosh
 _mosh(){
-  \mosh --server='env LANG="$(locale -a|grep ko_KR\.UTF-8||locale -a|grep \.UTF-8|head -1||locale -a|grep \.utf8|head -1)" mosh-server' "$@"
+  \mosh --server='env LANG="$(locale -a|grep ko_KR\.UTF-8||locale -a|grep \.UTF-8|head -1||locale -a|grep \.utf8|head -1)" mosh-server || /usr/local/bin/mosh-server' "$@"
 }
 
-alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
+#alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
+alias rsync-with-openelec='rsync --rsync-path="./rsync" '
 alias rsync-with-mac='rsync --iconv=utf-8,utf-8-mac'
 
 # multitail goodies
@@ -510,12 +511,12 @@ use Archive::Zip;
 binmode(STDOUT, ":utf8");
 my $zip = Archive::Zip->new();
 $zip->read($ARGV[0]) == 0 or
-   die "$0: couldn't read $ARGV[0]\n";
+   die "$0: could not read $ARGV[0]\n";
 foreach my $mref ($zip->members) {
     my $n = decode("cp949",$mref->fileName);
     print "Extracting $n\n";
     $zip->extractMember($mref,$n) == 0 or
-   die "$0: couldn't extract $n\n";
+   die "$0: could not extract $n\n";
 }
 ' "$@"
 
@@ -526,8 +527,9 @@ foreach my $mref ($zip->members) {
 alias unzip-py=_unzip_py
 _unzip_py(){
   # use <<- heredoc, to keep tab/indentation
-  python - "@$" <<-"EOB"
+  python - "$@" <<-"EOB"
 #!/usr/bin/env python
+# coding: utf-8
 
 # copied from http://stackoverflow.com/a/14981125/496899
 from __future__ import print_function

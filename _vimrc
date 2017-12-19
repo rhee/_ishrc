@@ -49,11 +49,13 @@ map  :set guifont=GulimChe:h10:cHANGEUL columns=89 lines=29 nonu wrap sw=8
 map ;; :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !tee -a check.txt.x >/dev/null
 map ;a :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !transmission-remote -a $(perl -ne 's@^([0-9A-F]{40}).*$@magnet:?xt=urn:btih:\L\1\&tr=udp\%3A\%2F\%2Ftracker.publicbt.com\%3A80\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.publicbt.com\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.torrentbox.com\%3A2710\%2Fannounce@ && print;') -ph all
 
-" map b :so ~/.vimrc-neobundle
-" map b :so ~/.vimrc-vundle
-
 " so ~/.vimrc-neobundle
-so ~/.vimrc-vundle
+" so ~/.vimrc-vundle
+
+" map b :so ~/.vimrc-neobundle
+" map  :so ~/.vimrc-neobundle
+map b :so ~/.vimrc-vundle
+map  :so ~/.vimrc-vundle
 
 " Append modeline after last line in buffer.
 " Use substitute() instead of printf() to handle '%%s' modeline in LaTeX
@@ -74,3 +76,5 @@ nnoremap <silent> <Leader>ml :call AppendModeline()<CR>
 let g:netrw_banner = 0
 
 set bg=dark
+set wrap
+
