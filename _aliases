@@ -773,6 +773,7 @@ _docker_tf(){(
 alias docker-tf=_docker_tf
 
 alias tf-inspect-checkpoints='python -mtensorflow.python.tools.inspect_checkpoint --file_name '
+alias tensorboard='python -mtensorboard.main '
 
 ###
 
