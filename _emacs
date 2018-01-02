@@ -126,6 +126,16 @@
     (add-to-list 'load-path "~/.emacs.d/user/pulseaudio")
     (require 'pulseaudio-autoload)))
 
+(with-demoted-errors
+    ""
+  (let ((face-height-selection 5)
+	(face-height-list '(100 110 120 130 140 160 180 200 240 300 360)))
+    (defun mac-set-font-size (sel)
+      ""
+      (interactive)
+      (set-face-attribute 'default nil :height (aref face-height-list face-height-selection))
+      (setq face-height-selection sel))))
+
 ;;; auto-generated codes
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -133,6 +143,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages (quote (js2-mode php-mode))))
+(set-face-attribute 'default nil :height 240)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -140,6 +151,8 @@
  ;; If there is more than one, they won't work right.
  '(company-preview ((t (:foreground "darkgray" :underline t))))
  '(company-preview-common ((t (:inherit company-preview))))
+ '(company-scrollbar-bg ((t (:background "#ffffff"))))
+ '(company-scrollbar-fg ((t (:background "#ffffff"))))
  '(company-tooltip ((t (:background "lightgray" :foreground "black"))))
  '(company-tooltip-common ((((type x)) (:inherit company-tooltip :weight bold)) (t (:inherit company-tooltip))))
  '(company-tooltip-common-selection ((((type x)) (:inherit company-tooltip-selection :weight bold)) (t (:inherit company-tooltip-selection))))

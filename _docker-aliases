@@ -68,6 +68,48 @@ if test ! -z "$(docker ps -q -f 'name=dropbox' 2>/dev/null)" ; then
   alias dropbox-filestatus='docker exec dropbox /dropbox.sh filestatus'
 fi
 
-alias docker_clean_images='docker rmi $(docker images -a --filter=dangling=true -q)'
-alias docker_clean_ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
+alias docker-clean-images='docker rmi $(docker images -a --filter=dangling=true -q)'
+alias docker-clean-ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
 
+_docker_clear_log(){(
+  container="$1"
+  echo "" > "$(docker inspect --format='{{.LogPath}}' "$container")"
+)}
+alias docker-clear-log=_docker_clear_log
+
+_docker_use_host_dns(){(
+    cd ~/Library/Containers/com.docker.docker/Data/database/
+    git checkout master
+    mkdir -p com.docker.driver.amd64-linux/slirp
+    echo > com.docker.driver.amd64-linux/slirp/dns
+    git add com.docker.driver.amd64-linux/slirp/dns
+    git commit -s -m "use the host DNS resolver"
+)}
+alias docker-use-host-dns=_docker_use_host_dns
+
+_docker_use_auto_compaction(){(
+    cd ~/Library/Containers/com.docker.docker/Data/database/
+    git checkout master
+    mkdir -p com.docker.driver.amd64-linux/disk
+    echo 262144 > com.docker.driver.amd64-linux/disk/compact-after
+    echo 262144 > com.docker.driver.amd64-linux/disk/keep-erased
+    git add com.docker.driver.amd64-linux/disk/compact-after
+    git add com.docker.driver.amd64-linux/disk/keep-erased
+    git commit -s -m "switch on online compaction"
+)}
+alias docker-use-auto-compaction=_docker_use_auto_compaction
+
+_docker_set_max_connections(){(
+    if test -z "$1"; then
+	echo "Usage: docker-set-max-donnections <max-connections>" 1>&2
+	return 1
+    fi
+    max_connections="$1"
+    cd ~/Library/Containers/com.docker.docker/Data/database/
+    git checkout master # git reset --hard
+    mkdir -p com.docker.driver.amd64-linux/slirp
+    echo "$max_connections" > com.docker.driver.amd64-linux/slirp/max-connections
+    git add com.docker.driver.amd64-linux/slirp/max-connections
+    git commit -s -m "set max-connections to $max_connections"
+)}
+alias docker-set-max-connections=_docker_set_max_connections

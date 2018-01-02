@@ -210,3 +210,5 @@ if [ "Darwin" = "$(uname -s)" -a -d /opt/local/bin ];then
 fi
 
 alias pa-start-mac='pulseaudio -D --start --disallow-exit --exit-idle-time=86400'
+
+alias kickstart='sudo -H /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart'
