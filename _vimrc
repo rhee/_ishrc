@@ -13,7 +13,7 @@ sy on
 "set diffopt=iwhite 
 set diffopt+=filler
 
-let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,.*.swp"
+let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,*.pyc,.*.swp"
 
 "for ant see :help errorformat-javac :help errorformat-ant
 set efm+=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,\%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#

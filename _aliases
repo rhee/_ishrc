@@ -842,3 +842,7 @@ alias pa-to-mbp='_pa_to_mbp; PULSE_SERVER=10.100.0.105; export PULSE_SERVER'
 
 test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-gpu'
 
+###
+
+alias inspect-checkpoint='python -mtensorflow.python.tools.inspect_checkpoint --file_name '
+
