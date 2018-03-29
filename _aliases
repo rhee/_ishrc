@@ -845,4 +845,3 @@ test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-
 ###
 
 alias inspect-checkpoint='python -mtensorflow.python.tools.inspect_checkpoint --file_name '
-

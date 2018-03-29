@@ -72,7 +72,7 @@ test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-
 
 if [ -x /opt/conda/bin/conda ]
 then
-    alias conda='. /opt/conda/bin/conda '
+    alias conda='/opt/conda/bin/conda '
     alias conda-activate='. /opt/conda/bin/activate '
 fi
 
