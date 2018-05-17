@@ -732,17 +732,6 @@ _reload_chrome(){(
 
 ##########
 
-# switch sink for already launched apps
-_pa_sink_to(){(
-    new_sink="$1"
-    pulseaudio -k
-    pactl info
-    pactl set-default-sink "$new_sink"
-)}
-alias pa-sink-to=_pa_sink_to
-
-##########
-
 alias no_cuda='env CUDA_VISIBLE_DEVICES= USE_CUDA= /bin/bash -i'
 
 ##########
@@ -805,6 +794,8 @@ _start_rstudio(){(
     docker run --name rstudio -d -p 8787:8787 -v $PWD:/home/rstudio -e ROOT=TRUE rocker/rstudio "$@"
 )}
 
+##########
+
 _start_pulseaudio(){(
     if test ! -s "$HOME"/.config/pulse/default.pa
     then
@@ -824,11 +815,25 @@ EEE
     pulseaudio -D --start --disallow-exit --exit-idle-time=86400
 )}
 
-_pa_to_mbp(){(
-    PULSE_SERVER= pulseaudio -k
-    PULSE_SERVER= pacmd set-default-sink mbp-spk
+# switch sink for already launched apps
+_pa_update_sink_to(){(
+    dest=$1
+    if test -z "$dest"
+    then
+	echo "Usage: _pa_update_sink_to <target-addres>" 1>&2
+	return 1
+    fi
+    mkdir -p "$HOME"/.config/pulse
+    cat <<EEE > "$HOME"/.config/pulse/default.pa
+.include /etc/pulse/default.pa
+load-module module-tunnel-sink server=${dest} sink=Channel_1__Channel_2.2 format=float32le channels=2 rate=44100 sink_name=remote-spk
+load-module module-tunnel-source server=${dest} source=Channel_1__Channel_2 format=float32le channels=2 rate=44100 source_name=remote-mic
+EEE
+    pulseaudio -k
+    pactl info
+    pactl set-default-sink remote-spk
 )}
-alias pa-to-mbp='_pa_to_mbp; PULSE_SERVER=10.100.0.105; export PULSE_SERVER'
+alias pa-sink-to=_pa_update_sink_to
 
 # # env-mkl (ref)
 # . /opt/intel/bin/compilervars.sh intel64
