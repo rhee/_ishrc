@@ -70,13 +70,14 @@ done
 alias kor='export LANG=ko_KR.UTF-8'
 test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-gpu'
 
+
 #if [ -x /opt/conda/bin/conda ]
 #then
 #    #alias conda='/opt/conda/bin/conda '
 #    alias conda-activate='. /opt/conda/bin/activate '
 #fi
 
-
+#####################################################
 
 # switch sink for already launched apps
 _pa_update_sink_to(){(
@@ -98,9 +99,7 @@ EEE
 )}
 alias pa-sink-to=_pa_update_sink_to
 
-#
-
-alias pa-mbp='pa-sink-to rhee-mbp.local'
+#####################################################
 
 
 # disable ls color
