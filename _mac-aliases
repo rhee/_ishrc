@@ -213,6 +213,10 @@ alias pa-start-mac='pulseaudio -D --start --disallow-exit --exit-idle-time=86400
 
 alias kickstart='sudo -H /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart'
 
+_mac_enable_remote_management(){(
+    sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -off -restart -agent -privs -all -allowAccessFor -allUsers
+)}
+alias mac-enable-remote-management=_mac_enable_remote_management
 
 _mac_enable_vnc(){(
     sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist com.apple.screensharing -dict Disabled -bool false
@@ -221,3 +225,4 @@ _mac_enable_vnc(){(
 alias mac-enable-vnc=_mac_enable_vnc
 
 
+alias mac-docker-restart="osascript -e 'quit app \"Docker\"' && open -a Docker"
