@@ -1,7 +1,10 @@
 set enc=utf8 fencs=ucs-bom,utf-8,euc-kr
 set sw=4 sts=4 ts=8 noai nosi
 set nu nowrap nows
-"set et
+set et
+set bg=dark
+
+
 set tags=tags.ctags,./tags.ctags,../tags.ctags,../../tags.ctags,../../../tags.ctags,../../../../tags.ctags,$CTAGSROOT/tags.ctags,~/src/tags.ctags,~/.ctags/*
 
 set nobackup noswapfile
@@ -13,7 +16,7 @@ sy on
 "set diffopt=iwhite 
 set diffopt+=filler
 
-let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,.*.swp"
+let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,*.pyc,.*.swp"
 
 "for ant see :help errorformat-javac :help errorformat-ant
 set efm+=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,\%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
@@ -74,7 +77,4 @@ nnoremap <silent> <Leader>ml :call AppendModeline()<CR>
 " http://stackoverflow.com/questions/21686729/vim-how-to-remove-netrw
 "let loaded_netrwPlugin = 1
 let g:netrw_banner = 0
-
-set bg=dark
-set wrap
 
