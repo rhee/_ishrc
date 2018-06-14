@@ -136,6 +136,23 @@
       (set-face-attribute 'default nil :height (aref face-height-list face-height-selection))
       (setq face-height-selection sel))))
 
+
+
+
+
+(custom-set-variables '(linum-format (quote "%5d ")))
+;;(custom-set-variables '(linum-format 'dynamic))
+
+(add-hook 'c-mode-common-hook 'linum-mode)
+(add-hook 'python-mode-hook 'linum-mode)
+(add-hook 'js-mode-hook 'linum-mode)
+(add-hook 'sh-mode-hook 'linum-mode)    ;https://stackoverflow.com/q/8892813
+
+
+
+
+
+
 ;;; auto-generated codes
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
