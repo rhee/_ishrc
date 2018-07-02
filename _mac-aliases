@@ -226,3 +226,10 @@ alias mac-enable-vnc=_mac_enable_vnc
 
 
 alias mac-docker-restart="osascript -e 'quit app \"Docker\"' && open --background -a Docker"
+
+if [ -d /Volumes/ext/Docker ]
+then
+    MACHINE_STORAGE_PATH=/Volumes/ext/Docker
+    export MACHINE_STORAGE_PATH
+fi
+
