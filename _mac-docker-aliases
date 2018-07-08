@@ -1,8 +1,9 @@
 :
+[ ! -d  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/ ] && return 1
 
-alias docker-hykit-term='screen -e  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty'
+alias mac-docker-hykit-term='screen -e  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty'
 
-_docker_use_host_dns(){(
+_mac_docker_use_host_dns(){(
     cd ~/Library/Containers/com.docker.docker/Data/database/
     git checkout master
     mkdir -p com.docker.driver.amd64-linux/slirp
@@ -10,9 +11,9 @@ _docker_use_host_dns(){(
     git add com.docker.driver.amd64-linux/slirp/dns
     git commit -s -m "use the host DNS resolver"
 )}
-alias docker-use-host-dns=_docker_use_host_dns
+alias mac-docker-use-host-dns=_mac_docker_use_host_dns
 
-_docker_use_auto_compaction(){(
+_mac_docker_use_auto_compaction(){(
     cd ~/Library/Containers/com.docker.docker/Data/database/
     git checkout master
     mkdir -p com.docker.driver.amd64-linux/disk
@@ -22,9 +23,9 @@ _docker_use_auto_compaction(){(
     git add com.docker.driver.amd64-linux/disk/keep-erased
     git commit -s -m "switch on online compaction"
 )}
-alias docker-use-auto-compaction=_docker_use_auto_compaction
+alias mac-docker-use-auto-compaction=_mac_docker_use_auto_compaction
 
-_docker_set_max_connections(){(
+_mac_docker_set_max_connections(){(
     if test -z "$1"; then
 	echo "Usage: docker-set-max-donnections <max-connections>" 1>&2
 	return 1
@@ -37,8 +38,17 @@ _docker_set_max_connections(){(
     git add com.docker.driver.amd64-linux/slirp/max-connections
     git commit -s -m "set max-connections to $max_connections"
 )}
-alias docker-set-max-connections=_docker_set_max_connections
-alias mac-docker-restart="osascript -e 'quit app \"Docker\"' && open --background -a Docker"
+alias mac-docker-set-max-connections=_mac_docker_set_max_connections
+
+#alias mac-docker-service-restart="osascript -e 'quit app \"Docker\"' && open --background -a Docker"
+
+_mac_docker_restart_service(){(
+    set -x
+    osascript -e 'quit app "Docker"'
+    sleep 5
+    open -a Docker
+)}
+alias mac-docker-restart-service=_mac_docker_restart_service
 
 if [ -d /Volumes/ext/Docker ]
 then
