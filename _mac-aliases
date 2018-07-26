@@ -224,4 +224,6 @@ _mac_enable_vnc(){(
 )}
 alias mac-enable-vnc=_mac_enable_vnc
 
+alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
+
 test -f ~/.mac-docker-aliases && . ~/.mac-docker-aliases

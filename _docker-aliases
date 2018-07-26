@@ -46,6 +46,16 @@ _docker_vbox_unnat(){
     VBoxManage controlvm default natpf1 delete tcp-$1
 }
 
+alias docker-vbox-nat-udp=_docker_vbox_nat_udp
+_docker_vbox_nat_udp(){
+    VBoxManage controlvm default natpf1 udp-$1,udp,,$1,,$1
+}
+
+alias docker-vbox-unnat-udp=_docker_vbox_unnat_udp
+_docker_vbox_unnat_udp(){
+    VBoxManage controlvm default natpf1 delete udp-$1
+}
+
 alias docker-run='docker run -ti'
 
 alias docker-exec=_docker_exec

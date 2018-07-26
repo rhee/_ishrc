@@ -2,7 +2,7 @@ set enc=utf8 fencs=ucs-bom,utf-8,euc-kr
 set sw=4 sts=4 ts=8 noai nosi
 set nu nowrap nows
 set et
-set bg=dark
+set bg=light
 
 
 set tags=tags.ctags,./tags.ctags,../tags.ctags,../../tags.ctags,../../../tags.ctags,../../../../tags.ctags,$CTAGSROOT/tags.ctags,~/src/tags.ctags,~/.ctags/*

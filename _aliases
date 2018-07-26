@@ -785,7 +785,7 @@ alias nv-docker=_nv_docker
 #alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data -e HOME=$HOME -w $PWD haron/vim-with-plugins vim'
 #alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data -e HOME=$HOME -w $PWD --entrypoint vim ${VIMIMAGE-jare/vim-bundle}'
 #alias vim8='docker run -ti --rm -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${VIMIMAGE-jare/vim-bundle}'
-alias vim8='docker run -ti --rm -v $HOME:$HOME -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${IMAGE_VIM_CB-vim-codebreak}'
+alias vim8='docker run -ti --rm -v $HOME:$HOME -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${IMAGE_VIM_CB-vim-codebreak:0.1}'
 
 ###
 
