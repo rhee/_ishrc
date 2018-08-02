@@ -239,3 +239,6 @@ then
     alias mplayer='"/Applications/MPlayer OSX Extended.app//Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" '
 fi
 
+alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
+
+test -f ~/.mac-docker-aliases && . ~/.mac-docker-aliases

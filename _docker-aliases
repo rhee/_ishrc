@@ -46,6 +46,16 @@ _docker_vbox_unnat(){
     VBoxManage controlvm default natpf1 delete tcp-$1
 }
 
+alias docker-vbox-nat-udp=_docker_vbox_nat_udp
+_docker_vbox_nat_udp(){
+    VBoxManage controlvm default natpf1 udp-$1,udp,,$1,,$1
+}
+
+alias docker-vbox-unnat-udp=_docker_vbox_unnat_udp
+_docker_vbox_unnat_udp(){
+    VBoxManage controlvm default natpf1 delete udp-$1
+}
+
 alias docker-run='docker run -ti'
 
 alias docker-exec=_docker_exec
@@ -59,9 +69,7 @@ alias docker-rm='docker rm -f'
 alias docker-logs='docker logs --follow --tail=50'
 
 #alias docker-ps='docker ps --format "{{printf \"%22s:\" .Names}}\t{{.ID}}\t{{.Status}}\t{{.Image}}"'
-alias docker-ps='docker ps -a --format "{{.ID}}\t{{printf \"%15s:\" .Names}}\t{{printf \"%19s\" .Image}}\t{{.Status}}"'
-
-alias docker-hykit-term='screen -e  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty'
+alias docker-ps='docker ps -a --format "{{.ID}}\t{{printf \"%15s:\" .Names}}\t{{printf \"%31s\" .Image}}\t    {{.Status}}"'
 
 if test ! -z "$(docker ps -q -f 'name=dropbox' 2>/dev/null)" ; then
   alias dropbox-status='docker exec dropbox /dropbox.sh status'
@@ -77,39 +85,3 @@ _docker_clear_log(){(
 )}
 alias docker-clear-log=_docker_clear_log
 
-_docker_use_host_dns(){(
-    cd ~/Library/Containers/com.docker.docker/Data/database/
-    git checkout master
-    mkdir -p com.docker.driver.amd64-linux/slirp
-    echo > com.docker.driver.amd64-linux/slirp/dns
-    git add com.docker.driver.amd64-linux/slirp/dns
-    git commit -s -m "use the host DNS resolver"
-)}
-alias docker-use-host-dns=_docker_use_host_dns
-
-_docker_use_auto_compaction(){(
-    cd ~/Library/Containers/com.docker.docker/Data/database/
-    git checkout master
-    mkdir -p com.docker.driver.amd64-linux/disk
-    echo 262144 > com.docker.driver.amd64-linux/disk/compact-after
-    echo 262144 > com.docker.driver.amd64-linux/disk/keep-erased
-    git add com.docker.driver.amd64-linux/disk/compact-after
-    git add com.docker.driver.amd64-linux/disk/keep-erased
-    git commit -s -m "switch on online compaction"
-)}
-alias docker-use-auto-compaction=_docker_use_auto_compaction
-
-_docker_set_max_connections(){(
-    if test -z "$1"; then
-	echo "Usage: docker-set-max-donnections <max-connections>" 1>&2
-	return 1
-    fi
-    max_connections="$1"
-    cd ~/Library/Containers/com.docker.docker/Data/database/
-    git checkout master # git reset --hard
-    mkdir -p com.docker.driver.amd64-linux/slirp
-    echo "$max_connections" > com.docker.driver.amd64-linux/slirp/max-connections
-    git add com.docker.driver.amd64-linux/slirp/max-connections
-    git commit -s -m "set max-connections to $max_connections"
-)}
-alias docker-set-max-connections=_docker_set_max_connections
