@@ -40,19 +40,19 @@ _mac_docker_set_max_connections(){(
 )}
 alias mac-docker-set-max-connections=_mac_docker_set_max_connections
 
-#alias mac-docker-service-restart="osascript -e 'quit app \"Docker\"' && open --background -a Docker"
-
 _mac_docker_restart_service(){(
     set -x
     osascript -e 'quit app "Docker"'
     sleep 5
+    #open --background -a Docker
     open -a Docker
 )}
 alias mac-docker-restart-service=_mac_docker_restart_service
+
+test -z "DOCKER_MACHINE_NAME" && eval $(docker-machine env)
 
 if [ -d /Volumes/ext/Docker ]
 then
     MACHINE_STORAGE_PATH=/Volumes/ext/Docker
     export MACHINE_STORAGE_PATH
 fi
-
