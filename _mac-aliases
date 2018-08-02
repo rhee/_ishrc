@@ -205,7 +205,7 @@ _mac_wifi_password(){(
   security find-generic-password -ga "$your_router"
 )}
 
-if [ "Darwin" = "$(uname -s)" -a -d /opt/local/bin ];then
+if [ -d /opt/local/bin ];then
   alias mac-enable-macport='PATH=/opt/local/bin:$PATH;export PATH'
 fi
 
@@ -224,12 +224,18 @@ _mac_enable_vnc(){(
 )}
 alias mac-enable-vnc=_mac_enable_vnc
 
-
 alias mac-docker-restart="osascript -e 'quit app \"Docker\"' && open --background -a Docker"
+
+test -z "DOCKER_MACHINE_NAME" && eval $(docker-machine env)
 
 if [ -d /Volumes/ext/Docker ]
 then
     MACHINE_STORAGE_PATH=/Volumes/ext/Docker
     export MACHINE_STORAGE_PATH
+fi
+
+if [ -x "/Applications/MPlayer OSX Extended.app//Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" ]
+then
+    alias mplayer='"/Applications/MPlayer OSX Extended.app//Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" '
 fi
 
