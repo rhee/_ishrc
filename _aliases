@@ -854,3 +854,6 @@ alias inspect-checkpoint='python -mtensorflow.python.tools.inspect_checkpoint --
 alias unlock-sessions='loginctl unlock-sessions'
 
 
+alias vim8='docker run -ti --rm -v $(pwd):$(pwd) -v /data:/data -w $(pwd) --entrypoint vim vim-codebreak'
+alias vim-codebreak='vim8 -c VimGameCodeBreak '
+
