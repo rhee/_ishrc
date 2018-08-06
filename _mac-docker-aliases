@@ -1,6 +1,22 @@
 :
 [ ! -d  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/ ] && return 1
 
+
+
+
+
+test -z "DOCKER_MACHINE_NAME" && eval $(docker-machine env)
+
+if [ -d /Volumes/ext/Docker ]
+then
+    MACHINE_STORAGE_PATH=/Volumes/ext/Docker
+    export MACHINE_STORAGE_PATH
+fi
+
+
+
+
+
 alias mac-docker-hykit-term='screen -e  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty'
 
 _mac_docker_use_host_dns(){(
@@ -49,10 +65,3 @@ _mac_docker_restart_service(){(
 )}
 alias mac-docker-restart-service=_mac_docker_restart_service
 
-test -z "DOCKER_MACHINE_NAME" && eval $(docker-machine env)
-
-if [ -d /Volumes/ext/Docker ]
-then
-    MACHINE_STORAGE_PATH=/Volumes/ext/Docker
-    export MACHINE_STORAGE_PATH
-fi
