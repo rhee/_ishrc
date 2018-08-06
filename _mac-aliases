@@ -205,7 +205,7 @@ _mac_wifi_password(){(
   security find-generic-password -ga "$your_router"
 )}
 
-if [ "Darwin" = "$(uname -s)" -a -d /opt/local/bin ];then
+if [ -d /opt/local/bin ];then
   alias mac-enable-macport='PATH=/opt/local/bin:$PATH;export PATH'
 fi
 
@@ -224,5 +224,11 @@ _mac_enable_vnc(){(
 )}
 alias mac-enable-vnc=_mac_enable_vnc
 
+if [ -x "/Applications/MPlayer OSX Extended.app//Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" ]
+then
+    alias mplayer='"/Applications/MPlayer OSX Extended.app//Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" '
+fi
 
-alias mac-docker-restart="osascript -e 'quit app \"Docker\"' && open --background -a Docker"
+alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
+
+test -f ~/.mac-docker-aliases && . ~/.mac-docker-aliases
