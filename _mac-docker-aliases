@@ -1,6 +1,4 @@
 :
-[ ! -d  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/ ] && return 1
-
 if ! docker ps -q >/dev/null 2>&1
 then
   test -z "$DOCKER_MACHINE_NAME" && eval $(docker-machine env)
@@ -13,6 +11,18 @@ then
 fi
 
 
+_mac_docker_restart_service(){(
+    set -x
+    osascript -e 'quit app "Docker"'
+    sleep 5
+    #open --background -a Docker
+    open -a Docker
+)}
+alias mac-docker-restart-service=_mac_docker_restart_service
+
+
+
+[ ! -d  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/ ] && return 1
 
 
 
@@ -54,13 +64,4 @@ _mac_docker_set_max_connections(){(
     git commit -s -m "set max-connections to $max_connections"
 )}
 alias mac-docker-set-max-connections=_mac_docker_set_max_connections
-
-_mac_docker_restart_service(){(
-    set -x
-    osascript -e 'quit app "Docker"'
-    sleep 5
-    #open --background -a Docker
-    open -a Docker
-)}
-alias mac-docker-restart-service=_mac_docker_restart_service
 
