@@ -1,11 +1,10 @@
 :
 [ ! -d  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/ ] && return 1
 
-
-
-
-
-test -z "DOCKER_MACHINE_NAME" && eval $(docker-machine env)
+if ! docker ps -q >/dev/null 2>&1
+then
+  test -z "$DOCKER_MACHINE_NAME" && eval $(docker-machine env)
+fi
 
 if [ -d /Volumes/ext/Docker ]
 then
