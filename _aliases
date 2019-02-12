@@ -845,7 +845,7 @@ _start_rstudio(){(
 
 ###
 
-test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-gpu'
+test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code-oss --disable-gpu'
 
 ###
 
@@ -856,4 +856,6 @@ alias unlock-sessions='loginctl unlock-sessions'
 
 alias vim8='docker run -ti --rm -v $(pwd):$(pwd) -v /data:/data -w $(pwd) --entrypoint vim vim-codebreak'
 alias vim-codebreak='vim8 -c VimGameCodeBreak '
+
+alias abi-dumper='docker run --rm -it -v /opt/conda:/opt/conda -v $(pwd):$(pwd) -w $(pwd) abi-dumper abi-dumper '
 

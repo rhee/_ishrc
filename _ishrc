@@ -69,7 +69,7 @@ done
 
 
 alias kor='export LANG=ko_KR.UTF-8'
-test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-gpu'
+test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code-oss --disable-gpu'
 
 
 #if [ -x /opt/conda/bin/conda ]
