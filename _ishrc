@@ -53,13 +53,23 @@ _green=`tput setaf 2`
 _nocolor=`tput sgr0`
 
 echo "$(date +%s.%N) [Loading .aliases ...]" 1>&2
-if test -f $HOME/.aliases; then . $HOME/.aliases; fi
+#if test -f $HOME/.aliases; then . $HOME/.aliases; fi
+for rc in $HOME/.aliases*
+do
+  case $rc in
+    *~|*.bak|*.orig|*.old);;
+    *) test -f $rc && . $rc;;
+  esac
+done
+  
 
 echo "$(date +%s.%N) [Loading profile.d aliases ...]" 1>&2
-for rc in $HOME/.local/etc/profile.d/_*.sh; do
-  case $rc in *~|*.bak|*.orig|*.old|*/make.sh);; # skip backup files
-    *) if test -f $rc; then
-         #printf "${_green}[$(basename $rc .sh)]${_nocolor} " 1>&2 2>/dev/null
+for rc in $HOME/.local/etc/profile.d/_*.sh
+ do
+  case $rc in
+    *~|*.bak|*.orig|*.old|*/make.sh);; # skip backup files
+    *) if test -f $rc
+       then
          printf "${_green}.${_nocolor}" | cat -u 1>&2 2>/dev/null
 	 . $rc
        fi;;
