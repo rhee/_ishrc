@@ -105,8 +105,12 @@ alias mkxclean='xf=${TMP:-/tmp}/mkxc-$$; echo "Purge-recursively:"; /usr/bin/fin
 alias zap='perl -e "truncate \$ARGV[0],0"'
 
 alias capmmf='sh -c '\''mplayer.static -vo null -ao null -dumpfile "cap_$(basename $1)" -dumpstream "$1"'\'' capmmf'
-alias mpPP='sh -c '\''exec mplayer -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -shuffle -quiet "$@" </dev/null'\'' mpPP'
-alias mpq='sh -c '\''exec mplayer -noconfig user -quiet -osdlevel 3 -shuffle "$@" </dev/null'\'' mpq'
+#alias mpPP='sh -c '\''exec mplayer -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -shuffle -quiet "$@" </dev/null'\'' mpPP'
+#unalias mpPP
+mpPP(){ mplayer -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -shuffle -quiet "$@" </dev/null; }
+#alias mpq='sh -c '\''exec mplayer -noconfig user -quiet -osdlevel 3 -shuffle "$@" </dev/null'\'' mpq'
+#unalias mpq
+mpq(){ mplayer -noconfig user -quiet -osdlevel 3 -shuffle "$@" </dev/null; }
 
 alias flac2mp3=_flac2mp3
 _flac2mp3(){(
