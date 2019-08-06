@@ -69,15 +69,13 @@ alias  xtT='sh -c "echo -n \"@]2;\$1%@]1;\$1%\"|sed -e '"'"'y/@%//'"'"'" xtT'
 
 if printf 1 >/dev/null 2>&1 ; then
 
-    alias xtC=_xtC
-    _xtC(){(
+    xtC(){(
 	osc="\e]" # or 0x9d
 	fg=$1
 	bg=$2
 	printf "${osc}10;${fg}\007""\e]11;${bg}\007"
     )}
-    alias xtS=_xtS
-    _xtS(){(
+    xtS(){(
 	csi="\e[" # or 0x9b
 	lines=$1
 	columns=$2
@@ -105,15 +103,10 @@ alias mkxclean='xf=${TMP:-/tmp}/mkxc-$$; echo "Purge-recursively:"; /usr/bin/fin
 alias zap='perl -e "truncate \$ARGV[0],0"'
 
 alias capmmf='sh -c '\''mplayer.static -vo null -ao null -dumpfile "cap_$(basename $1)" -dumpstream "$1"'\'' capmmf'
-#alias mpPP='sh -c '\''exec mplayer -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -shuffle -quiet "$@" </dev/null'\'' mpPP'
-#unalias mpPP
 mpPP(){ mplayer -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -shuffle -quiet "$@" </dev/null; }
-#alias mpq='sh -c '\''exec mplayer -noconfig user -quiet -osdlevel 3 -shuffle "$@" </dev/null'\'' mpq'
-#unalias mpq
 mpq(){ mplayer -noconfig user -quiet -osdlevel 3 -shuffle "$@" </dev/null; }
 
-alias flac2mp3=_flac2mp3
-_flac2mp3(){(
+flac2mp3(){(
   if [ -z "$2" ]
   then
     echo "Usage: flac2mp3 input.flac output.mp3" 1>&2
@@ -273,8 +266,7 @@ alias gitdiffyesterday='git diff "@{yesterday}" --'
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'
 alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 
-alias sqltime=_sqltime
-_sqltime(){(
+sqltime(){(
     ts="$1"; shift
     if which sqlite3 >/dev/null 2>&1; then
 	sqlite3 /dev/null "SELECT datetime('$ts','unixepoch','localtime')"
@@ -399,12 +391,11 @@ alias b='popd '
 alias psx='sh -c '"'"'ps x "$@" |exec grep "^"'"'"' psx'
 
 alias gtts='sh -c '"'"'curl -s -o- -A Mozilla --data-urlencode "q=$*" --data "ie=UTF-8" --data "tl=ko" "http://translate.google.com/translate_tts" |mpg123 -q -'"'"' gtts'
-_DirDiff(){(
+DirDiff(){(
   lfile="$1"
   rfile="$2"
   vim -c 'DirDiff '"$1"' '"$2"' '
 )}
-alias DirDiff=_DirDiff
 
 alias ff='sh -c '\''exec fgrep -nH "$@" * */* */*/* 2>/dev/null | tee /tmp/tt.$USER.log | fgrep --colour "$@" '\'' ff'
 alias tt='sh -c '\''"$@" |exec tee /tmp/tt.$USER.log'\'' tt'
@@ -413,8 +404,7 @@ alias tt='sh -c '\''"$@" |exec tee /tmp/tt.$USER.log'\'' tt'
 alias git-sync='git remote update -p; git merge --ff-only @{u}; git commit -m. -a&&git push'
 alias git-forget-and-sync='git fetch --all; git reset --hard origin/master; git pull'
 
-alias git-sync-dotfiles=_git_sync_dotfiles
-_git_sync_dotfiles(){(
+git_sync_dotfiles(){(
   test -d ~/.local/etc/_ishrc && cd ~/.local/etc/_ishrc; git-sync
   test -d ~/.local/etc/profile.d && cd ~/.local/etc/profile.d; git-sync
 )}
@@ -423,8 +413,7 @@ _git_sync_dotfiles(){(
 #XXX# incompatible#alias dd='ddrescue --help >/dev/null 2>&1 && alias dd="ddrescue" ; dd'
 alias dd='dcfldd --help >/dev/null 2>&1 && alias dd="dcfldd" ; dd'
 
-alias rename-files=_rename_files
-_rename_files(){(
+rename_files(){(
   setopt shwordsplit 2>/dev/null
   dry_run=echo
   if [ "--no-dry-run" = "$1" ]; then dry_run="sh -x -c" ; shift ; fi
@@ -461,28 +450,24 @@ alias mtj='multitail -p l -j'
 alias sync='echo -n "Sync? "; read yn; case $yn in [Yy]) /bin/sync;; esac;'
 
 # prompt by git
-alias git-branch-name=_git_branch_name
-_git_branch_name(){
+git_branch_name(){
   git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3
 }
-alias git-branch-prompt=_git_branch_prompt
-_git_branch_prompt(){
+git_branch_prompt(){
   local branch=`_git_branch_name`
   if [ $branch ]; then printf " [%s]" $branch; fi
 }
 #PS1="\u@\h \[\033[0;36m\]\W\[\033[0m\]\[\033[0;32m\]\$(_git_branch_prompt)\[\033[0m\] \$ "
 
 # lsof, find processes using a specific tcp port
-alias lsof-port-listeners='_lsof_port_listeners'
-_lsof_port_listeners(){(
+lsof_port_listeners(){(
     port=$1
     shift
     # disable uid, dns, port name resolv
     lsof -l -n -P -i:$port
 )}
 
-alias unzip-pl=_unzip_pl
-_unzip_pl(){
+unzip_pl(){
 
 ### if [ ! -z "$BASH_VERSION" ]; then
 ###   # alt 1 - try bash <( ... )
@@ -528,8 +513,7 @@ foreach my $mref ($zip->members) {
 
 }
 
-alias unzip-py=_unzip_py
-_unzip_py(){
+unzip_py(){
   # use <<- heredoc, to keep tab/indentation
   python - "$@" <<-"EOB"
 #!/usr/bin/env python
@@ -617,20 +601,17 @@ ifbw(){(
 
 )}
 
-alias chrome-debug-9222=_chrome_debug_9222
-_chrome_debug_9222(){(
+chrome_debug_9222(){(
   mkdir -p /tmp/chrome
   google-chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome --incognito
 )}
 
-alias chrome-proxy-5555=_chrome_proxy_5555
-_chrome_proxy_5555(){(
+chrome_proxy_5555(){(
   #google-chrome --proxy-server="http=http://127.0.0.1:5555;https=http://127.0.0.1:5555" "$@"
   env all_proxy=127.0.0.1:5555 google-chrome "$@"
 )}
 
-alias clear-menus=_clear_menus
-_clear_menus(){(
+clear_menus(){(
   set -e
   cd ~/.local/share
   mkdir -p applications.bak
@@ -645,8 +626,7 @@ alias psc='ps xaw -eo pid,user,cgroup,args'
 
 alias wttr='curl http://wttr.in/ | less -r'
 
-alias socat-forward=_socat_forward
-_socat_forward(){(
+socat_forward(){(
   if [ -z "$4" ]; then
     echo "Usage: socat-forward addr port remote-addr remote-port" 1>&2
     return 1
@@ -658,8 +638,7 @@ _socat_forward(){(
   socat TCP4-LISTEN:$port,bind=$addr,reuseaddr,fork TCP4:$remoteaddr:$remoteport
 )}
 
-alias ipt-forward=_ipt_forward
-_ipt_forward(){(
+ipt_forward(){(
   if [ -z "$4" ]; then
     echo "Usage: ipt-forward addr port remote-addr remote-port" 1>&2
     return 1
@@ -687,18 +666,15 @@ alias j2y='python -c "import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin
 
 alias dmps-disable='xset -dpms; xset s noblank;'
 
-alias less-csv=_less_csv
-_less_csv(){
+less_csv(){
   cat "$@" | column -s, -t | less -#2 -N -S
 }
 
-alias sshfs-better=_sshfs_better
-_sshfs_better(){
+sshfs_better(){
     sshfs "$@" -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3
 }
 
-alias openssl-showcerts=_openssl_showcerts
-_openssl_showcerts(){
+openssl_showcerts(){
   test ! -z "$1" || ( echo "Usage: openssl-showcerts <file-path|host[:port]>" 1>&2; return )
   if [ -f "$1" ] # is file?
   then
@@ -718,8 +694,7 @@ _openssl_showcerts(){
 
 
 # reload-chrome-nix from: http://stackoverflow.com/a/31040369/496899
-alias reload-chrome=_reload_chrome
-_reload_chrome(){(
+reload_chrome(){(
   BROWSER=google-chrome
   echo "$(date --rfc-3339=seconds) Refresh: $FILE"
   CUR_WID=$(xdotool getwindowfocus)
@@ -750,7 +725,7 @@ alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
 
 ###
 
-_docker_tf(){(
+docker_tf(){(
     LD_PRELOAD="/usr/lib/libtcmalloc_minimal.so.4" 
     export LD_PRELOAD
 
@@ -763,14 +738,13 @@ _docker_tf(){(
 	"$IMAGE" \
 	"$@"
 )}
-alias docker-tf=_docker_tf
 
 alias tf-inspect-checkpoints='python -mtensorflow.python.tools.inspect_checkpoint --file_name '
 alias tensorboard='python -mtensorboard.main '
 
 ###
 
-_nv_docker(){(
+nv_docker(){(
 docker run \
     --device /dev/nvidia0:/dev/nvidia0 \
     --device /dev/nvidia0:/dev/nvidia1 \
@@ -780,7 +754,6 @@ docker run \
     --device /dev/nvidia-uvm:/dev/nvidia-uvm \
     "$@"
 )}
-alias nv-docker=_nv_docker
 
 ###
 
@@ -794,13 +767,13 @@ alias vim8='docker run -ti --rm -v $HOME:$HOME -v $PWD:$PWD -v /data:/data -w $P
 ###
 
 # BEGIN shr-mbp aliases
-_start_rstudio(){(
+start_rstudio(){(
     docker run --name rstudio -d -p 8787:8787 -v $PWD:/home/rstudio -e ROOT=TRUE rocker/rstudio "$@"
 )}
 
 ##########
 
-### _start_pulseaudio(){(
+### start_pulseaudio(){(
 ###     if test ! -s "$HOME"/.config/pulse/default.pa
 ###     then
 ### 	mkdir -p "$HOME"/.config/pulse
@@ -820,7 +793,7 @@ _start_rstudio(){(
 ### )}
 ### 
 ### # switch sink for already launched apps
-### _pa_update_sink_to(){(
+### pa_update_sink_to(){(
 ###     dest=$1
 ###     if test -z "$dest"
 ###     then
