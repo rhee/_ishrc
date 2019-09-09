@@ -435,7 +435,7 @@ alias kor='export LANG=ko_KR.UTF-8'
 alias moshk='mosh --server='"'"'env LANG=ko_KR.UTF-8 mosh-server'"'"''
 unalias mosh 2>/dev/null || true
 mosh(){
-  \mosh --server='env LANG="$(locale -a|grep -E '"'"'(ko_|en_).*\.(UTF-8|utf8)'"'"'|sort|tail -1)" mosh-server||/usr/local/bin/mosh-server' "$@"
+  command mosh --server='env LANG="$(locale -a|grep -E '"'"'(ko_|en_).*\.(UTF-8|utf8)'"'"'|sort|tail -1)" mosh-server||/usr/local/bin/mosh-server' "$@"
 }
 
 #alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '

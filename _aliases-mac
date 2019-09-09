@@ -4,7 +4,7 @@ if [ "Darwin" != "$(uname -s)" ]; then return; fi
 
 alias mac-ls=_mac_ls
 _mac_ls(){
-    \ls "$@" | iconv -f utf8-mac
+    command ls "$@" | iconv -f utf8-mac
 }
 unaliase ls 2>/dev/null || true
 alias ls=_mac_ls
