@@ -52,32 +52,6 @@ _red=`tput setaf 1`
 _green=`tput setaf 2`
 _nocolor=`tput sgr0`
 
-echo "$(date +%s.%N) [Loading .aliases ...]" 1>&2
-#if test -f $HOME/.aliases; then . $HOME/.aliases; fi
-for rc in $HOME/.aliases*
-do
-  case $rc in
-    *~|*.bak|*.orig|*.old);;
-    *) test -f $rc && . $rc;;
-  esac
-done
-  
-
-echo "$(date +%s.%N) [Loading profile.d aliases ...]" 1>&2
-for rc in $HOME/.local/etc/profile.d/_*.sh
- do
-  case $rc in
-    *~|*.bak|*.orig|*.old|*/make.sh);; # skip backup files
-    *) if test -f $rc
-       then
-         printf "${_green}.${_nocolor}" | cat -u 1>&2 2>/dev/null
-	 . $rc
-       fi;;
-  esac
-done
-
-
-
 alias kor='export LANG=ko_KR.UTF-8'
 test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code-oss --disable-gpu'
 
@@ -112,7 +86,6 @@ alias pa-sink-to=_pa_update_sink_to
 
 #####################################################
 
-
 # disable ls color
 alias ls='ls -F'
 
@@ -122,6 +95,30 @@ alias notouch='synclient TouchpadOff=1'
 alias nocaps='setxkbmap -layout us -option ctrl:nocaps'
 # erase = del, disable ^\
 alias noquit='stty erase  quit undef'
+
+echo "$(date +%s.%N) [Loading .aliases ...]" 1>&2
+#if test -f $HOME/.aliases; then . $HOME/.aliases; fi
+for rc in $HOME/.aliases*
+do
+  case $rc in
+    *~|*.bak|*.orig|*.old);;
+    *) test -f $rc && . $rc;;
+  esac
+done
+  
+
+echo "$(date +%s.%N) [Loading profile.d aliases ...]" 1>&2
+for rc in $HOME/.local/etc/profile.d/_*.sh
+ do
+  case $rc in
+    *~|*.bak|*.orig|*.old|*/make.sh);; # skip backup files
+    *) if test -f $rc
+       then
+         printf "${_green}.${_nocolor}" | cat -u 1>&2 2>/dev/null
+	 . $rc
+       fi;;
+  esac
+done
 
 noquit
 

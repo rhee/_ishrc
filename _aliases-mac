@@ -6,6 +6,7 @@ alias mac-ls=_mac_ls
 _mac_ls(){
     \ls "$@" | iconv -f utf8-mac
 }
+unaliase ls 2>/dev/null || true
 alias ls=_mac_ls
 
 alias code='open -a /Applications/Visual\ Studio\ Code.app'
