@@ -241,4 +241,4 @@ fi
 alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
 
 #test -f ~/.mac-docker-aliases && . ~/.mac-docker-aliases
-test -f ~/.aliases-mac-docker && . ~/.aliases-mac-docker
+#test -f ~/.aliases-mac-docker && . ~/.aliases-mac-docker
