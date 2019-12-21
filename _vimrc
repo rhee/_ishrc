@@ -19,7 +19,7 @@ au BufEnter *.yml set ai sw=2 sts=2 ts=8 et
 
 set tags=tags.ctags,./tags.ctags,../tags.ctags,../../tags.ctags,../../../tags.ctags,../../../../tags.ctags,$CTAGSROOT/tags.ctags,~/src/tags.ctags,~/.ctags/*
 
-"set diffopt=iwhite 
+set diffopt=
 set diffopt+=filler
 
 if &diff
