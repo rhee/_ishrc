@@ -1,3 +1,4 @@
+se bg=dark
 set enc=utf8 fencs=ucs-bom,utf-8,euc-kr
 set sw=4 sts=4 ts=8 noai nosi
 set hlsearch
