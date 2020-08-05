@@ -4,7 +4,7 @@ set sw=4 sts=4 ts=8 noai nosi
 set hlsearch
 set nu nowrap nows
 set et
-set bg=dark
+"set bg=dark
 set modeline
 set nobackup noswapfile
 se bufhidden=unload
