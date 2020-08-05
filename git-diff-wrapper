@@ -1,0 +1,17 @@
+#!/bin/bash
+echo "git-diff-wrapper: env:"
+env | grep GIT | sort
+echo "git-diff-wrapper: LOCAL:" "$LOCAL"
+echo "git-diff-wrapper: REMOTE:" "$REMOTE"
+echo "git-diff-wrapper: args:" "$@"
+echo "git-diff-wrapper: ***************************************"
+echo "git-diff-wrapper: press CTRL-C to stop"
+echo "git-diff-wrapper: ***************************************"
+read -t 1 _dummy
+set -x -e
+if test $# -eq 7
+then
+    exec vimdiff "$2" "$5"
+else
+    exec vim "$@"
+fi
