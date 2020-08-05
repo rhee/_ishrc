@@ -1,6 +1,10 @@
 :
-#\docker -v >/dev/null 2>&1 || return 0
 which docker  >/dev/null 2>&1 || return 0
+
+if ! docker ps -q >/dev/null 2>&1
+then
+  test -z "$DOCKER_MACHINE_NAME" && eval $(docker-machine env) > /dev/null 2>&1 || return 1
+fi
 
 alias docker-clean=_docker_clean
 _docker_clean(){(

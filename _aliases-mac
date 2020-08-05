@@ -2,6 +2,13 @@ if [ "Darwin" != "$(uname -s)" ]; then return; fi
 
 # begin some common mac osx
 
+alias mac-ls=_mac_ls
+_mac_ls(){
+    command ls "$@" | /usr/bin/iconv -f utf8-mac
+}
+unaliase ls 2>/dev/null || true
+alias ls='_mac_ls -sF'
+
 alias code='open -a /Applications/Visual\ Studio\ Code.app'
 
 alias mac-rsync-with-linux='rsync --iconv=utf-8-mac,utf-8'
@@ -224,11 +231,14 @@ _mac_enable_vnc(){(
 )}
 alias mac-enable-vnc=_mac_enable_vnc
 
-if [ -x "/Applications/MPlayer OSX Extended.app//Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" ]
+if [ -x "/Applications/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" ]
 then
-    alias mplayer='"/Applications/MPlayer OSX Extended.app//Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" '
+    #alias mplayer='"/Applications/MPlayer OSX Extended.app//Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" '
+    #unalias mplayer
+    mplayer(){ "/Applications/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" "$@"; }
 fi
 
 alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
 
-test -f ~/.mac-docker-aliases && . ~/.mac-docker-aliases
+#test -f ~/.mac-docker-aliases && . ~/.mac-docker-aliases
+#test -f ~/.aliases-mac-docker && . ~/.aliases-mac-docker

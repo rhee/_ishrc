@@ -1,3 +1,4 @@
+se bg=dark
 set enc=utf8 fencs=ucs-bom,utf-8,euc-kr
 set sw=4 sts=4 ts=8 noai nosi
 set hlsearch
@@ -5,20 +6,30 @@ set nu nowrap nows
 set et
 set bg=dark
 set modeline
+set nobackup noswapfile
+se bufhidden=unload
+se undolevels=5
+sy on
+
+autocmd FileType java set sw=4 sts=4 ts=8 et
+au BufEnter *.java set ai sw=4 sts=4 ts=8 et
+autocmd FileType python set sw=4 sts=4 ts=8 et
+au BufEnter *.py set ai sw=4 sts=4 ts=8 et
+autocmd FileType yaml set sw=2 sts=2 ts=8 et
+au BufEnter *.yml set ai sw=2 sts=2 ts=8 et
 
 
 set tags=tags.ctags,./tags.ctags,../tags.ctags,../../tags.ctags,../../../tags.ctags,../../../../tags.ctags,$CTAGSROOT/tags.ctags,~/src/tags.ctags,~/.ctags/*
 
-set nobackup noswapfile
-se bufhidden=unload
-se undolevels=5
-
-sy on
-
-"set diffopt=iwhite 
+set diffopt=
 set diffopt+=filler
 
-let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,*.pyc,.*.swp,*.jpg,*.png"
+if &diff
+    " diff mode
+    set diffopt+=iwhite
+endif
+
+let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,*.pyc,.*.swp,*.jpg,*.png,*.ckpt,*.ckpt-data-?????-of-?????"
 
 "for ant see :help errorformat-javac :help errorformat-ant
 set efm+=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,\%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
@@ -56,15 +67,14 @@ map  :set guifont=Lucida_Sans_Typewriter:h9:cANSI columns=119 lines=43 nu nowr
 map  :set guifont=GulimChe:h10:cHANGEUL columns=89 lines=29 nonu wrap sw=8
 
 map ;; :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !tee -a check.txt.x >/dev/null
-map ;a :sy off:se nowrap nowrapscan cursorline so=9999:.,.w !transmission-remote -a $(perl -ne 's@^([0-9A-F]{40}).*$@magnet:?xt=urn:btih:\L\1\&tr=udp\%3A\%2F\%2Ftracker.publicbt.com\%3A80\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.publicbt.com\%2Fannounce\&tr=http\%3A\%2F\%2Ftracker.torrentbox.com\%3A2710\%2Fannounce@ && print;') -ph all
 
 " so ~/.vimrc-neobundle
 " so ~/.vimrc-vundle
 
 " map b :so ~/.vimrc-neobundle
 " map  :so ~/.vimrc-neobundle
-map b :so ~/.vimrc-vundle
-map  :so ~/.vimrc-vundle
+" map b :so ~/.vimrc-vundle
+" map  :so ~/.vimrc-vundle
 
 " Append modeline after last line in buffer.
 " Use substitute() instead of printf() to handle '%%s' modeline in LaTeX

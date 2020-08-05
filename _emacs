@@ -140,7 +140,14 @@
 
 
 
-(custom-set-variables '(linum-format (quote "%5d ")))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(evil-default-state (quote emacs))
+ '(linum-format (quote "%5d "))
+ '(package-selected-packages (quote (evil js2-mode php-mode))))
 ;;(custom-set-variables '(linum-format 'dynamic))
 
 (add-hook 'c-mode-common-hook 'linum-mode)
@@ -154,12 +161,7 @@
 
 
 ;;; auto-generated codes
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (evil js2-mode php-mode))))
+
 (set-face-attribute 'default nil :height 240)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -175,3 +177,32 @@
  '(company-tooltip-common-selection ((((type x)) (:inherit company-tooltip-selection :weight bold)) (t (:inherit company-tooltip-selection))))
  '(company-tooltip-selection ((t (:background "steelblue" :foreground "white"))))
  '(term-color-green ((t (:background "green" :foreground "green")))))
+
+
+
+;;; (progn
+;;;   (setq evil-default-state 'emacs)
+;;;   (require 'cl)
+;;;   (require 'evil)
+;;;   (loop for (mode . state) in '((inferior-emacs-lisp-mode . emacs)
+;;; 				(nrepl-mode . insert)
+;;; 				(pylookup-mode . emacs)
+;;; 				(comint-mode . emacs)
+;;; 				(shell-mode . emacs)
+;;; 				(git-commit-mode . emacs)
+;;; 				(git-rebase-mode . emacs)
+;;; 				(term-mode . emacs)
+;;; 				(help-mode . emacs)
+;;; 				(helm-grep-mode . emacs)
+;;; 				(grep-mode . emacs)
+;;; 				(bc-menu-mode . emacs)
+;;; 				(magit-branch-manager-mode . emacs)
+;;; 				(rdictcc-buffer-mode . emacs)
+;;; 				(dired-mode . emacs)
+;;; 				(wdired-mode . normal)
+;;; 				(python-mode . normal)
+;;; 				(c-mode . normal)
+;;; 				(js2-mode . normal)
+;;; 				(sh-mode . normal)
+;;; 				(php-mode . normal))
+;;; 	do (evil-set-initial-state mode state)))
