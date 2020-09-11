@@ -837,3 +837,4 @@ alias vim-codebreak='vim8 -c VimGameCodeBreak '
 
 alias abi-dumper='docker run --rm -it -v /opt/conda:/opt/conda -v $(pwd):$(pwd) -w $(pwd) abi-dumper abi-dumper '
 
+alias nethack='docker run -it matsuu/nethack'
