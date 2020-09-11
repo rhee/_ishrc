@@ -4,6 +4,7 @@ set sw=4 sts=4 ts=8 noai nosi
 set hlsearch
 set nu nowrap nows
 set et
+"set bg=dark
 set modeline
 set nobackup noswapfile
 se bufhidden=unload
@@ -40,6 +41,15 @@ if has("multi_byte")
   set encoding=utf-8                     " better default than latin1
   setglobal fileencoding=utf-8           " change default file encoding when writing new files
 endif
+
+autocmd FileType java set sw=4 sts=4 ts=8 et
+au BufEnter *.java set ai sw=4 sts=4 ts=8 et
+autocmd FileType python set sw=4 sts=4 ts=8 et
+au BufEnter *.py set ai sw=4 sts=4 ts=8 et
+autocmd FileType yaml set sw=2 sts=2 ts=8 et
+au BufEnter *.yml set ai sw=2 sts=2 ts=8 et
+
+
 
 :hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 :hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
