@@ -432,10 +432,10 @@ rename_files(){(
 #alias kor='export LANG=$(locale -a |grep -i ko_KR.utf)'
 alias kor='export LANG=ko_KR.UTF-8'
 
-alias moshk='mosh --server='"'"'env LANG=ko_KR.UTF-8 mosh-server'"'"''
+alias moshk='mosh --server='"'"'env LANG=ko_KR.utf8 mosh-server'"'"''
 unalias mosh 2>/dev/null || true
 mosh(){
-  command mosh --server='env LANG="$(locale -a|grep -E '"'"'(ko_|en_).*\.(UTF-8|utf8)'"'"'|sort|tail -1)" mosh-server||/usr/local/bin/mosh-server' "$@"
+  command mosh --server='env LANG="$(locale -a|grep -E '\''(ko_|en_).*\.(UTF-8|utf8)'\''|sort|tail -1)" bash -c "mosh-server --version > /dev/null 2>&1 && exec mosh-server || exec /usr/local/bin/mosh-server"' "$@"
 }
 
 #alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '

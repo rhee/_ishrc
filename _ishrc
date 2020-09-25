@@ -99,6 +99,7 @@ alias nethack='docker run --name nethack --rm -it matsuu/nethack '
 #alias vim8='docker run -ti --rm -v $HOME:$HOME -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${IMAGE_VIM_CB-vim-codebreak:0.1}'
 alias vim8='docker run -ti --rm -v $(pwd):$(pwd) -v /data:/data -w $(pwd) --entrypoint vim vim-codebreak'
 alias vim-codebreak='vim8 -c VimGameCodeBreak '
+mosh(){ command mosh --server='env LANG="$(locale -a|grep -E '\''(ko_|en_).*\.(UTF-8|utf8)'\''|sort|tail -1)" bash -c '\''mosh-server --version >/dev/null 2>&1 && mosh-server "$@" || exec /usr/local/bin/mosh-server "$@"'\'' mosh-server'; }
 #####################################################
 
 
