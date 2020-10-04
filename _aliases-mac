@@ -1,3 +1,4 @@
+:
 if [ "Darwin" != "$(uname -s)" ]; then return; fi
 
 # begin some common mac osx
