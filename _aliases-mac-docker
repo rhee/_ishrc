@@ -12,7 +12,6 @@ then
     export MACHINE_STORAGE_PATH
 fi
 
-
 _mac_docker_restart_service(){(
     set -x
     osascript -e 'quit app "Docker"'
@@ -22,11 +21,11 @@ _mac_docker_restart_service(){(
 )}
 alias mac-docker-restart-service=_mac_docker_restart_service
 
-
-
-[ ! -d  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/ ] && return 1
-
-
+############################################################################
+# for hyperkit base docker
+#
+if test -d  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/
+then
 
 alias mac-docker-hykit-term='screen -e  ~/Library/Containers/com.docker.docker/Data/com.docker.driver.amd64-linux/tty'
 
@@ -67,4 +66,11 @@ _mac_docker_set_max_connections(){(
 )}
 alias mac-docker-set-max-connections=_mac_docker_set_max_connections
 
+fi
+
+# end hyperkit based aliases
+############################################################################
+
 alias nmap='docker run --name nmap --rm -it --net host uzyexe/nmap '
+
+
