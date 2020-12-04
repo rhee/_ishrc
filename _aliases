@@ -1,24 +1,11 @@
 :
-\ls -F -w > /dev/null 2>&1 && alias ls='\ls -F -w' 
-\ls -NF --show-control-chars --color=auto > /dev/null 2>&1 && \
-  alias ls='\ls -NF --show-control-chars'
-
-alias ll='ls -al'
-alias lc='ls -NF --color=auto'
-alias tF='sh -c '"'"'for f in "$@"; do echo "-F" "$f"; done |exec xargs tail'"'"' tF '
-
-alias lsof='sudo lsof -n -P'
-
-alias cp='\cp -i'
-alias mv='\mv -i'
-alias rm='\rm -i'
 alias Copy='\rsync -e ssh -avP'
-alias cpV='rsync --partial --progress --append'
-alias mvV='rsync --partial --progress --append --remove-sent-files'
 
 alias tart='tar tvvzf'
 alias tarx='tar xvvzf'
 alias tarc='tar cvvzf'
+
+alias tF='sh -c '"'"'for f in "$@"; do echo "-F" "$f"; done |exec xargs tail'"'"' tF '
 
 alias ko='export LANG=ko_KR.euckr'
 alias u8='export LANG=ko_KR.utf8'
@@ -248,7 +235,7 @@ cvd(){(
   echo "Done: $cmd"
 )}
 
-ytd() { ID=$1 ; curl www.youtube.com/watch?v="$1" |sed 's/http/\ &/g;s/ /<\CR|\n>&/g;s/\"\,//g;s/\,[0-9]*\|//g' |awk '/http\:\/\/.*.itag\='$2'/{print "curl -C- -L -vvv \42"$1"\42 -o '$PWD'/youtube_'$ID'.flv"}' |unvis -h | unvis -h|sort -u | sh ;}
+ytd(){( local ID=$1 ; curl www.youtube.com/watch?v="$1" |sed 's/http/\ &/g;s/ /<\CR|\n>&/g;s/\"\,//g;s/\,[0-9]*\|//g' |awk '/http\:\/\/.*.itag\='$2'/{print "curl -C- -L -vvv \42"$1"\42 -o '$PWD'/youtube_'$ID'.flv"}' |unvis -h | unvis -h|sort -u | sh; )}
 
 alias en2='enscript -2rj --line-numbers --media=A4 --margin=:36::72 -p output.ps '
 
@@ -431,12 +418,9 @@ rename_files(){(
 
 #alias kor='export LANG=$(locale -a |grep -i ko_KR.utf)'
 alias kor='export LANG=ko_KR.UTF-8'
-
-alias moshk='mosh --server='"'"'env LANG=ko_KR.utf8 mosh-server'"'"''
-unalias mosh 2>/dev/null || true
-mosh(){
-  command mosh --server='env LANG="$(locale -a|grep -E '\''(ko_|en_).*\.(UTF-8|utf8)'\''|sort|tail -1)" bash -c "mosh-server --version > /dev/null 2>&1 && exec mosh-server || exec /usr/local/bin/mosh-server"' "$@"
-}
+#mosh(){ command mosh --server='env LANG="$(locale -a|grep -E '\''(ko_|en_).*\.(UTF-8|utf8)'\''|sort|tail -1)" bash -c "mosh-server --version > /dev/null 2>&1 && exec mosh-server || exec /usr/local/bin/mosh-server"' "$@" }
+# nosync
+alias sync='echo -n "Sync? "; read yn; case $yn in [Yy]) /bin/sync;; esac;'
 
 #alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
 alias rsync-with-openelec='rsync --rsync-path="./rsync" '
@@ -446,17 +430,9 @@ alias rsync-with-mac='rsync --iconv=utf-8,utf-8-mac'
 alias mt='multitail -p l'
 alias mtj='multitail -p l -j'
 
-# nosync
-alias sync='echo -n "Sync? "; read yn; case $yn in [Yy]) /bin/sync;; esac;'
-
 # prompt by git
-git_branch_name(){
-  git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3
-}
-git_branch_prompt(){
-  local branch=`_git_branch_name`
-  if [ $branch ]; then printf " [%s]" $branch; fi
-}
+git_branch_name(){ git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3; }
+git_branch_prompt(){ local branch=`_git_branch_name`; if [ $branch ]; then printf " [%s]" $branch; fi; }
 #PS1="\u@\h \[\033[0;36m\]\W\[\033[0m\]\[\033[0;32m\]\$(_git_branch_prompt)\[\033[0m\] \$ "
 
 # lsof, find processes using a specific tcp port
@@ -653,7 +629,8 @@ ipt_forward(){(
 
 alias shuf-pl='perl -MList::Util=shuffle -e "print shuffle(<STDIN>);"'
 
-alias myip="curl -s http://myip.dnsomatic.com | grep '[\d.]'"
+#alias myip="curl -s http://myip.dnsomatic.com | grep '[\d.]'"
+alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 alias sudo='sudo -H'
 
@@ -666,13 +643,8 @@ alias j2y='python -c "import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin
 
 alias dmps-disable='xset -dpms; xset s noblank;'
 
-less_csv(){
-  cat "$@" | column -s, -t | less -#2 -N -S
-}
-
-sshfs_better(){
-    sshfs "$@" -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3
-}
+less_csv(){ cat "$@" | column -s, -t | less -#2 -N -S; }
+sshfs_better(){ sshfs "$@" -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3; }
 
 openssl_showcerts(){
   test ! -z "$1" || ( echo "Usage: openssl-showcerts <file-path|host[:port]>" 1>&2; return )
@@ -690,7 +662,6 @@ openssl_showcerts(){
     openssl s_client -showcerts -connect "$1" < /dev/null | less
   fi
 }
-
 
 
 # reload-chrome-nix from: http://stackoverflow.com/a/31040369/496899
@@ -719,11 +690,6 @@ if test -f $HOME/.mac-aliases; then . $HOME/.mac-aliases; fi
 if test -f $HOME/.docker-aliases; then . $HOME/.docker-aliases; fi
 
 ##########
-
-alias i='. $HOME/.ishrc'
-alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
-
-###
 
 docker_tf(){(
     LD_PRELOAD="/usr/lib/libtcmalloc_minimal.so.4" 
@@ -757,10 +723,9 @@ docker run \
 
 ###
 
-# BEGIN shr-mbp aliases
-start_rstudio(){(
-    docker run --name rstudio -d -p 8787:8787 -v $PWD:/home/rstudio -e ROOT=TRUE rocker/rstudio "$@"
-)}
+#start_rstudio(){(
+#    docker run --name rstudio -d -p 8787:8787 -v $PWD:/home/rstudio -e ROOT=TRUE rocker/rstudio "$@"
+#)}
 
 ##########
 
@@ -813,6 +778,6 @@ start_rstudio(){(
 
 ###
 
-test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code-oss --disable-gpu'
+#test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-gpu'
 
 ###

@@ -48,69 +48,50 @@ esac
 unset HISTFILE
 IGNOREEOF=4
 
-_red=`tput setaf 1`
-_green=`tput setaf 2`
-_nocolor=`tput sgr0`
-
-alias kor='export LANG=ko_KR.UTF-8'
-test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code-oss --disable-gpu'
-
-
-#if [ -x /opt/conda/bin/conda ]
-#then
-#    #alias conda='/opt/conda/bin/conda '
-#    alias conda-activate='. /opt/conda/bin/activate '
-#fi
-
+#####################################################
+# anaconda
+test -f /opt/conda/etc/profile.d/conda.sh && . /opt/conda/etc/profile.d/conda.sh
 #####################################################
 
-# switch sink for already launched apps
-_pa_update_sink_to(){(
-    dest=$1
-    if test -z "$dest"
-    then
-	echo "Usage: _pa_update_sink_to <target-addres>" 1>&2
-	return 1
-    fi
-    mkdir -p "$HOME"/.config/pulse
-    cat <<EEE > "$HOME"/.config/pulse/default.pa
-.include /etc/pulse/default.pa
-load-module module-tunnel-sink server=${dest} sink=Channel_1__Channel_2.2 format=float32le channels=2 rate=44100 sink_name=remote-spk
-load-module module-tunnel-source server=${dest} source=Channel_1__Channel_2 format=float32le channels=2 rate=44100 source_name=remote-mic
-EEE
-    pulseaudio -k
-    pactl info
-    pactl set-default-sink remote-spk
-)}
-alias pa-sink-to=_pa_update_sink_to
-
-
 #####################################################
+alias i='. $HOME/.ishrc'
+alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
+\ls -F -w > /dev/null 2>&1 && alias ls='\ls -F -w' 
+\ls -NF --show-control-chars --color=auto > /dev/null 2>&1 && \
+  alias ls='\ls -NF --show-control-chars'
+alias ll='ls -al'
+alias lc='ls -NF --color=auto'
+alias cp='\cp -i'
+alias mv='\mv -i'
+alias rm='\rm -i'
+alias cpV='rsync --partial --progress --append'
+alias mvV='rsync --partial --progress --append --remove-sent-files'
+alias lsof='sudo lsof -n -P'
 alias unlock-sessions='loginctl unlock-sessions'
 alias inspect-checkpoint='python -mtensorflow.python.tools.inspect_checkpoint --file_name '
-alias rsync-tensorboard-events="rsync -avP --delete --append-verify --include='*/' --include='events.*' --exclude='*' "
+alias rsync-events="rsync -avP --delete --append-verify --include='*/' --include='events.*' --exclude='*' "
 alias abi-dumper='docker run --rm -it -v /opt/conda:/opt/conda -v $(pwd):$(pwd) -w $(pwd) abi-dumper abi-dumper '
 alias nethack='docker run --name nethack --rm -it matsuu/nethack '
-#alias vim8='docker run -ti --rm -v $HOME:$HOME -v /data:/data -v $PWD:$PWD -w $PWD jare/vim-bundle vim'
-#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data vim vim'
-#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data -e HOME=$HOME -w $PWD haron/vim-with-plugins vim'
-#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data -e HOME=$HOME -w $PWD --entrypoint vim ${VIMIMAGE-jare/vim-bundle}'
-#alias vim8='docker run -ti --rm -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${VIMIMAGE-jare/vim-bundle}'
-#alias vim8='docker run -ti --rm -v $HOME:$HOME -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${IMAGE_VIM_CB-vim-codebreak:0.1}'
 alias vim8='docker run -ti --rm -v $(pwd):$(pwd) -v /data:/data -w $(pwd) --entrypoint vim vim-codebreak'
 alias vim-codebreak='vim8 -c VimGameCodeBreak '
-#####################################################
-
-
 # disable ls color
-alias ls='ls -F'
-
+alias ls='\ls -F'
 # disable touchpad
 alias notouch='synclient TouchpadOff=1'
 # remap key capslock as control
 alias nocaps='setxkbmap -layout us -option ctrl:nocaps'
 # erase = del, disable ^\
 alias noquit='stty erase  quit undef'
+# kor
+alias kor='export LANG=ko_KR.UTF-8'
+# nosync
+alias sync='echo -n "Sync? "; read yn; case $yn in [Yy]) /bin/sync;; esac;'
+# mosh
+mosh(){
+command mosh --server='env LANG="$(locale -a|grep -E '\''(ko_|en_).*\.(UTF-8|utf8)'\''|sort|tail -1)" bash -c "mosh-server --version > /dev/null 2>&1 && exec mosh-server || exec /usr/local/bin/mosh-server"' "$@"
+}
+#####################################################
+
 
 echo "$(date +%s.%N) [Loading profile.d aliases ...]" 1>&2
 for rc in $HOME/.local/etc/profile.d/_*.sh; do
