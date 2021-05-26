@@ -1,10 +1,11 @@
 :
 if [ "Darwin" != "$(uname -s)" ]; then return; fi
 
-if ! docker ps -q >/dev/null 2>&1
-then
-  test -z "$DOCKER_MACHINE_NAME" && eval $(docker-machine env) >/dev/null 2>&1 || return 1
-fi
+! docker ps -q >/dev/null 2>&1 && \
+  docker-machine -v 2>/dev/null && \
+  test -z "$DOCKER_MACHINE_NAME" && \
+  eval $(docker-machine env) >/dev/null 2>&1 || \
+  return 1
 
 if [ -d /Volumes/ext/Docker ]
 then
