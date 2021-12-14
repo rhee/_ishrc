@@ -436,7 +436,7 @@ git_branch_prompt(){ local branch=`_git_branch_name`; if [ $branch ]; then print
 #PS1="\u@\h \[\033[0;36m\]\W\[\033[0m\]\[\033[0;32m\]\$(_git_branch_prompt)\[\033[0m\] \$ "
 
 
-alias lsof='lsof -l -n -P '
+alias lsof='sudo -H lsof -l -n -P '
 
 # lsof, find processes using a specific tcp port
 lsof_port_listeners(){(
