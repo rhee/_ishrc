@@ -232,14 +232,13 @@ _mac_enable_vnc(){(
 )}
 alias mac-enable-vnc=_mac_enable_vnc
 
-if [ -x "/Applications/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" ]
+if [ -x '/Applications/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer' ]
 then
-    mplayer(){ "/Applications/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer" "$@"; }
+    mplayer(){ '/Applications/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer' "$@"; }
 fi
 
 alias brew='env PATH=/opt/homebrew/bin:$PATH brew '
 alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
 
-alias za="arch -arch arm64e /bin/zsh"
-alias zi="arch -arch x86_64 /bin/zsh"
-
+alias za='exec arch -arch arm64e /bin/zsh'
+alias zi='exec arch -arch x86_64 /bin/zsh'
