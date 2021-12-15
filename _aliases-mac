@@ -239,3 +239,7 @@ fi
 
 alias brew='env PATH=/opt/homebrew/bin:$PATH brew '
 alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
+
+alias za="arch -arch arm64e /bin/zsh"
+alias zi="arch -arch x86_64 /bin/zsh"
+
