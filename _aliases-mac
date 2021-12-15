@@ -1,5 +1,6 @@
 :
-if [ "Darwin" != "$(uname -s)" ]; then return; fi
+##if [ "Darwin" != "$(uname -s)" ]; then return; fi
+test "Darwin" = "$(uname -s)" || return
 
 # begin some common mac osx
 
@@ -12,13 +13,12 @@ alias ls='_mac_ls -sF'
 
 alias code='open -a /Applications/Visual\ Studio\ Code.app'
 
-alias mac-rsync-with-linux='rsync --iconv=utf-8-mac,utf-8'
-
-alias mac-rsync=_mac_rsync
-_mac_rsync(){(
-    rsync --iconv=utf-8-mac,utf-8 "$@" || \
-	rsync "$@"
-)}
+#alias mac-rsync-with-linux='rsync --iconv=utf-8-mac,utf-8'
+#alias mac-rsync=_mac_rsync
+#_mac_rsync(){(
+#    rsync --iconv=utf-8-mac,utf-8 "$@" || \
+#	rsync "$@"
+#)}
 
 alias mac-convmv-to-normal='convmv -r -f utf-8 -t utf-8 --nfc --notest'
 alias mac-convmv-from-normal='convmv -r -f utf-8 -t utf-8 --nfd --notest'
@@ -237,7 +237,21 @@ then
     mplayer(){ '/Applications/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer' "$@"; }
 fi
 
-alias brew='env PATH=/opt/homebrew/bin:$PATH brew '
+### if [[ $(arch) == "arm64" ]]; then
+###   PS1="%{$fg_bold[red]%}🐇%{$reset_color%} $PS1"
+###   PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/local/sbin:$PATH"
+### else
+###   PS1="%{$fg_bold[red]%}🐢%{$reset_color%} $PS1"
+###   PATH="/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+### fi
+
+### if [[ $(arch) == "arm64" ]]; then
+###   test -f /opt/homebrew/bin/brew && eval "$(/opt/homebrew/bin/brew shellenv)"
+### else
+###   test -f /usr/local/bin/brew && eval "$(/usr/local/bin/brew shellenv)"
+### fi
+
+unalias brew >/dev/null 2>&1
 alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
 
 alias za='exec arch -arch arm64e /bin/zsh'
