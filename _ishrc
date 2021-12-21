@@ -70,9 +70,9 @@ alias mvV='rsync --partial --progress --append --remove-sent-files'
 alias lsof='sudo lsof -n -P'
 alias unlock-sessions='loginctl unlock-sessions'
 alias inspect-checkpoint='python -mtensorflow.python.tools.inspect_checkpoint --file_name '
-###alias rsync-events="rsync -avP --delete --append-verify --include='*/' --include='events.*' --exclude='*' "
+###alias rsync-events="rsync -q -rtvP --delete --append-verify --include='*/' --include='events.*' --exclude='*' "
+## consider `--relative` for rsync-events
 alias rsync-events="rsync -q -rtP \
-        --relative \
         --delete \
         --append-verify \
         --prune-empty-dirs \
