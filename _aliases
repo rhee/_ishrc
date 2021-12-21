@@ -1,5 +1,10 @@
 :
+\ls -F -w > /dev/null 2>&1 && alias ls='\ls -F -w' 
+\ls -NF --show-control-chars --color=auto > /dev/null 2>&1 && \
+  alias ls='\ls -NF --show-control-chars'
 alias Copy='\rsync -e ssh -avP'
+alias cpV='rsync --partial --progress --append'
+alias mvV='rsync --partial --progress --append --remove-sent-files'
 
 alias tart='tar tvvzf'
 alias tarx='tar xvvzf'
@@ -13,6 +18,8 @@ alias u8='export LANG=ko_KR.utf8'
 alias sl='screen -ls'
 alias sx8='LANG=ko_KR.utf8 screen -U -x -r'
 
+#alias dC='d_=/run/user/$(id -u)/dtach; mkdir -p $d_; env dC_sock_=$d_/sock dtach -c $d_/sock -z -r winch'
+#alias dA='d_=/run/user/$(id -u)/dtach; if [ -S "$dC_sock_" ]; then echo "socket already attached"; else dtach -a $d_/sock -z -r winch; fi'
 alias dC='d_=/tmp/dtach/$(id -u); mkdir -p $d_; env dC_sock_=$d_/sock dtach -c $d_/sock -z -r winch'
 alias dA='d_=/tmp/dtach/$(id -u); if [ -S "$dC_sock_" ]; then echo "socket already attached"; else dtach -a $d_/sock -z -r winch; fi'
 
@@ -726,11 +733,15 @@ docker run \
 
 ###
 
-#start_rstudio(){(
-#    docker run --name rstudio -d -p 8787:8787 -v $PWD:/home/rstudio -e ROOT=TRUE rocker/rstudio "$@"
-#)}
+#alias vim8='docker run -ti --rm -v $HOME:$HOME -v /data:/data -v $PWD:$PWD -w $PWD jare/vim-bundle vim'
+#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data vim vim'
+#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data -e HOME=$HOME -w $PWD haron/vim-with-plugins vim'
+#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data -e HOME=$HOME -w $PWD --entrypoint vim ${VIMIMAGE-jare/vim-bundle}'
+#alias vim8='docker run -ti --rm -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${VIMIMAGE-jare/vim-bundle}'
+alias vim8='docker run -ti --rm -v $HOME:$HOME -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${IMAGE_VIM_CB-vim-codebreak:0.1}'
 
-##########
+###
+
 
 ### start_pulseaudio(){(
 ###     if test ! -s "$HOME"/.config/pulse/default.pa
@@ -784,3 +795,20 @@ docker run \
 #test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-gpu'
 
 ###
+
+alias inspect-checkpoint='python -mtensorflow.python.tools.inspect_checkpoint --file_name '
+alias rsync-events="rsync -avP --delete --append-verify --include='*/' --include='events.*' --exclude='*' "
+
+alias unlock-sessions='loginctl unlock-sessions'
+
+
+alias vim8='docker run -ti --rm -v $(pwd):$(pwd) -v /data:/data -w $(pwd) --entrypoint vim vim-codebreak'
+alias vim-codebreak='vim8 -c VimGameCodeBreak '
+
+alias abi-dumper='docker run --rm -it -v /opt/conda:/opt/conda -v $(pwd):$(pwd) -w $(pwd) abi-dumper abi-dumper '
+
+alias convert='env MAGICK_THREAD_LIMIT=1 convert'
+alias mogrify='env MAGICK_THREAD_LIMIT=1 mogrify'
+
+##alias i='. $HOME/.ishrc'
+##alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
