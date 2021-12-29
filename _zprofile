@@ -1,0 +1,18 @@
+:
+### trusted tmux socket path
+if test -d /run/user/$(id -u)
+then
+  mkdir -p /run/user/$(id -u)/tmux
+  TMUX_TMPDIR=/run/user/$(id -u)/tmux
+  export TMUX_TMPDIR
+fi
+
+if test -f /opt/conda/etc/profile.d/conda.sh
+then
+  . /opt/conda/etc/profile.d/conda.sh
+fi
+
+case :$PATH: in *:/usr/lib/ccache:*);; *)export PATH=/usr/lib/ccache:$PATH;; esac
+case :$PATH: in *:$HOME/.cargon/bin:*);; *)export PATH=$HOME/.cargo/bin:$PATH;; esac
+
+source ~/.zshrc
