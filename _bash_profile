@@ -7,6 +7,16 @@ then
   export TMUX_TMPDIR
 fi
 
+MANPATH=$(man --path 2>/dev/null)
+LANG=ko_KR.UTF-8
+export MANPATH LANG
+
+if [[ $(arch) == "arm64" ]]; then
+  test -f /opt/homebrew/bin/brew && eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+  test -f /usr/local/bin/brew && eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 if test -f /opt/conda/etc/profile.d/conda.sh
 then
   . /opt/conda/etc/profile.d/conda.sh
@@ -15,4 +25,7 @@ fi
 case :$PATH: in *:/usr/lib/ccache:*);; *)export PATH=/usr/lib/ccache:$PATH;; esac
 case :$PATH: in *:$HOME/.cargon/bin:*);; *)export PATH=$HOME/.cargo/bin:$PATH;; esac
 
-source ~/.bashrc
+pyenv --version 2>/dev/null && eval "$(pyenv init -)"
+pyenv --version 2>/dev/null && eval "$(pyenv virtualenv-init -)"
+
+source $HOME/.bashrc
