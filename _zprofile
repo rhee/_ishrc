@@ -28,4 +28,4 @@ case :$PATH: in *:$HOME/.cargon/bin:*);; *)export PATH=$HOME/.cargo/bin:$PATH;; 
 pyenv --version >/dev/null 2>&1 && eval "$(pyenv init -)"
 pyenv --version >/dev/null 2>&1 && eval "$(pyenv virtualenv-init -)"
 
-source $HOME/.bashrc
+source $HOME/.zshrc
