@@ -696,8 +696,8 @@ alias no_cuda='env CUDA_VISIBLE_DEVICES= USE_CUDA= /bin/bash -i'
 
 ##########
 
-if test -f $HOME/.mac-aliases; then . $HOME/.mac-aliases; fi
-if test -f $HOME/.docker-aliases; then . $HOME/.docker-aliases; fi
+###if test -f $HOME/.mac-aliases; then . $HOME/.mac-aliases; fi
+###if test -f $HOME/.docker-aliases; then . $HOME/.docker-aliases; fi
 
 ##########
 
