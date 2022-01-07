@@ -3,7 +3,7 @@ _iquitnow(){
     set -Eeuo pipefail
     IFS=$'\n\t'
 
-    if test "${1-none}" == "--no-dry-run"
+    if test "${1-none}" = "--no-dry-run"
     then
         _purge(){
             for ff in "$@"
