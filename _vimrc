@@ -49,9 +49,12 @@ au BufEnter *.py set ai sw=4 sts=4 ts=8 et
 autocmd FileType yaml set sw=2 sts=2 ts=8 et
 au BufEnter *.yml set ai sw=2 sts=2 ts=8 et
 
+se cursorline
+:hi clear cursorline
+":hi cursorline gui=underline
+:hi cursorline cterm=underline
 
-
-:hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+":hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 :hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 :nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
 

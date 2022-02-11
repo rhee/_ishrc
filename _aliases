@@ -98,7 +98,7 @@ alias zap='perl -e "truncate \$ARGV[0],0"'
 
 alias capmmf='sh -c '\''mplayer.static -vo null -ao null -dumpfile "cap_$(basename $1)" -dumpstream "$1"'\'' capmmf'
 mpPP(){ mplayer -quiet -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -utf8 -shuffle "$@" </dev/null; }
-mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle "$@" </dev/null; }
+mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle -slang ko -alang ko -framedrop -fixed-vo -x 640 -y 360 "$@" </dev/null; }
 
 flac2mp3(){(
   if [ -z "$2" ]
