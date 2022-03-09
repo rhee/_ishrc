@@ -812,3 +812,6 @@ alias mogrify='env MAGICK_THREAD_LIMIT=1 mogrify'
 
 ##alias i='. $HOME/.ishrc'
 ##alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
+
+## ## trick from: https://askubuntu.com/a/379282
+## =() { echo "$(($@))" }
