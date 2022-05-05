@@ -31,5 +31,4 @@ N_PREFIX=$HOME/.local
 pyenv --version >/dev/null 2>&1 && eval "$(pyenv init -)"
 pyenv --version >/dev/null 2>&1 && eval "$(pyenv virtualenv-init -)"
 
-
 source $HOME/.bashrc

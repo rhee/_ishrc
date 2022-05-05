@@ -96,7 +96,7 @@ alias noquit='stty erase  quit undef'
 alias kor='export LANG=ko_KR.UTF-8'
 # nosync
 alias sync='echo -n "Sync? "; read yn; case $yn in [Yy]) /bin/sync;; esac;'
-# mosh
+unalias mosh 2>/dev/null || true
 _mosh(){ command mosh --server='env LANG="$(locale -a|grep -E '"'"'(ko_|en_).*\.(UTF-8|utf8)'"'"'|sort|tail -1)" mosh-server||/usr/local/bin/mosh-server' "$@"; }
 alias mosh=_mosh
 
