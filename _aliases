@@ -814,3 +814,11 @@ alias mogrify='env MAGICK_THREAD_LIMIT=1 mogrify'
 
 ## ## trick from: https://askubuntu.com/a/379282
 ## =() { echo "$(($@))" }
+
+_tightrun(){
+    cgexec -g memory:tight /bin/echo || (
+      sudo cgcreate -t $USER:$USER -a $USER:$USER -g memory:tight
+      sudo cgset -r memory.limit_in_bytes=15g tight )
+    cgexec -g memory:tight "$@"
+}
+alias tightrun='_tightrun '
