@@ -1,4 +1,4 @@
-#!/bin/bash
+:
 _iquitnow(){(
     set -Eeuo pipefail
     IFS=$'\n\t'
