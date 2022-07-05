@@ -3,7 +3,12 @@ _iquitnow(){(
     set -Eeuo pipefail
     IFS=$'\n\t'
 
-    if test "${1-none}" = "--no-dry-run"
+    # zsh workaround
+    setopt noequals 2>/dev/null || true
+    setopt shwordsplit 2>/dev/null || true
+    shopt -s nullglob 2>/dev/null || true
+
+    if test "${1-none}" == "--no-dry-run"
     then
         _purge(){
             for ff in "$@"
@@ -23,6 +28,7 @@ _iquitnow(){(
     _purge ~/.bash_history ~/.bash_logout ~/.cifscreds
     _purge ~/.netrc ~/.vscode ~/.viminfo
     _purge ~/.config/google-chrome
+    _purge ~/.config/opera
 
 )}
 alias iquitnow=_iquitnow
