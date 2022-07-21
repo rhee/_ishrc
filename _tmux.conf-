@@ -1,8 +1,19 @@
 #
 set-option -g prefix C-a
+set-option default-terminal screen-256color
 unbind-key C-a
 bind-key C-a send-prefix
-# set -g status off
+
+# set base index: https://unix.stackexchange.com/a/35932/27157
+set -g base-index 1
+setw -g pane-base-index 1
+
+#set -g status off
 set -s escape-time 0
-#run-shell "/usr/bin/powerline-daemon -q"
+#run-shell "$HOME/.local/bin/powerline-daemon -q"
 #source "/usr/share/powerline/bindings/tmux/powerline.conf"
+#source "$HOME/.local/lib/python2.7/site-packages/powerline/bindings/tmux/powerline.conf"
+
+## set-option -g prefix 'C-\'
+## unbind-key 'C-\'
+## bind-key 'C-\' send-prefix
