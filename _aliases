@@ -822,3 +822,11 @@ _tightrun(){
     cgexec -g memory:tight "$@"
 }
 alias tightrun='_tightrun '
+
+if ! timeout --version >/dev/null 2>&1
+then
+    timeout(){
+        local s="$1"; shift
+        ("$@") & sleep $s; kill $! 2> /dev/null || :
+    }
+fi
