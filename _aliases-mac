@@ -256,3 +256,9 @@ alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
 
 alias za='exec arch -arch arm64e /bin/zsh'
 alias zi='exec arch -arch x86_64 /bin/zsh'
+
+alias mac-restart-screensharing='sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.screensharing.plist &&  sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist'
+## or for later version OS: sudo launchctl kill KILL system/com.apple.screensharing
+
+#/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/MacOS/ARDAgent
+alias mac-restart-ardagent='sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -users admin -privs -all -restart -agent -menu'

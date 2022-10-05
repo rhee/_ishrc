@@ -69,7 +69,7 @@ alias cpV='rsync --partial --progress --append'
 alias mvV='rsync --partial --progress --append --remove-sent-files'
 alias lsof='sudo lsof -n -P'
 alias unlock-sessions='loginctl unlock-sessions'
-alias inspect-checkpoint='python -mtensorflow.python.tools.inspect_checkpoint --file_name '
+alias inspect-checkpoint='python3 -mtensorflow.python.tools.inspect_checkpoint --file_name '
 ###alias rsync-events="rsync -q -rtvP --delete --append-verify --include='*/' --include='events.*' --exclude='*' "
 ## consider `--relative` for rsync-events
 alias rsync-events="rsync -q -rtP \
@@ -96,9 +96,26 @@ alias noquit='stty erase  quit undef'
 alias kor='export LANG=ko_KR.UTF-8'
 # nosync
 alias sync='echo -n "Sync? "; read yn; case $yn in [Yy]) /bin/sync;; esac;'
+
 unalias mosh 2>/dev/null || true
 _mosh(){ command mosh --server='env LANG="$(locale -a|grep -E '"'"'(ko_|en_).*\.(UTF-8|utf8)'"'"'|sort|tail -1)" mosh-server||/usr/local/bin/mosh-server' "$@"; }
 alias mosh=_mosh
+
+_tightrun(){
+    cgexec -g memory:tight /bin/echo || (
+      sudo cgcreate -t $USER:$USER -a $USER:$USER -g memory:tight
+      sudo cgset -r memory.limit_in_bytes=15g tight )
+    cgexec -g memory:tight "$@"
+}
+alias tightrun='_tightrun '
+
+if ! timeout --version >/dev/null 2>&1
+then
+    timeout(){
+        local s="$1"; shift
+        ("$@") & sleep $s; kill $! 2> /dev/null || :
+    }
+fi
 
 #####################################################
 

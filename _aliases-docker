@@ -75,8 +75,8 @@ _docker_exec(){(
 alias docker-rm='docker rm -f'
 alias docker-logs='docker logs --follow --tail=50'
 
-#alias docker-ps='docker ps --format "{{printf \"%22s:\" .Names}}\t{{.ID}}\t{{.Status}}\t{{.Image}}"'
-alias docker-ps='docker ps -a --format "{{.ID}}\t{{printf \"%15s:\" .Names}}\t{{printf \"%31s\" .Image}}\t    {{.Status}}"'
+#alias docker-ps='docker ps --format "{{printf \"%22s:\" .Names}}	{{.ID}}	{{.Status}}	{{.Image}}"'
+alias docker-ps='docker ps -a --format "{{.ID}}	{{printf \"%15s:\" .Names}}	{{printf \"%31s\" .Image}}	    {{.Status}}"'
 
 if test ! -z "$(docker ps -q -f 'name=dropbox' 2>/dev/null)" ; then
   alias dropbox-status='docker exec dropbox /dropbox.sh status'

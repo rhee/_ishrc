@@ -732,16 +732,6 @@ docker run \
 
 ###
 
-#alias vim8='docker run -ti --rm -v $HOME:$HOME -v /data:/data -v $PWD:$PWD -w $PWD jare/vim-bundle vim'
-#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data vim vim'
-#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data -e HOME=$HOME -w $PWD haron/vim-with-plugins vim'
-#alias vim8='docker run -ti --rm -v $PWD:$PWD -v $HOME:$HOME -v /data:/data -e HOME=$HOME -w $PWD --entrypoint vim ${VIMIMAGE-jare/vim-bundle}'
-#alias vim8='docker run -ti --rm -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${VIMIMAGE-jare/vim-bundle}'
-alias vim8='docker run -ti --rm -v $HOME:$HOME -v $PWD:$PWD -v /data:/data -w $PWD --entrypoint vim ${IMAGE_VIM_CB-vim-codebreak:0.1}'
-
-###
-
-
 ### start_pulseaudio(){(
 ###     if test ! -s "$HOME"/.config/pulse/default.pa
 ###     then
@@ -795,17 +785,6 @@ alias vim8='docker run -ti --rm -v $HOME:$HOME -v $PWD:$PWD -v /data:/data -w $P
 
 ###
 
-alias inspect-checkpoint='python -mtensorflow.python.tools.inspect_checkpoint --file_name '
-alias rsync-events="rsync -avP --delete --append-verify --include='*/' --include='events.*' --exclude='*' "
-
-alias unlock-sessions='loginctl unlock-sessions'
-
-
-alias vim8='docker run -ti --rm -v $(pwd):$(pwd) -v /data:/data -w $(pwd) --entrypoint vim vim-codebreak'
-alias vim-codebreak='vim8 -c VimGameCodeBreak '
-
-alias abi-dumper='docker run --rm -it -v /opt/conda:/opt/conda -v $(pwd):$(pwd) -w $(pwd) abi-dumper abi-dumper '
-
 alias convert='env MAGICK_THREAD_LIMIT=1 convert'
 alias mogrify='env MAGICK_THREAD_LIMIT=1 mogrify'
 
@@ -814,19 +793,3 @@ alias mogrify='env MAGICK_THREAD_LIMIT=1 mogrify'
 
 ## ## trick from: https://askubuntu.com/a/379282
 ## =() { echo "$(($@))" }
-
-_tightrun(){
-    cgexec -g memory:tight /bin/echo || (
-      sudo cgcreate -t $USER:$USER -a $USER:$USER -g memory:tight
-      sudo cgset -r memory.limit_in_bytes=15g tight )
-    cgexec -g memory:tight "$@"
-}
-alias tightrun='_tightrun '
-
-if ! timeout --version >/dev/null 2>&1
-then
-    timeout(){
-        local s="$1"; shift
-        ("$@") & sleep $s; kill $! 2> /dev/null || :
-    }
-fi
