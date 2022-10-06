@@ -92,3 +92,14 @@ _docker_clear_log(){(
 )}
 alias docker-clear-log=_docker_clear_log
 
+nv_docker(){(
+docker run \
+    --device /dev/nvidia0:/dev/nvidia0 \
+    --device /dev/nvidia0:/dev/nvidia1 \
+    --device /dev/nvidia0:/dev/nvidia2 \
+    --device /dev/nvidia0:/dev/nvidia3 \
+    --device /dev/nvidiactl:/dev/nvidiactl \
+    --device /dev/nvidia-uvm:/dev/nvidia-uvm \
+    "$@"
+)}
+

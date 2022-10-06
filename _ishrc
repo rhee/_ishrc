@@ -67,12 +67,23 @@ alias mv='\mv -i'
 alias rm='\rm -i'
 alias cpV='rsync --partial --progress --append'
 alias mvV='rsync --partial --progress --append --remove-sent-files'
+alias sudo='sudo -H'
 alias lsof='sudo lsof -n -P'
+# lsof, find processes using a specific tcp port
+_lsof_port_listeners(){(
+    port=$1
+    shift
+    # disable uid, dns, port name resolv
+    lsof -l -n -P -i:$port
+)}
+alias lsof-port-listeners=_lsof_port_listeners
+alias vimless='/usr/share/vim/vim??/macros/less.sh'
+
 alias unlock-sessions='loginctl unlock-sessions'
 alias inspect-checkpoint='python3 -mtensorflow.python.tools.inspect_checkpoint --file_name '
 ###alias rsync-events="rsync -q -rtvP --delete --append-verify --include='*/' --include='events.*' --exclude='*' "
 ## consider `--relative` for rsync-events
-alias rsync-events="rsync -q -rtP \
+alias rsync-events="rsync -q -rtvP \
         --delete \
         --append-verify \
         --prune-empty-dirs \
@@ -80,7 +91,6 @@ alias rsync-events="rsync -q -rtP \
         --include='*/' \
         --include='events.*' \
         --exclude='*'"
-alias abi-dumper='docker run --rm -it -v /opt/conda:/opt/conda -v $(pwd):$(pwd) -w $(pwd) abi-dumper abi-dumper '
 alias nethack='docker run --name nethack --rm -it matsuu/nethack '
 alias vim8='docker run -ti --rm -v $(pwd):$(pwd) -v /data:/data -w $(pwd) --entrypoint vim vim-codebreak'
 alias vim-codebreak='vim8 -c VimGameCodeBreak '
@@ -111,11 +121,19 @@ alias tightrun='_tightrun '
 
 if ! timeout --version >/dev/null 2>&1
 then
-    timeout(){
+    _timeout(){
         local s="$1"; shift
         ("$@") & sleep $s; kill $! 2> /dev/null || :
     }
 fi
+alias timeout=_timeout
+
+# bash/zsh completion behavior simulation
+alias zsh-like='if [ ! -z "$BASH_VERSION" ]; then bind "set show-all-if-ambiguous on" ; bind "TAB:menu-complete" ; fi'
+alias bash-like='autoload -U compinit; compinit; zstyle ":completion:*:*:*:*:*" menu select; setopt autolist; unsetopt menucomplete; setopt noautomenu'
+
+## ## trick from: https://askubuntu.com/a/379282
+## =() { echo "$(($@))" }
 
 #####################################################
 

@@ -6,6 +6,14 @@ alias Copy='\rsync -e ssh -avP'
 alias cpV='rsync --partial --progress --append'
 alias mvV='rsync --partial --progress --append --remove-sent-files'
 
+alias rN='perl -e '"'"'$pat=shift@ARGV;for$f(@ARGV){eval"(\$ff=\$f)=~\$pat";$f ne$ff&&(!-f$ff&&rename $f,$ff&&print"rNF $f $ff\n"||warn "skip $f->$ff\n");}'"'"
+alias rM='sh -c "mkdir -p $HOME/.Trash; /bin/mv \$* $HOME/.Trash" rM'
+alias zap='perl -e "truncate \$ARGV[0],0"'
+alias mkclean='echo -n "Purge " .#* *~ .??*~ " ?"; read ans; case "$ans" in [Yy]*) rm -fvr .\#* *~ .??*~; ;; esac'
+alias mkxclean='xf=${TMP:-/tmp}/mkxc-$$; echo "Purge-recursively:"; /usr/bin/find -L . -name .\#\* -o -name \*~ -o -name .\?\?\*~ |tee $xf; echo "Purge above files?"; read ans; case "$ans" in [Yy]*) xargs rm -fvr $xf < $xf; ;; esac'
+alias lsR~='/usr/bin/find . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) '
+alias rmR~='/usr/bin/find . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) -print0 |xargs -0 rm -fv '
+
 alias tart='tar tvvzf'
 alias tarx='tar xvvzf'
 alias tarc='tar cvvzf'
@@ -18,8 +26,6 @@ alias u8='export LANG=ko_KR.utf8'
 alias sl='screen -ls'
 alias sx8='LANG=ko_KR.utf8 screen -U -x -r'
 
-#alias dC='d_=/run/user/$(id -u)/dtach; mkdir -p $d_; env dC_sock_=$d_/sock dtach -c $d_/sock -z -r winch'
-#alias dA='d_=/run/user/$(id -u)/dtach; if [ -S "$dC_sock_" ]; then echo "socket already attached"; else dtach -a $d_/sock -z -r winch; fi'
 alias dC='d_=/tmp/dtach/$(id -u); mkdir -p $d_; env dC_sock_=$d_/sock dtach -c $d_/sock -z -r winch'
 alias dA='d_=/tmp/dtach/$(id -u); if [ -S "$dC_sock_" ]; then echo "socket already attached"; else dtach -a $d_/sock -z -r winch; fi'
 
@@ -27,74 +33,6 @@ alias ldpkg='less /var/lib/dpkg/available'
 
 alias w3x='w3m -v -no-proxy'
 alias fwman='sh -c "exec w3m http://www.FreeBSD.org/cgi/man.cgi\?query=\$1" fwman'
-
-alias unU='perl -p -e '"'"'tr/+/ /;s/%([0-9A-F]{2})/pack("C",hex($1))/egi;'"'"''
-alias unX='perl -p -e '"'"'s/\\([0-9]{3})/chr($1)/egi;'"'"
-alias enU='perl -p -e '"'"'s/([\200-\377])/sprintf("%%%02X",ord($1))/eg;'"'"
-
-alias ipD='sh -c "echo \"obase=256; \$1\" |bc" ipD'
-
-alias 6D='perl -MMIME::Base64 -p -e '"'"'tr/+/ /;s/%([0-9A-F]{2})/pack("C",hex($1))/egi;$_=decode_base64($_);'"'"
-alias puE='python -c "import uuencode,sys; print uuencode.encode(sys.argv[1],sys.argv[2]);"'
-alias puD='python -c "import uuencode,sys; print uuencode.decode(sys.argv[1],sys.argv[2]);"'
-alias p6E='python -c "import base64,sys; print base64.encode(sys.argv[1],sys.argv[2]);"'
-alias p6D='python -c "import base64,sys; print base64.decode(sys.argv[1],sys.argv[2]);"'
-alias p6sE='python -c "import base64,sys; print len(sys.argv[1]),base64.encodestring(sys.argv[1]);"'
-alias p6sD='python -c "import base64,sys; print len(sys.argv[1]),base64.decodestring(sys.argv[1]);"'
-
-alias 47D='perl -MEncode -p -e '"'"'s/(=\?[^ \t]*)/encode("euc-kr",decode("MIME-Header",$1))/eg;'"'"''
-
-alias dR='sh -c "for h in \$*; do tar c -f - -C ~ -L .bashrc .ishrc .aliases .vimrc .vim .emacs .gitconfig .screenrc .tmux.conf | ssh $h tar xvf -; done" dR'
-
-alias rN='perl -e '"'"'$pat=shift@ARGV;for$f(@ARGV){eval"(\$ff=\$f)=~\$pat";$f ne$ff&&(!-f$ff&&rename $f,$ff&&print"rNF $f $ff\n"||warn "skip $f->$ff\n");}'"'"
-
-alias xKS='xmodmap -e "remove Lock = Caps_Lock" -e "keycode 66 = Control_L" -e "add Control = Control_L" -e "keycode 9 = Escape asciitilde"'
-alias xKs='xmodmap -e "remove Control = Control_L" -e "keycode 66 = Caps_Lock" -e "add Lock = Caps_Lock" -e "add Control = Control_L" -e "keycode 9 = Escape"'
-alias xKM='xmodmap -e "clear Mod1" -e "clear Mod4" -e "keycode 64 = Alt_L" -e "keycode 49 = Alt_L" -e "keycode 115 = grave asciitilde" -e "add Mod1 = Alt_L Alt_R" -e "add Mod4 = Meta_L Meta_R"'
-alias xKm='xmodmap -e "clear Mod1" -e "clear Mod4" -e "keycode 64 = Alt_L" -e "keycode 49 = grave asciitilde" -e "keycode 115 = Meta_L" -e "add Mod1 = Alt_L Alt_R" -e "add Mod4 = Meta_L Meta_R"'
-alias xKW='xmodmap -e "remove mod1 = Alt_L" -e "remove mod4 = Super_L" -e "keycode 133 = Alt_L" -e "keycode 64 = Super_L" -e "add mod1 = Alt_L" -e "add mod4 = Super_L"'
-alias xKw='xmodmap -e "remove mod1 = Alt_L" -e "remove mod4 = Super_L" -e "keycode 133 = Super_L" -e "keycode 64 = Alt_L" -e "add mod1 = Alt_L" -e "add mod4 = Super_L"'
-
-alias lrgb='less /etc/X11/rgb.txt'
-
-alias  xtN='sh -c "echo -n \"@]1;\$1%\"|sed -e '"'"'y/@%//'"'"'" xtN'
-alias xtT_='sh -c "echo -n \"@]2;\$1%@]1;\$1%\"|sed -e '"'"'y/@%//'"'"'" xtT'
-alias  xtT='sh -c "echo -n \"@]2;\$1%@]1;\$1%\"|sed -e '"'"'y/@%//'"'"'" xtT'
-
-if printf 1 >/dev/null 2>&1 ; then
-
-    xtC(){(
-	osc="\e]" # or 0x9d
-	fg=$1
-	bg=$2
-	printf "${osc}10;${fg}\007""\e]11;${bg}\007"
-    )}
-    xtS(){(
-	csi="\e[" # or 0x9b
-	lines=$1
-	columns=$2
-	printf "${csi}8;${lines};${columns}t"
-    )}
-
-else
-
-    alias xtC='sh -c "echo -n \"@]10;\$1%@]11;\$2%\"|sed -e '"'"'y/@%//'"'"'" xtC'
-    alias xtS='sh -c "echo -n \"@[8;\$1;\$2t\"|sed -e '"'"'y/@%//'"'"'" xtS'
-
-fi
-
-alias xtcW89='xtC rgb:00/00/00 rgb:e0/e0/e0; xtS 27 89'
-alias xtcB89='xtC black rgb:d0/d0/ff; xtS 27 89'
-alias xtcG89='xtC black rgb:e0/ff/e0; xtS 27 89'
-alias xtcR89='xtC black rgb:ff/e0/e0; xtS 27 89'
-alias xtcW137='xtC rgb:00/00/00 rgb:e0/e0/e0; xtS 39 137'
-alias xtcB137='xtC black rgb:d0/d0/ff; xtS 39 137'
-
-alias rM='sh -c "mkdir -p $HOME/.Trash; /bin/mv \$* $HOME/.Trash" rM'
-alias mkclean='echo -n "Purge " .#* *~ .??*~ " ?"; read ans; case "$ans" in [Yy]*) rm -fvr .\#* *~ .??*~; ;; esac'
-alias mkxclean='xf=${TMP:-/tmp}/mkxc-$$; echo "Purge-recursively:"; /usr/bin/find -L . -name .\#\* -o -name \*~ -o -name .\?\?\*~ |tee $xf; echo "Purge above files?"; read ans; case "$ans" in [Yy]*) xargs rm -fvr $xf < $xf; ;; esac'
-
-alias zap='perl -e "truncate \$ARGV[0],0"'
 
 alias capmmf='sh -c '\''mplayer.static -vo null -ao null -dumpfile "cap_$(basename $1)" -dumpstream "$1"'\'' capmmf'
 mpPP(){ mplayer -quiet -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -utf8 -shuffle "$@" </dev/null; }
@@ -111,87 +49,10 @@ flac2mp3(){(
   ffmpeg -i "$input" -ab 320k -map_metadata 0 -id3v2_version 3 "$output"
 )}
 
-alias efence='LD_PRELOAD=/usr/lib/libefence.so EF_PROTECT_BELOW=0'
-alias underfence='LD_PRELOAD=/usr/lib/libefence.so EF_PROTECT_BELOW=1'
-alias guard='DYLD_INSERT_LIBRARIES=/usr/lib/libgmalloc.dylib'
-alias underguard='DYLD_INSERT_LIBRARIES=/usr/lib/libgmalloc.dylib MALLOC_PROTECT_BEFORE=1'
-alias valddd='valgrind --db-attach=yes --db-command="ddd %f %p" '
-
-lssources(){(
-  not=""
-  action="-print"
-  optdone="no"
-  while [ ! "xyes" = "x$optdone" ]; do
-    case "$1" in
-      -not) shift ; not="!" ;;
-      -rm) shift ; action="-delete" ;;
-      -0) shift ; action="-print0" ;;
-      *) optdone=yes ;;
-    esac
-  done
-  for f in "${@:-.}"; do
-    find -L "$f" -type f $not \( -false \
-      -o -iname '*.h' -o -iname '*.c' -o -iname '*.hpp' -o -iname '*.cpp' \
-      -o -iname '*.inc' -o -iname '*.s' -o -iname '*.asm' \
-      -o -iname '*.m' -o -iname '*.mm' \
-      -o -iname '*.py' -o -iname '*.pyw' \
-      -o -iname '*.ml' \
-      -o -iname '*.mak' -o -iname 'makefile' -o -iname 'kbuild' \
-      -o -iname '*.java' -o -iname '*.jsp' \
-      -o -iname '*.js' -o -iname '*.css' -o -iname '*.html' -o -iname '*.htm' -o -iname '*.php' \
-      -o -iname '*.pde' -o -iname '*.ino' \
-    \) -a \! -path '*/.??*' $action
-  done
-)}
-
-alias xG='lsS -0 | sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; xargs -0 grep -n \${1+\"\$@\"} /dev/null | sed '"'"'s&^\./&&'"'"' | tee \${log}" xG'
-
-alias vG='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; ( [ ! -z \"\${TERM}\" -a \"dumb\" != \"\${TERM}\" ] && vim -q \${log} -c cl) || cat \${log}" vG'
-alias lsS='lssources'
-
-alias yG='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; cat -d ./.yginput |xargs grep -n \${1+\"\$@\"} /dev/null |tee \${log}" xG'
-alias yG0='sh -c "tmpdir=\${TMP:-\${HOME}/tmp}; mkdir -p \${tmpdir}; log=\${tmpdir}/xG$$; cat ./.yginput |xargs grep -n \${1+\"\$@\"} /dev/null |tee \${log}" xG'
-
-gR(){
-  find . '(' -type d -path '*/node_modules/*' -o -path '*/.git/*' ')' -prune -o '(' \
-    -type f '(' -false \
-      -o -iname '*.h' -o -iname '*.c' -o -iname '*.hpp' -o -iname '*.cpp' \
-      -o -iname '*.inc' -o -iname '*.s' -o -iname '*.asm' \
-      -o -iname '*.m' -o -iname '*.mm' \
-      -o -iname '*.py' -o -iname '*.pyw' \
-      -o -iname '*.ml' \
-      -o -iname '*.mak' -o -iname 'makefile' -o -iname 'kbuild' \
-      -o -iname '*.java' -o -iname '*.jsp' \
-      -o -iname '*.js' -o -iname '*.css' -o -iname '*.html' -o -iname '*.htm' -o -iname '*.php' \
-      -o -iname '*.pde' -o -iname '*.ino' \
-    ')' ')' -print0 | xargs -0 -n 10 fgrep -nH "$@"
-}
-
-alias lsR~='/usr/bin/find . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) '
-alias rmR~='/usr/bin/find . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) -print0 |xargs -0 rm -fv '
-
-which exuberant-ctags >/dev/null 2>&1 || alias exuberant-ctags=ctags
-which ctags-exuberant > /dev/null 2>&1 && alias exuberant-ctags=ctags-exuberant
-
-alias mT='CTAGSROOT=$PWD; export CTAGSROOT; lsS |exuberant-ctags --langmap=c++:+.ino,java:+.pde -L - -o tags.ctags'
-alias mTE='CTAGSROOT=$PWD; export CTAGSROOT; lsS |exuberant-ctags --langmap=c++:+.ino,java:+.pde -e -L - -o TAGS'
-alias fN='/usr/bin/find -L . -iname'
-alias fnG='sh -c '"'"'dirname -L $(/usr/bin/find . -iname $1|head -1)'"'"' fnG'
-alias vF='sh -c '"'"'pattern=$1; shift; exec vim $(/usr/bin/find -L . -iname "$pattern") "$@"'"'"' vF'
+alias dR='sh -c "for h in \$*; do tar c -f - -C ~ -L .bashrc .ishrc .aliases .vimrc .vim .emacs .gitconfig .screenrc .tmux.conf | ssh $h tar xvf -; done" dR'
 
 alias mutt='LANG=ko_KR.utf8 LC_ALL=ko_KR.utf8 mutt -n -f $HOME/Maildir'
 alias muttkr='LANG=ko_KR.eucKR LC_ALL=ko_KR.eucKR mutt -F $HOME/.muttrc-euckr'
-
-# alias tnowrap='setterm -linewrap off'
-
-# # alternate 'tnowrap' (for use with both linux and mac os.x)
-# # http://heyrod.com/snippets/toggle-line-wrapping-in-terminal.html
-# # This seems to known as "automatic margin" mode, hence smam is enter_am_mode and rmam is exit_am_mode.
-alias tnowrap='tput rmam'
-alias twrap='tput smam'
-
-alias curon='setterm -cursor on'
-alias no-screen-saver='setterm -blank 15 -powersave powerdown -powerdown 60'
 
 alias xc='perl -e '"'"'$r = eval($ARGV[0]); printf "%d\n0x%x\n",$r,$r;'"'"''
 
@@ -199,11 +60,6 @@ alias xF='sh -c '"'"'pat=$1; shift; /usr/bin/find -L . -type f -iname "$pat" -pr
 alias xD='sh -c '"'"'pat=$1; shift; /usr/bin/find -L . -type d -iname "$pat" -print0 |xargs -0 "$@"'"'"' xD'
 
 alias gM='gcc -dM -E - < /dev/null'
-
-alias 4cc='perl -e '"'"'$ARGV[0] =~ s/(.)/sprintf("%02x",ord($1))/egi; print $ARGV[0],"\n";'"'"''
-alias un4cc='perl -e '"'"'$ARGV[0] =~ s/([0-9A-F]{2})/chr(hex($1))/egi; print $ARGV[0],"\n";'"'"''
-
-alias vimless='/usr/share/vim/vim??/macros/less.sh'
 
 alias urlConvMV='for f in *%*; do n="$(echo $f|unU|iconv -c -f euc-kr -t utf-8)"; echo "mv \"$f\" \"$n\""; done'
 
@@ -218,47 +74,15 @@ alias L='sh -c '"'"'"$@" |less'"'"' L'
 alias bash_quine='s='"'"'s=\47%s\47; printf "$s" "$s"'"'"'; printf "$s" "$s"'
 alias pslist='sh -c '"'"'ps xa |grep "$1"'"'"' pslist'
 
-alias cvs='cvs -q'
-
-cvd(){(
-  revopts=
-  while [ ! -z "$1" ]; do
-    case "$1" in
-      -r|-D) revopts="$revopts '$1$2'"; shift; shift; ;;
-      -r*|-D*) revopts="$revopts '$1'"; shift; ;;
-      *) filename="$1"; shift; ;;
-    esac
-  done
-  if [ -f "${filename}" ]; then
-    tempname=$(echo ${filename} |sed -e "y/\/:/__/; s/^/cvd-/;")
-    tempdir=${TMP-'/tmp'}
-    mkdir -p ${tempdir}
-    cmd="cvs update -p ${revopts} ${filename}"
-    eval $cmd > ${tempdir}/${tempname}
-    vim -d ${tempdir}/${tempname} ${filename}
-  else
-    echo "file not found: ${filename}"
-  fi
-  echo "Done: $cmd"
-)}
-
 ytd(){( local ID=$1 ; curl www.youtube.com/watch?v="$1" |sed 's/http/\ &/g;s/ /<\CR|\n>&/g;s/\"\,//g;s/\,[0-9]*\|//g' |awk '/http\:\/\/.*.itag\='$2'/{print "curl -C- -L -vvv \42"$1"\42 -o '$PWD'/youtube_'$ID'.flv"}' |unvis -h | unvis -h|sort -u | sh; )}
 
 alias en2='enscript -2rj --line-numbers --media=A4 --margin=:36::72 -p output.ps '
 
-alias objD='sh -c '"'"'objdump -bbinary -marmv4 -EL -D "$1" |exec less '"'"' objD'
-alias objDB='sh -c '"'"'objdump -bbinary -marmv4 -EB -D "$1" |exec less '"'"' objD'
-
 alias synergyto='sh -c '"'"'exec /usr/bin/synergyc --no-daemon --debug FATAL -n $(hostname) $1'"'"' synergyto'
-
-alias lddA='sh -c '"'"'readelf -d "$@" | grep NEEDED'"'"' lddA'
 
 alias lxargs="xargs -d '\n'"
 
 alias gitdiffyesterday='git diff "@{yesterday}" --'
-
-alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1])"'
-alias urldecode='python -c "import sys, urllib as ul; print ul.unquote_plus(sys.argv[1])"'
 
 sqltime(){(
     ts="$1"; shift
@@ -423,13 +247,10 @@ rename_files(){(
   fi
 )}
 
-#alias kor='export LANG=$(locale -a |grep -i ko_KR.utf)'
-alias kor='export LANG=ko_KR.UTF-8'
 # nosync
 alias sync='echo -n "Sync? "; read yn; case $yn in [Yy]) /bin/sync;; esac;'
 
-#alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
-alias rsync-with-openelec='rsync --rsync-path="./rsync" '
+alias rsync-with-openelec='rsync --rsync-path="/storage/.kodi/addons/network.backup.rsync/bin/rsync" '
 alias rsync-with-mac='rsync --iconv=utf-8,utf-8-mac'
 
 # multitail goodies
@@ -440,17 +261,6 @@ alias mtj='multitail -p l -j'
 git_branch_name(){ git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3; }
 git_branch_prompt(){ local branch=`_git_branch_name`; if [ $branch ]; then printf " [%s]" $branch; fi; }
 #PS1="\u@\h \[\033[0;36m\]\W\[\033[0m\]\[\033[0;32m\]\$(_git_branch_prompt)\[\033[0m\] \$ "
-
-
-alias lsof='sudo -H lsof -l -n -P '
-
-# lsof, find processes using a specific tcp port
-lsof_port_listeners(){(
-    port=$1
-    shift
-    # disable uid, dns, port name resolv
-    lsof -l -n -P -i:$port
-)}
 
 unzip_pl(){
 
@@ -586,16 +396,6 @@ ifbw(){(
 
 )}
 
-chrome_debug_9222(){(
-  mkdir -p /tmp/chrome
-  google-chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome --incognito
-)}
-
-chrome_proxy_5555(){(
-  #google-chrome --proxy-server="http=http://127.0.0.1:5555;https=http://127.0.0.1:5555" "$@"
-  env all_proxy=127.0.0.1:5555 google-chrome "$@"
-)}
-
 clear_menus(){(
   set -e
   cd ~/.local/share
@@ -611,48 +411,13 @@ alias psc='ps xaw -eo pid,user,cgroup,args'
 
 alias wttr='curl http://wttr.in/ | less -r'
 
-socat_forward(){(
-  if [ -z "$4" ]; then
-    echo "Usage: socat-forward addr port remote-addr remote-port" 1>&2
-    return 1
-  fi
-  addr=$1
-  port=$2
-  remoteaddr=$3
-  remoteport=$4
-  socat TCP4-LISTEN:$port,bind=$addr,reuseaddr,fork TCP4:$remoteaddr:$remoteport
-)}
-
-ipt_forward(){(
-  if [ -z "$4" ]; then
-    echo "Usage: ipt-forward addr port remote-addr remote-port" 1>&2
-    return 1
-  fi
-  addr=$1
-  port=$2
-  remoteaddr=$3
-  remoteport=$4
-  sudo -H iptables -t nat -A PREROUTING -p tcp -d $addr --dport $port -j DNAT --to $remoteaddr:$remoteport
-  sudo -H iptables -A FORWARD -p tcp -d $remoteaddr --dport $remoteport -j ACCEPT
-)}
-
 alias shuf-pl='perl -MList::Util=shuffle -e "print shuffle(<STDIN>);"'
-
-#alias myip="curl -s http://myip.dnsomatic.com | grep '[\d.]'"
-alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
-
-alias sudo='sudo -H'
-
-# bash/zsh completion behavior simulation
-alias zsh-like='if [ ! -z "$BASH_VERSION" ]; then bind "set show-all-if-ambiguous on" ; bind "TAB:menu-complete" ; fi'
-alias bash-like='autoload -U compinit; compinit; zstyle ":completion:*:*:*:*:*" menu select; setopt autolist; unsetopt menucomplete; setopt noautomenu'
 
 alias y2j='python -c "import sys, yaml, json; json.dump(yaml.load(sys.stdin), sys.stdout, indent=4)"'
 alias j2y='python -c "import sys, yaml, json; yaml.safe_dump(json.load(sys.stdin), sys.stdout, default_flow_style=False)"'
 
-alias dmps-disable='xset -dpms; xset s noblank;'
-
 less_csv(){ cat "$@" | column -s, -t | less -#2 -N -S; }
+
 sshfs_better(){ sshfs "$@" -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3; }
 
 openssl_showcerts(){
@@ -671,125 +436,3 @@ openssl_showcerts(){
     openssl s_client -showcerts -connect "$1" < /dev/null | less
   fi
 }
-
-
-# reload-chrome-nix from: http://stackoverflow.com/a/31040369/496899
-reload_chrome(){(
-  BROWSER=google-chrome
-  echo "$(date --rfc-3339=seconds) Refresh: $FILE"
-  CUR_WID=$(xdotool getwindowfocus)
-  #gets the first $BROWSER window, if you have more than one
-  #$BROWSER window open, it might not refresh the right one,
-  #as an alternative you can search by the window/html title
-  WID=$(xdotool search --onlyvisible --class $BROWSER|head -1)
-  #TITLE="window/html file title"
-  #WID=$(xdotool search --title "$TITLE"|head -1)
-  xdotool windowactivate $WID
-  xdotool key 'ctrl+r'
-  xdotool windowactivate $CUR_WID
-)}
-
-##########
-
-alias no_cuda='env CUDA_VISIBLE_DEVICES= USE_CUDA= /bin/bash -i'
-
-##########
-
-###if test -f $HOME/.mac-aliases; then . $HOME/.mac-aliases; fi
-###if test -f $HOME/.docker-aliases; then . $HOME/.docker-aliases; fi
-
-##########
-
-docker_tf(){(
-    LD_PRELOAD="/usr/lib/libtcmalloc_minimal.so.4" 
-    export LD_PRELOAD
-
-    IMAGE=tensorflow
-
-    nvidia-docker run -ti --rm --pid=host \
-	-v /data:/data \
-	-v /etc/localtime:/etc/localtime:ro \
-	-w "$(pwd)" \
-	"$IMAGE" \
-	"$@"
-)}
-
-alias tf-inspect-checkpoints='python -mtensorflow.python.tools.inspect_checkpoint --file_name '
-alias tensorboard='python -mtensorboard.main '
-
-###
-
-nv_docker(){(
-docker run \
-    --device /dev/nvidia0:/dev/nvidia0 \
-    --device /dev/nvidia0:/dev/nvidia1 \
-    --device /dev/nvidia0:/dev/nvidia2 \
-    --device /dev/nvidia0:/dev/nvidia3 \
-    --device /dev/nvidiactl:/dev/nvidiactl \
-    --device /dev/nvidia-uvm:/dev/nvidia-uvm \
-    "$@"
-)}
-
-###
-
-### start_pulseaudio(){(
-###     if test ! -s "$HOME"/.config/pulse/default.pa
-###     then
-### 	mkdir -p "$HOME"/.config/pulse
-### 	cat <<EEE > "$HOME"/.config/pulse/default.pa
-### #.nofail
-### .include /usr/local/etc/pulse/default.pa
-### #load-module module-remap-sink sink_name=rpi3-analog-stereo master=alsa_output.0.analog-mono channels=1 channel_map=left sink_properties="device.description='라즈베리파이 스피커 스테레오인척'"
-### #set-default-sink rpi3-analog-stereo
-### #set-default-source alsa_input.usb-_Webcam_C170-02-C170.analog-mono
-### #load-module module-native-protocol-tcp cookie=/home/pi/.pulse-cookie auth-ip-acl=127.0.0.1/32;172.30.0.0/16 auth-anonymous=1
-### ##load-module module-rtp-recv
-### #load-module module-zeroconf-publish
-### load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1/32;10.100.0.0/24 auth-anonymous=1
-### EEE
-###     fi
-###     pulseaudio -D --start --disallow-exit --exit-idle-time=86400
-### )}
-### 
-### # switch sink for already launched apps
-### pa_update_sink_to(){(
-###     dest=$1
-###     if test -z "$dest"
-###     then
-### 	echo "Usage: _pa_update_sink_to <target-addres>" 1>&2
-### 	return 1
-###     fi
-###     mkdir -p "$HOME"/.config/pulse
-###     cat <<EEE > "$HOME"/.config/pulse/default.pa
-### .include /etc/pulse/default.pa
-### load-module module-tunnel-sink server=${dest} sink=Channel_1__Channel_2.2 format=float32le channels=2 rate=44100 sink_name=remote-spk
-### load-module module-tunnel-source server=${dest} source=Channel_1__Channel_2 format=float32le channels=2 rate=44100 source_name=remote-mic
-### EEE
-###     pulseaudio -k
-###     pactl info
-###     pactl set-default-sink remote-spk
-### )}
-### alias pa-sink-to=_pa_update_sink_to
-
-# # env-mkl (ref)
-# . /opt/intel/bin/compilervars.sh intel64
-# _num_threads=$(expr $(cat /proc/cpuinfo  | grep ^processor| wc -l) - 1)
-# MKL_NUM_THREADS=$_num_threads
-# MKL_DOMAIN_NUM_THREADS="MKL_DOMAIN_ALL=1,MKL_DOMAIN_BLAS=$_num_threads"
-# MKL_DYNAMIC=FALSE
-# export MKL_NUM_THREADS MKL_DOMAIN_NUM_THREADS MKL_DYNAMIC
-
-###
-
-#test -f /etc/lsb-release && alias code='DISPLAY=${DISPLAY:-:0.0} code --disable-gpu'
-
-###
-
-alias convert='env MAGICK_THREAD_LIMIT=1 convert'
-alias mogrify='env MAGICK_THREAD_LIMIT=1 mogrify'
-
-##alias i='. $HOME/.ishrc'
-##alias ii='exec env -u TMOUT $SHELL --noprofile --rcfile $HOME/.ishrc -i'
-
-## ## trick from: https://askubuntu.com/a/379282
-## =() { echo "$(($@))" }
