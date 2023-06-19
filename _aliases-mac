@@ -234,7 +234,8 @@ alias mac-enable-vnc=_mac_enable_vnc
 
 if [ -x '/Applications/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer' ]
 then
-    mplayer(){ '/Applications/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer' "$@"; }
+    _mplayer_osx(){ '/Applications/MPlayer OSX Extended.app/Contents/Resources/Binaries/mpextended.mpBinaries/Contents/MacOS/mplayer' "$@"; }
+    alias mplayer-osx=_mplayer_osx
 fi
 
 ### if [[ $(arch) == "arm64" ]]; then

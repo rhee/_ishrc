@@ -19,7 +19,7 @@ fi
 
 if test -f /opt/conda/etc/profile.d/conda.sh
 then
-  . /opt/conda/etc/profile.d/conda.sh
+  source /opt/conda/etc/profile.d/conda.sh
 fi
 
 case :$PATH: in *:/usr/lib/ccache:*);; *)export PATH=/usr/lib/ccache:$PATH;; esac
@@ -28,7 +28,7 @@ case :$PATH: in *:$HOME/.local/bin:*);; *)export PATH=$HOME/.local/bin:$PATH;; e
 
 export N_PREFIX=$HOME/.local
 
-pyenv --version >/dev/null 2>&1 && eval "$(pyenv init -)"
-pyenv --version >/dev/null 2>&1 && eval "$(pyenv virtualenv-init -)"
+#pyenv --version >/dev/null 2>&1 && eval "$(pyenv init -)"
+#pyenv --version >/dev/null 2>&1 && eval "$(pyenv virtualenv-init -)"
 
 source $HOME/.zshrc

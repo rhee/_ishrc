@@ -3,7 +3,6 @@ set sw=4 sts=4 ts=8 noai nosi
 set hlsearch
 set nu nowrap nows
 set et
-"set bg=dark
 set modeline
 set nobackup noswapfile
 se bufhidden=unload
@@ -22,6 +21,7 @@ au BufEnter *.yml set ai sw=2 sts=2 ts=8 et
 set tags=tags.ctags,./tags.ctags,../tags.ctags,../../tags.ctags,../../../tags.ctags,../../../../tags.ctags,$CTAGSROOT/tags.ctags,~/src/tags.ctags,~/.ctags/*
 
 set diffopt=
+"set diffopt+=iwhite
 set diffopt+=filler
 
 if &diff
@@ -29,7 +29,7 @@ if &diff
     set diffopt+=iwhite
 endif
 
-let g:DirDiffExcludes = ".git,CVS,*.class,*.exe,*.pyc,.*.swp,*.jpg,*.png,*.ckpt,*.ckpt-data-?????-of-?????"
+let g:DirDiffExcludes = "__pycache__,.ipynb_checkpoints,.git,CVS,*.class,*.exe,*.pyc,.*.swp,*.jpg,*.png,*.ckpt,*.ckpt-data-?????-of-?????,*.gz,*.xz,*.bz2"
 
 "for ant see :help errorformat-javac :help errorformat-ant
 set efm+=\ %#[javac]\ %#%f:%l:%c:%*\\d:%*\\d:\ %t%[%^:]%#:%m,\%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
@@ -49,14 +49,14 @@ au BufEnter *.py set ai sw=4 sts=4 ts=8 et
 autocmd FileType yaml set sw=2 sts=2 ts=8 et
 au BufEnter *.yml set ai sw=2 sts=2 ts=8 et
 
-se cursorline
+"se cursorline
 :hi clear cursorline
 ":hi cursorline gui=underline
 :hi cursorline cterm=underline
 
-:hi CursorLine   cterm=NONE ctermbg=darkgray ctermfg=white guibg=darkgray guifg=white
-:hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
-:nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
+":hi CursorLine   cterm=NONE ctermbg=darkgray ctermfg=white guibg=darkgray guifg=white
+":hi CursorColumn cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+":nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
 
 map  :tp
 map  :tn
@@ -97,3 +97,9 @@ nnoremap <silent> <Leader>ml :call AppendModeline()<CR>
 "let loaded_netrwPlugin = 1
 let g:netrw_banner = 0
 
+call plug#begin()
+Plug 'https://github.com/rakr/vim-one.git'
+call plug#end()
+
+colorscheme one
+se bg=dark

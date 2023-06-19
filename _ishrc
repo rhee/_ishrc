@@ -119,14 +119,17 @@ _tightrun(){
 }
 alias tightrun='_tightrun '
 
+unalias timeout 2>/dev/null || true
 if ! timeout --version >/dev/null 2>&1
 then
     _timeout(){
-        local s="$1"; shift
-        ("$@") & sleep $s; kill $! 2> /dev/null || :
+        local s="$1"
+        shift
+        "$@" &
+        (sleep $s; kill $! 2>/dev/null) || :
     }
+    alias timeout=_timeout
 fi
-alias timeout=_timeout
 
 # bash/zsh completion behavior simulation
 alias zsh-like='if [ ! -z "$BASH_VERSION" ]; then bind "set show-all-if-ambiguous on" ; bind "TAB:menu-complete" ; fi'
