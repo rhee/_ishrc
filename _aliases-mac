@@ -6,7 +6,8 @@ test "Darwin" = "$(uname -s)" || return
 
 alias mac-ls=_mac_ls
 _mac_ls(){
-    command ls "$@" | /usr/bin/iconv -c -f utf8-mac
+    #command ls "$@" | /usr/bin/iconv -c -f utf8-mac
+    command ls "$@" | /usr/bin/iconv -c -f UTF-8-MAC
 }
 unaliase ls 2>/dev/null || true
 alias ls='_mac_ls -sF'
