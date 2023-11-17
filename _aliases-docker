@@ -9,8 +9,8 @@ then
   return 1
 fi
 
-alias docker-clean=_docker_clean
-_docker_clean(){(
+alias docker-clear=_docker_clear
+_docker_clear(){(
 
     CMD='docker'
 
@@ -35,12 +35,56 @@ _docker_clean(){(
     [ -z "$images" ] || $CMD rmi $images
 
     if [ xyes != x$aggressive ]; then
-	echo "docker_clean completed: re-run with --aggressive option to clear stopped ps and volumes too" 1>&2
+	echo "docker_clear completed: re-run with --aggressive option to clear stopped ps and volumes too" 1>&2
     fi
 
 )}
 
 alias docker-ipaddr='docker inspect --format "{{.NetworkSettings.IPAddress}}"'
+
+alias docker-run='docker run -ti'
+
+alias docker-exec=_docker_exec
+_docker_exec(){(
+  container="$1"; shift
+  cmd="$1"; shift
+  docker exec -ti "$container" "${cmd-/bin/sh}" "$@"
+)}
+
+alias docker-rm='docker rm -f'
+
+alias docker-logs='_docker-logs '
+_docker-logs(){
+    ## 처음 1회는 failsafe 없이 실행
+    docker logs --follow --tail=50 "$@" && \
+    while :
+    do
+        docker logs --follow --tail=50 "$@"
+        sleep 15
+    done
+}
+
+alias docker-ps='docker ps -a --format "{{.ID}}\t{{printf \"%29s:\" .Names}}\t{{printf \"%39s\" .Image}}\t    {{.Status}}"'
+
+alias docker-clear-images='docker rmi $(docker images -a --filter=dangling=true -q)'
+alias docker-clear-ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
+
+alias docker-clear-log=_docker_clear_log
+_docker_clear_log(){(
+  container="$1"
+  echo "" > "$(docker inspect --format='{{.LogPath}}' "$container")"
+)}
+
+alias docker-children='_docker-children'
+_docker-children(){
+    local id="$1"
+    for i in $(docker images -q)
+    do
+        docker history $i | grep -q "$id" && echo $i
+    done | sort -u
+}
+
+### for docker by VBoxManager
 alias docker-vbox-listnat='VBoxManage showvminfo default |grep NIC'
 
 alias docker-vbox-nat=_docker_vbox_nat
@@ -63,36 +107,15 @@ _docker_vbox_unnat_udp(){
     VBoxManage controlvm default natpf1 delete udp-$1
 }
 
-alias docker-run='docker run -ti'
-
-alias docker-exec=_docker_exec
-_docker_exec(){(
-  container="$1"; shift
-  cmd="$1"; shift
-  docker exec -ti "$container" "${cmd-/bin/sh}" "$@"
-)}
-
-alias docker-rm='docker rm -f'
-alias docker-logs='docker logs --follow --tail=50'
-
-#alias docker-ps='docker ps --format "{{printf \"%22s:\" .Names}}	{{.ID}}	{{.Status}}	{{.Image}}"'
-alias docker-ps='docker ps -a --format "{{.ID}}	{{printf \"%15s:\" .Names}}	{{printf \"%31s\" .Image}}	    {{.Status}}"'
-
+### docker dropbox aliases
 if test ! -z "$(docker ps -q -f 'name=dropbox' 2>/dev/null)" ; then
   alias dropbox-status='docker exec dropbox /dropbox.sh status'
   alias dropbox-filestatus='docker exec dropbox /dropbox.sh filestatus'
 fi
 
-alias docker-clean-images='docker rmi $(docker images -a --filter=dangling=true -q)'
-alias docker-clean-ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
-
-_docker_clear_log(){(
-  container="$1"
-  echo "" > "$(docker inspect --format='{{.LogPath}}' "$container")"
-)}
-alias docker-clear-log=_docker_clear_log
-
-nv_docker(){(
+### NV docker
+alias nv-docker='_nv-docker'
+_nv-docker(){(
 docker run \
     --device /dev/nvidia0:/dev/nvidia0 \
     --device /dev/nvidia0:/dev/nvidia1 \
