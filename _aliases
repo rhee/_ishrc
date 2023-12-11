@@ -1,5 +1,5 @@
 :
-\ls -F -w > /dev/null 2>&1 && alias ls='\ls -F -w' 
+\ls -F -w > /dev/null 2>&1 && alias ls='\ls -F -w'
 \ls -NF --show-control-chars --color=auto > /dev/null 2>&1 && \
   alias ls='\ls -NF --show-control-chars'
 alias Copy='\rsync -e ssh -avP'
@@ -38,9 +38,9 @@ alias capmmf='sh -c '\''mplayer.static -vo null -ao null -dumpfile "cap_$(basena
 _mpPP(){ mplayer -quiet -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -utf8 -shuffle "$@" </dev/null; }
 alias mpPP=_mpPP
 #_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle -slang ko -alang ko -framedrop -fixed-vo -x 640 -y 360 "$@" </dev/null; }
-_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle -slang ko -alang ko -framedrop -fixed-vo -xy 512 "$@" </dev/null; }
+#_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle -slang ko -alang ko -framedrop -fixed-vo -xy 512 "$@" </dev/null; }
+_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle -slang ko -alang ko -framedrop -fixed-vo -xy 960 -vf mirror "$@" </dev/null; }
 alias mpq=_mpq
-
 
 
 flac2mp3(){(
@@ -162,7 +162,6 @@ gs  -q -dNOPAUSE -dBATCH -dSAFER -dQUIET \
     -sOutputFile="$output" \
      "$input"
 
-
 ## to extract embedded font:
 ##  -dEmbedAllFonts=false \
 ##  -dSubsetFonts=true \
@@ -170,7 +169,6 @@ gs  -q -dNOPAUSE -dBATCH -dSAFER -dQUIET \
 ##  -dCompressFonts=true \
 ##  -c ".setpdfwrite <</AlwaysEmbed [ ]>> setdistillerparams" \
 ##  -c ".setpdfwrite <</NeverEmbed [/Courier /Courier-Bold /Courier-Oblique /Courier-BoldOblique /Helvetica /Helvetica-Bold /Helvetica-Oblique /Helvetica-BoldOblique /Times-Roman /Times-Bold /Times-Italic /Times-BoldItalic /Symbol /ZapfDingbats /Arial]>> setdistillerparams" \
-
 
 # to check more options later, see: http://ghostscript.com/doc/current/Ps2pdf.htm
 
@@ -271,7 +269,7 @@ unzip_pl(){
 
 ### if [ ! -z "$BASH_VERSION" ]; then
 ###   # alt 1 - try bash <( ... )
-### 
+###
 ###   perl <(cat <<'EOF'
 ### use strict;
 ### use Encode;
@@ -288,7 +286,7 @@ unzip_pl(){
 ### }
 ### EOF
 ### ) "$@"
-### 
+###
 ### else
 
   # alt 2 - try using literal
@@ -334,7 +332,7 @@ def unzip(source_filename, dest_dir):
         zf.debug = 3
         if False: ### if sys.version_info >= (2, 7, 4):
             # if python 2.7.4+, safe to use 'extractall'
-            zf.extractall(dest_dir)  
+            zf.extractall(dest_dir)
         else:
             # iterate to avoid '..' security issue
             for member in zf.infolist():
