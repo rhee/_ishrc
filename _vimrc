@@ -97,9 +97,12 @@ nnoremap <silent> <Leader>ml :call AppendModeline()<CR>
 "let loaded_netrwPlugin = 1
 let g:netrw_banner = 0
 
-call plug#begin()
-Plug 'https://github.com/rakr/vim-one.git'
-call plug#end()
+let g:airline_theme='one'
 
-colorscheme one
+"call plug#begin()
+"Plug 'https://github.com/rakr/vim-one.git'
+"call plug#end()
+
+"colorscheme one
+
 se bg=dark
