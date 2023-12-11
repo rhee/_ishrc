@@ -59,8 +59,8 @@ _docker-logs(){
     docker logs --follow --tail=50 "$@" && \
     while :
     do
-        docker logs --follow --tail=50 "$@"
         sleep 15
+        docker logs --follow --tail=50 "$@"
     done
 }
 
