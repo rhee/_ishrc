@@ -29,8 +29,6 @@ alias sx8='LANG=ko_KR.utf8 screen -U -x -r'
 alias dC='d_=/tmp/dtach/$(id -u); mkdir -p $d_; env dC_sock_=$d_/sock dtach -c $d_/sock -z -r winch'
 alias dA='d_=/tmp/dtach/$(id -u); if [ -S "$dC_sock_" ]; then echo "socket already attached"; else dtach -a $d_/sock -z -r winch; fi'
 
-alias ldpkg='less /var/lib/dpkg/available'
-
 alias w3x='w3m -v -no-proxy'
 alias fwman='sh -c "exec w3m http://www.FreeBSD.org/cgi/man.cgi\?query=\$1" fwman'
 
@@ -70,8 +68,6 @@ alias urlConvMV='for f in *%*; do n="$(echo $f|unU|iconv -c -f euc-kr -t utf-8)"
 
 # 'shift' can make error
 alias with-agent='exec ssh-agent /bin/sh -i -c '"'"' [ -z "$1" ] && l="exec ${SHELL:-/bin/sh} -i" || l="exec ""$@"; ssh-add; eval "$l"'"'"' with-agent'
-
-alias L='sh -c '"'"'"$@" |less'"'"' L'
 
 # bash_quine
 # http://www.commandlinefu.com/commands/view/5589/bash-quine?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed:+Command-line-fu+(Command-Line-Fu)&utm_content=Google+Feedfetcher
@@ -412,7 +408,11 @@ clear_menus(){(
 #alias psc='ps xawf -eo pid,user,cgroup,args'
 alias psc='ps xaw -eo pid,user,cgroup,args'
 
-alias wttr='curl http://wttr.in/ | less -r'
+alias L='sh -c '"'"'"$@" 2>&1 |less -r'"'"' L'
+#alias ldpkg='less /var/lib/dpkg/available'
+alias ldpkg='L cat /var/lib/dpkg/available'
+#alias wttr='curl http://wttr.in/ | less -r'
+alias wttr='L curl http://wttr.in/'
 
 alias shuf-pl='perl -MList::Util=shuffle -e "print shuffle(<STDIN>);"'
 
@@ -436,7 +436,8 @@ openssl_showcerts(){
         ;;
     esac
   else
-    openssl s_client -showcerts -connect "$1" < /dev/null | less
+    #openssl s_client -showcerts -connect "$1" < /dev/null | less
+    L openssl s_client -showcerts -connect "$1" < /dev/null
   fi
 }
 

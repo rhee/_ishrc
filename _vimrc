@@ -105,4 +105,4 @@ let g:airline_theme='one'
 
 "colorscheme one
 
-se bg=dark
+se bg=light
