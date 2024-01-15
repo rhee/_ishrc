@@ -37,9 +37,17 @@ _mpPP(){ mplayer -quiet -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -utf8 
 alias mpPP=_mpPP
 #_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle -slang ko -alang ko -framedrop -fixed-vo -x 640 -y 360 "$@" </dev/null; }
 #_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle -slang ko -alang ko -framedrop -fixed-vo -xy 512 "$@" </dev/null; }
-_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle -slang ko -alang ko -framedrop -fixed-vo -xy 960 -vf mirror "$@" </dev/null; }
+_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle \
+  -slang ko -alang ko \
+  -framedrop \
+  -fixed-vo -xy 960 \
+  -autosync 30 \
+  -nobps -ni -forceidx -mc 0 \
+  -vfm ffmpeg -lavdopts lowres=1:fast:skiploopfilter=all \
+  -cache 8192 \
+  -vf mirror \
+  "$@" </dev/null; }
 alias mpq=_mpq
-
 
 flac2mp3(){(
   if [ -z "$2" ]
