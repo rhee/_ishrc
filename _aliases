@@ -44,7 +44,7 @@ _mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle \
   -autosync 30 \
   -nobps -ni -forceidx -mc 0 \
   -vfm ffmpeg -lavdopts lowres=1:fast:skiploopfilter=all \
-  -cache 8192 \
+  -cache 16384 \
   -vf mirror \
   "$@" </dev/null; }
 alias mpq=_mpq
