@@ -1,4 +1,11 @@
 :
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If not running interactively, don't do anything
 case $- in *i*) ;; *) return;; esac
 
@@ -13,8 +20,9 @@ case :$PATH: in *:/opt/homebrew/opt/node@18/bin:*);;*) PATH=/opt/homebrew/opt/no
 alias i='. ~/.ishrc'
 alias kor='export LANG=ko_KR.UTF-8'
 
-unalias mosh 2>/dev/null
-mosh(){ command mosh --server='env LANG="$(locale -a|grep -E '"'"'(ko_|en_).*\.(UTF-8|utf8)'"'"'|sort|tail -1)" mosh-server||/usr/local/bin/mosh-server' "$@"; }
+unalias mosh 2>/dev/null || true
+_mosh(){ command mosh --server='env LANG="$(locale -a|grep -E '"'"'(ko_|en_).*\.(UTF-8|utf8)'"'"'|sort|tail -1)" mosh-server -i 0.0.0.0 ||/usr/local/bin/mosh-server -i 0.0.0.0' "$@"; }
+alias mosh=_mosh
 
 #MACHINE_STORAGE_PATH=/Volumes/ext/Docker
 #export MACHINE_STORAGE_PATH
@@ -23,4 +31,11 @@ test -x nvim && alias vim='nvim' && alias vi='nvim'
 export MODULAR_HOME="$HOME/.modular"
 export PATH="$HOME/.modular/pkg/packages.modular.com_mojo/bin:$PATH"
 
+#setopt nomatch nonullglob
+setopt no_match no_nullglob
+
 setopt nomatch nonullglob
+
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
