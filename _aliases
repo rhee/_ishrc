@@ -46,6 +46,7 @@ _mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle \
   -vfm ffmpeg -lavdopts lowres=1:fast:skiploopfilter=all \
   -cache 16384 \
   -vf mirror \
+  -af scaletempo \
   "$@" </dev/null; }
 alias mpq=_mpq
 
@@ -416,7 +417,19 @@ clear_menus(){(
 #alias psc='ps xawf -eo pid,user,cgroup,args'
 alias psc='ps xaw -eo pid,user,cgroup,args'
 
-alias L='sh -c '"'"'"$@" 2>&1 |less -r'"'"' L'
+
+if iconv -c -f UTF-8-MAC < /dev/null 2>/dev/null
+then
+
+alias L='sh -c '"'"'"$@" 2>&1 | iconv -c -f UTF-8-MAC | less -r'"'"' L'
+
+else
+
+alias L='sh -c '"'"'"$@" 2>&1 | less -r'"'"' L'
+
+fi
+
+
 #alias ldpkg='less /var/lib/dpkg/available'
 alias ldpkg='L cat /var/lib/dpkg/available'
 #alias wttr='curl http://wttr.in/ | less -r'

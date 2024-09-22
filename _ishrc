@@ -108,7 +108,7 @@ alias kor='export LANG=ko_KR.UTF-8'
 alias sync='echo -n "Sync? "; read yn; case $yn in [Yy]) /bin/sync;; esac;'
 
 unalias mosh 2>/dev/null || true
-_mosh(){ command mosh --server='env LANG="$(locale -a|grep -E '"'"'(ko_|en_).*\.(UTF-8|utf8)'"'"'|sort|tail -1)" mosh-server||/usr/local/bin/mosh-server' "$@"; }
+_mosh(){ command mosh --server='env LANG="$(locale -a|grep -E '"'"'(ko_|en_).*\.(UTF-8|utf8)'"'"'|sort|tail -1)" mosh-server -i 0.0.0.0 ||/usr/local/bin/mosh-server -i 0.0.0.0' "$@"; }
 alias mosh=_mosh
 
 _tightrun(){
@@ -171,6 +171,11 @@ for rc in $HOME/.aliases*; do
     *) test -s $rc && . $rc;;
   esac
 done
+
+
+# zsh nullglob workaround (to make it more like bash)
+setopt no_match no_nullglob >/dev/null 2>&1 || true
+
 
 noquit
 
