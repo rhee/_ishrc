@@ -33,11 +33,18 @@ alias w3x='w3m -v -no-proxy'
 alias fwman='sh -c "exec w3m http://www.FreeBSD.org/cgi/man.cgi\?query=\$1" fwman'
 
 alias capmmf='sh -c '\''mplayer.static -vo null -ao null -dumpfile "cap_$(basename $1)" -dumpstream "$1"'\'' capmmf'
-_mpPP(){ mplayer -quiet -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -utf8 -shuffle "$@" </dev/null; }
+#_mpPP(){ mplayer -quiet -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -utf8 -shuffle
+_mpPP(){ mplayer -quiet -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -utf8 \
+  -slang ko -alang ko \
+  -framedrop \
+  -fixed-vo \
+  -autosync 30 \
+  -nobps -ni -forceidx \
+  -af scaletempo \
+  "$@" </dev/null; }
 alias mpPP=_mpPP
-#_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle -slang ko -alang ko -framedrop -fixed-vo -x 640 -y 360 "$@" </dev/null; }
-#_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle -slang ko -alang ko -framedrop -fixed-vo -xy 512 "$@" </dev/null; }
-_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle \
+#_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle
+_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 \
   -slang ko -alang ko \
   -framedrop \
   -fixed-vo -xy 960 \
