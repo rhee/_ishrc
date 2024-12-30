@@ -428,13 +428,13 @@ alias psc='ps xaw -eo pid,user,cgroup,args'
 if iconv -c -f UTF-8-MAC < /dev/null 2>/dev/null
 then
 
-alias L=' sh -c '"'"'"$@" 2>&1 | iconv -c -f UTF-8-MAC | less -r '"'"' L'
-alias LL=' sh -c '"'"'"$@" 2>&1 | iconv -c -f UTF-8-MAC | /usr/share/vim/vim??/macros/less.sh '"'"' L'
+alias L=' sh -i -c '"'"'"$@" 2>&1 | iconv -c -f UTF-8-MAC | less -r '"'"' L'
+alias LL=' sh -i -c '"'"'"$@" 2>&1 | iconv -c -f UTF-8-MAC | /usr/share/vim/vim??/macros/less.sh '"'"' L'
 
 else
 
-alias L=' sh -c '"'"'"$@" 2>&1 | less -r '"'"' L'
-alias LL=' sh -c '"'"'"$@" 2>&1 | /usr/share/vim/vim??/macros/less.sh '"'"' L'
+alias L=' sh -i -c '"'"'"$@" 2>&1 | less -r '"'"' L'
+alias LL=' sh -i -c '"'"'"$@" 2>&1 | /usr/share/vim/vim??/macros/less.sh '"'"' L'
 
 fi
 

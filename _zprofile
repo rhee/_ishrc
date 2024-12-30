@@ -32,3 +32,17 @@ export N_PREFIX=$HOME/.local
 #pyenv --version >/dev/null 2>&1 && eval "$(pyenv virtualenv-init -)"
 
 source $HOME/.zshrc
+
+##
+# Your previous /Users/rhee/.zprofile file was backed up as /Users/rhee/.zprofile.macports-saved_2024-12-20_at_13:27:42
+##
+
+# MacPorts Installer addition on 2024-12-20_at_13:27:42: adding an appropriate PATH variable for use with MacPorts.
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+# Finished adapting your PATH environment variable for use with MacPorts.
+
+
+# MacPorts Installer addition on 2024-12-20_at_13:27:42: adding an appropriate MANPATH variable for use with MacPorts.
+export MANPATH="/opt/local/share/man:$MANPATH"
+# Finished adapting your MANPATH environment variable for use with MacPorts.
+

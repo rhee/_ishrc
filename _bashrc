@@ -7,8 +7,10 @@ test -f $HOME/.cargo/bin/env && . $HOME/.cargo/bin/env
 case :$PATH: in *:/opt/homebrew/sbin:*);;*) PATH=/opt/homebrew/sbin:$PATH; ;;esac
 case :$PATH: in *:/opt/homebrew/bin:*);;*) PATH=/opt/homebrew/bin:$PATH; ;;esac
 case :$PATH: in *:/usr/local/sbin:*);;*) PATH=/usr/local/sbin:$PATH; ;;esac
-case :$PATH: in *:$HOME/.local/bin:*);;*) PATH=$HOME/.local/bin:$PATH; ;;esac
+case :$PATH: in *:/opt/local/bin:*);;*) PATH=/opt/local/bin:$PATH; ;;esac
 case :$PATH: in *:/opt/homebrew/opt/node@18/bin:*);;*) PATH=/opt/homebrew/opt/node@18/bin:$PATH; ;;esac
+case :$PATH: in *:$HOME/go/bin:*);;*) PATH=$HOME/go/bin:$PATH; ;;esac
+case :$PATH: in *:$HOME/.local/bin:*);;*) PATH=$HOME/.local/bin:$PATH; ;;esac
 
 alias i='. ~/.ishrc'
 alias kor='export LANG=ko_KR.UTF-8'
@@ -20,6 +22,4 @@ source ~/.aliases-mosh
 
 test -x nvim && alias vim='nvim' && alias vi='nvim'
 export MODULAR_HOME="/Users/rhee/.modular"
-export PATH="/Users/rhee/.modular/pkg/packages.modular.com_mojo/bin:$PATH"
-export MODULAR_HOME="/Users/rhee/.modular"
-export PATH="/Users/rhee/.modular/pkg/packages.modular.com_mojo/bin:$PATH"
+case :$PATH: in *:$HOME/$MODULAR_HOME/pkg/packages.modular.com_mojo/bin:*);;*) PATH=$HOME/$MODULAR_HOME/pkg/packages.modular.com_mojo/bin:$PATH; ;;esac
