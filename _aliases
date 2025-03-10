@@ -33,7 +33,6 @@ alias w3x='w3m -v -no-proxy'
 alias fwman='sh -c "exec w3m http://www.FreeBSD.org/cgi/man.cgi\?query=\$1" fwman'
 
 alias capmmf='sh -c '\''mplayer.static -vo null -ao null -dumpfile "cap_$(basename $1)" -dumpstream "$1"'\'' capmmf'
-#_mpPP(){ mplayer -quiet -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -utf8 -shuffle
 _mpPP(){ mplayer -quiet -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -utf8 \
   -slang ko -alang ko \
   -framedrop \
@@ -43,7 +42,18 @@ _mpPP(){ mplayer -quiet -autoq 100 -vf pp=de,hqdn3d,scale -vfm ffmpeg -fs -utf8 
   -af scaletempo \
   "$@" </dev/null; }
 alias mpPP=_mpPP
-#_mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 -shuffle
+#_mpq(){(IFS=$'\n'; \ls -1v -tr "$@" | ( while :; do read F; if test -z "$F"; then break; fi; echo '['$F']'; \
+#mplayer -quiet -noconfig user -osdlevel 3 -utf8 \
+#  -slang ko -alang ko \
+#  -framedrop \
+#  -fixed-vo -xy 960 \
+#  -autosync 30 \
+#  -nobps -ni -forceidx -mc 0 \
+#  -vfm ffmpeg -lavdopts lowres=1:fast:skiploopfilter=all \
+#  -cache 16384 \
+#  -vf mirror \
+#  -af scaletempo \
+#  "$@" </dev/null; done)) }
 _mpq(){ mplayer -quiet -noconfig user -osdlevel 3 -utf8 \
   -slang ko -alang ko \
   -framedrop \
@@ -478,3 +488,9 @@ function dirdiff()
     DIR2=$(printf '%q' "$1"); shift
     vim $@ -c "DirDiff $DIR1 $DIR2"
 )}
+
+function _make_du_report()
+{(
+    ((shopt -s nullglob 2>/dev/null; du -x -sk .??* 2>/dev/null; du -x -sk * 2>/dev/null) | tee /tmp/du-$$.txt; echo; echo; sleep 2; clear; sort -n /tmp/du-$$.txt | tee diskusage.txt)
+)}
+alias make-du-report=_make_du_report
