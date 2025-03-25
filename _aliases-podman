@@ -1,0 +1,2 @@
+alias docker=podman
+## export DOCKER_HOST='unix:///Users/rhee/.local/share/containers/podman/machine/qemu/podman.sock'

@@ -126,3 +126,10 @@ docker run \
     "$@"
 )}
 
+### dockviz https://github.com/justone/dockviz
+# if docker client using local unix socket
+alias dockviz="docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz"
+
+## # if docker client using tcp
+## alias dockviz="docker run -it --rm -e DOCKER_HOST='tcp://127.0.0.1:2375' nate/dockviz"
+

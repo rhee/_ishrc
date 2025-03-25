@@ -14,6 +14,8 @@ alias mkxclean='xf=${TMP:-/tmp}/mkxc-$$; echo "Purge-recursively:"; /usr/bin/fin
 alias lsR~='/usr/bin/find . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) '
 alias rmR~='/usr/bin/find . \( -name '"'"'*~'"'"' -o -name '"'"'#*'"'"' \) -print0 |xargs -0 rm -fv '
 
+alias rmdir='rmdir -v'
+
 alias tart='tar tvvzf'
 alias tarx='tar xvvzf'
 alias tarc='tar cvvzf'
