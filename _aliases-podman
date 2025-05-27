@@ -1,4 +1,4 @@
 :
-podman --version || return 0
+podman --version 2>/dev/null || return 0
 alias docker=podman
 ## export DOCKER_HOST='unix:///Users/rhee/.local/share/containers/podman/machine/qemu/podman.sock'
