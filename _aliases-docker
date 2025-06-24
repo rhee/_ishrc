@@ -1,4 +1,7 @@
 :
+podman --version >/dev/null 2>&1 && alias docker=podman
+## export DOCKER_HOST='unix:///Users/rhee/.local/share/containers/podman/machine/qemu/podman.sock'
+
 docker -v >/dev/null 2>&1 || return 0
 
 if ! docker ps -q >/dev/null 2>&1
@@ -132,4 +135,3 @@ alias dockviz="docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock 
 
 ## # if docker client using tcp
 ## alias dockviz="docker run -it --rm -e DOCKER_HOST='tcp://127.0.0.1:2375' nate/dockviz"
-

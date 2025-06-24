@@ -1,5 +1,6 @@
 :
-if [ "Darwin" != "$(uname -s)" ]; then return; fi
+[ "Darwin" == "$(uname -s)" ] || return 0
+docker-machine -v >/dev/null 2>&1 || return 0
 
 ! docker ps -q >/dev/null 2>&1 && \
   docker-machine -v 2>/dev/null && \
@@ -71,7 +72,3 @@ fi
 
 # end hyperkit based aliases
 ############################################################################
-
-alias nmap='docker run --name nmap --rm -it --net host uzyexe/nmap '
-
-
