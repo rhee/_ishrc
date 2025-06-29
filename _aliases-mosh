@@ -1,3 +1,10 @@
 unalias mosh 2>/dev/null || true
-_mosh(){ command mosh --server='env LANG="$(locale -a|grep -E '"'"'(ko_|en_).*\.(UTF-8|utf8)'"'"'|sort|tail -1)" mosh-server||/usr/local/bin/mosh-server' "$@"; }
+_mosh(){ \
+  command mosh \
+    --server='env \
+                LANG="$(locale -a|grep -E '"'"'(ko_|en_).*\.(UTF-8|utf8)'"'"'|sort|tail -1)" \
+                mosh-server||/usr/local/bin/mosh-server' \
+    -- \
+    "$@"; \
+}
 alias mosh=_mosh
