@@ -255,7 +255,7 @@ fi
 
 unalias brew >/dev/null 2>&1
 alias brewski='brew update && brew upgrade && brew cleanup; brew doctor'
-alias portski='( set -x; sudo port uninstall inactivate && sudo port reclaim && sudo port clean --all all && while sudo port uninstall leaves; do :; done && sudo port install port_cutleaves && sudo port_cutleaves && sudo port -u uninstall )'
+alias portski='( set -x; sudo port selfupdate; sudo port uninstall inactivate && sudo port reclaim && sudo port clean --all all && while sudo port uninstall leaves; do :; done && sudo port install port_cutleaves && sudo port_cutleaves && sudo port -u uninstall )'
 
 alias za='exec arch -arch arm64e /bin/zsh'
 alias zi='exec arch -arch x86_64 /bin/zsh'
