@@ -8,8 +8,8 @@ if podman -v >/dev/null 2>&1
 then
 
     _podman_start() { (
-        podman machine ssh podman-machine-default uptime >/dev/null || (
-          podman machine inspect podman-machine-default >/dev/null || (
+        podman machine ssh podman-machine-default uptime >/dev/null 2>&1 || (
+          podman machine inspect podman-machine-default >/dev/null 2>&1 || (
             podman machine stop podman-machine-default
             podman machine rm podman-machine-default
             podman machine init \
