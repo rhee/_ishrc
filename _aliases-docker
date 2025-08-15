@@ -3,17 +3,18 @@
 if \podman -v >/dev/null 2>&1
 then
 
-    local extra_podman_volumes=()
-
-    test -d /Users && extra_podman_volumes+=("--volume" "/Users:/Users")
-    test -d /private && extra_podman_volumes+=("--volume" "/private:/private")
-    test -d /var/folders && extra_podman_volumes+=("--volume" "/var/folders:/var/folders")
-    test -d /Volumes && extra_podman_volumes+=("--volume" "/Volumes:/Volumes")
-    test -d /Volumes/EXT && extra_podman_volumes+=("--volume" "/Volumes/EXT:/Volumes/EXT")
-    test -d /Volumes/MGTEC && extra_podman_volumes+=("--volume" "/Volumes/MGTEC:/Volumes/MGTEC")
-    test -d /Volumes/250330 && extra_podman_volumes+=("--volume" "/Volumes/250330:/Volumes/250330")
-
     _podman_start() { (
+
+        local extra_podman_volumes=()
+
+        test -d /Users && extra_podman_volumes+=("--volume" "/Users:/Users")
+        test -d /private && extra_podman_volumes+=("--volume" "/private:/private")
+        test -d /var/folders && extra_podman_volumes+=("--volume" "/var/folders:/var/folders")
+        test -d /Volumes && extra_podman_volumes+=("--volume" "/Volumes:/Volumes")
+        test -d /Volumes/EXT && extra_podman_volumes+=("--volume" "/Volumes/EXT:/Volumes/EXT")
+        test -d /Volumes/MGTEC && extra_podman_volumes+=("--volume" "/Volumes/MGTEC:/Volumes/MGTEC")
+        test -d /Volumes/250330 && extra_podman_volumes+=("--volume" "/Volumes/250330:/Volumes/250330")
+
         podman machine ssh podman-machine-default uptime >/dev/null 2>&1 || (
           podman machine inspect podman-machine-default >/dev/null 2>&1 || (
             podman machine stop podman-machine-default >/dev/null 2>&1
