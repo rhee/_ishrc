@@ -1,47 +1,53 @@
 :
-podman --version >/dev/null 2>&1 && alias docker=podman
-## export DOCKER_HOST='unix:///Users/rhee/.local/share/containers/podman/machine/qemu/podman.sock'
 
-docker -v >/dev/null 2>&1 || return 0
-
-if podman -v >/dev/null 2>&1
+if \podman -v >/dev/null 2>&1
 then
+
+    local extra_podman_volumes=()
+
+    test -d /Users && extra_podman_volumes+=("--volume" "/Users:/Users")
+    test -d /private && extra_podman_volumes+=("--volume" "/private:/private")
+    test -d /var/folders && extra_podman_volumes+=("--volume" "/var/folders:/var/folders")
+    test -d /Volumes && extra_podman_volumes+=("--volume" "/Volumes:/Volumes")
+    test -d /Volumes/EXT && extra_podman_volumes+=("--volume" "/Volumes/EXT:/Volumes/EXT")
+    test -d /Volumes/MGTEC && extra_podman_volumes+=("--volume" "/Volumes/MGTEC:/Volumes/MGTEC")
+    test -d /Volumes/250330 && extra_podman_volumes+=("--volume" "/Volumes/250330:/Volumes/250330")
 
     _podman_start() { (
         podman machine ssh podman-machine-default uptime >/dev/null 2>&1 || (
           podman machine inspect podman-machine-default >/dev/null 2>&1 || (
-            podman machine stop podman-machine-default
-            podman machine rm podman-machine-default
-            podman machine init \
-                --volume /Users:/Users \
-                --volume /private:/private \
-                --volume /var/folders:/var/folders \
-                --volume /Volumes:/Volumes \
-                --volume /Volumes/250330:/Volumes/250330
+            podman machine stop podman-machine-default >/dev/null 2>&1
+            podman machine rm podman-machine-default >/dev/null 2>&1
+            podman machine init "${extra_podman_volumes[@]}"
           )
           podman machine start podman-machine-default
         )
     ) }
 
-    _podman_start
-
-    alias podman-start='_podman_start'
-
 fi
 
 
-if ! docker ps -q >/dev/null 2>&1
+if \docker -v >/dev/null 2>&1
 then
-  docker-machine -v 2>/dev/null && \
-  test -z "$DOCKER_MACHINE_NAME" && \
-  eval $(docker-machine env) >/dev/null 2>&1
-  return 1
+
+    DOCKER_CMD="docker"
+
+elif \podman -v >/dev/null 2>&1
+then
+
+    _podman_start || return 0
+
+    DOCKER_CMD="podman"
+    alias docker="$DOCKER_CMD"
+
 fi
+
+"$DOCKER_CMD" -v >/dev/null 2>&1 || return 0
 
 alias docker-clear=_docker_clear
 _docker_clear(){(
 
-    CMD='docker'
+    CMD="$DOCKER_CMD"
 
     if [ "--aggressive" = "$1" ]; then
 	aggressive=yes
@@ -69,47 +75,47 @@ _docker_clear(){(
 
 )}
 
-alias docker-ipaddr='docker inspect --format "{{.NetworkSettings.IPAddress}}"'
+alias docker-ipaddr='"$DOCKER_CMD" inspect --format "{{.NetworkSettings.IPAddress}}"'
 
-alias docker-run='docker run -ti'
+alias docker-run='"$DOCKER_CMD" run -ti'
 
 alias docker-exec=_docker_exec
 _docker_exec(){(
   container="$1"; shift
   cmd="$1"; shift
-  docker exec -ti "$container" "${cmd-/bin/sh}" "$@"
+  "$DOCKER_CMD" exec -ti "$container" "${cmd-/bin/sh}" "$@"
 )}
 
-alias docker-rm='docker rm -f'
+alias docker-rm='"$DOCKER_CMD" rm -f'
 
 alias docker-logs='_docker-logs '
 _docker-logs(){
     ## 처음 1회는 failsafe 없이 실행
-    docker logs --follow --tail=50 "$@" && \
+    "$DOCKER_CMD" logs --follow --tail=50 "$@" && \
     while :
     do
         sleep 15
-        docker logs --follow --tail=50 "$@"
+        "$DOCKER_CMD" logs --follow --tail=50 "$@"
     done
 }
 
-alias docker-ps='docker ps -a --format "{{.ID}}\t{{printf \"%29s:\" .Names}}\t{{printf \"%39s\" .Image}}\t    {{.Status}}"'
+alias docker-ps='"$DOCKER_CMD" ps -a --format "{{.ID}}\t{{printf \"%29s:\" .Names}}\t{{printf \"%39s\" .Image}}\t    {{.Status}}"'
 
-alias docker-clear-images='docker rmi $(docker images -a --filter=dangling=true -q)'
-alias docker-clear-ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
+alias docker-clear-images='"$DOCKER_CMD" rmi $("$DOCKER_CMD" images -a --filter=dangling=true -q)'
+alias docker-clear-ps='"$DOCKER_CMD" rm $("$DOCKER_CMD" ps --filter=status=exited --filter=status=created -q)'
 
 alias docker-clear-log=_docker_clear_log
 _docker_clear_log(){(
   container="$1"
-  echo "" > "$(docker inspect --format='{{.LogPath}}' "$container")"
+  echo "" > "$("$DOCKER_CMD" inspect --format='{{.LogPath}}' "$container")"
 )}
 
 alias docker-children='_docker-children'
 _docker-children(){
     local id="$1"
-    for i in $(docker images -q)
+    for i in $("$DOCKER_CMD" images -q)
     do
-        docker history $i | grep -q "$id" && echo $i
+        "$DOCKER_CMD" history $i | grep -q "$id" && echo $i
     done | sort -u
 }
 
@@ -136,12 +142,6 @@ _docker_vbox_unnat_udp(){
     VBoxManage controlvm default natpf1 delete udp-$1
 }
 
-### docker dropbox aliases
-if test ! -z "$(docker ps -q -f 'name=dropbox' 2>/dev/null)" ; then
-  alias dropbox-status='docker exec dropbox /dropbox.sh status'
-  alias dropbox-filestatus='docker exec dropbox /dropbox.sh filestatus'
-fi
-
 ### NV docker
 alias nv-docker='_nv-docker'
 _nv-docker(){(
@@ -157,7 +157,7 @@ docker run \
 
 ### dockviz https://github.com/justone/dockviz
 # if docker client using local unix socket
-alias dockviz="docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz"
+alias dockviz=""$DOCKER_CMD" run -it --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz"
 
 ## # if docker client using tcp
-## alias dockviz="docker run -it --rm -e DOCKER_HOST='tcp://127.0.0.1:2375' nate/dockviz"
+## alias dockviz=""$DOCKER_CMD" run -it --rm -e DOCKER_HOST='tcp://127.0.0.1:2375' nate/dockviz"
