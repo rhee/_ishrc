@@ -4,6 +4,32 @@ podman --version >/dev/null 2>&1 && alias docker=podman
 
 docker -v >/dev/null 2>&1 || return 0
 
+if podman -v >/dev/null 2>&1
+then
+
+    _podman_start() { (
+        podman machine ssh podman-machine-default uptime >/dev/null || (
+          podman machine inspect podman-machine-default >/dev/null || (
+            podman machine stop podman-machine-default
+            podman machine rm podman-machine-default
+            podman machine init \
+                --volume /Users:/Users \
+                --volume /private:/private \
+                --volume /var/folders:/var/folders \
+                --volume /Volumes:/Volumes \
+                --volume /Volumes/250330:/Volumes/250330
+          )
+          podman machine start podman-machine-default
+        )
+    ) }
+
+    _podman_start
+
+    alias podman-start='_podman_start'
+
+fi
+
+
 if ! docker ps -q >/dev/null 2>&1
 then
   docker-machine -v 2>/dev/null && \
