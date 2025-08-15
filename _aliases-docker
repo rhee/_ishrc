@@ -3,6 +3,7 @@
 if \podman -v >/dev/null 2>&1
 then
 
+    alias podman-start=_podman_start
     _podman_start() { (
 
         local extra_podman_volumes=()
@@ -23,10 +24,10 @@ then
           )
           podman machine start podman-machine-default
         )
+
     ) }
 
 fi
-
 
 if \docker -v >/dev/null 2>&1
 then
@@ -51,19 +52,19 @@ _docker_clear(){(
     CMD="$DOCKER_CMD"
 
     if [ "--aggressive" = "$1" ]; then
-	aggressive=yes
+        aggressive=yes
     fi
 
     if [ xyes = x$aggressive ]; then
-	# rm if not running
-	containers=$( $CMD ps -a -q )
-	[ -z "$containers" ] || $CMD rm $containers
+        # rm if not running
+        containers=$( $CMD ps -a -q )
+        [ -z "$containers" ] || $CMD rm $containers
     fi
 
     if [ xyes = x$aggressive ]; then
-	# volume rm if not used
-	volumes=$( $CMD volume ls -q )
-	[ -z "$volumes" ] || $CMD volume rm $volumes
+        # volume rm if not used
+        volumes=$( $CMD volume ls -q )
+        [ -z "$volumes" ] || $CMD volume rm $volumes
     fi
 
     # rmi if no tag
@@ -71,23 +72,12 @@ _docker_clear(){(
     [ -z "$images" ] || $CMD rmi $images
 
     if [ xyes != x$aggressive ]; then
-	echo "docker_clear completed: re-run with --aggressive option to clear stopped ps and volumes too" 1>&2
+        echo "docker_clear completed: re-run with --aggressive option to clear stopped ps and volumes too" 1>&2
     fi
 
 )}
 
 alias docker-ipaddr='"$DOCKER_CMD" inspect --format "{{.NetworkSettings.IPAddress}}"'
-
-alias docker-run='"$DOCKER_CMD" run -ti'
-
-alias docker-exec=_docker_exec
-_docker_exec(){(
-  container="$1"; shift
-  cmd="$1"; shift
-  "$DOCKER_CMD" exec -ti "$container" "${cmd-/bin/sh}" "$@"
-)}
-
-alias docker-rm='"$DOCKER_CMD" rm -f'
 
 alias docker-logs='_docker-logs '
 _docker-logs(){
@@ -120,31 +110,8 @@ _docker-children(){
     done | sort -u
 }
 
-### for docker by VBoxManager
-alias docker-vbox-listnat='VBoxManage showvminfo default |grep NIC'
-
-alias docker-vbox-nat=_docker_vbox_nat
-_docker_vbox_nat(){
-    VBoxManage controlvm default natpf1 tcp-$1,tcp,,$1,,$1
-}
-
-alias docker-vbox-unnat=_docker_vbox_unnat
-_docker_vbox_unnat(){
-    VBoxManage controlvm default natpf1 delete tcp-$1
-}
-
-alias docker-vbox-nat-udp=_docker_vbox_nat_udp
-_docker_vbox_nat_udp(){
-    VBoxManage controlvm default natpf1 udp-$1,udp,,$1,,$1
-}
-
-alias docker-vbox-unnat-udp=_docker_vbox_unnat_udp
-_docker_vbox_unnat_udp(){
-    VBoxManage controlvm default natpf1 delete udp-$1
-}
-
 ### NV docker
-alias nv-docker='_nv-docker'
+alias nv-docker=_nv-docker
 _nv-docker(){(
 docker run \
     --device /dev/nvidia0:/dev/nvidia0 \
@@ -156,9 +123,3 @@ docker run \
     "$@"
 )}
 
-### dockviz https://github.com/justone/dockviz
-# if docker client using local unix socket
-alias dockviz=""$DOCKER_CMD" run -it --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz"
-
-## # if docker client using tcp
-## alias dockviz=""$DOCKER_CMD" run -it --rm -e DOCKER_HOST='tcp://127.0.0.1:2375' nate/dockviz"
