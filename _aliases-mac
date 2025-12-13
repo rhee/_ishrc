@@ -5,9 +5,14 @@ test "Darwin" = "$(uname -s)" || return
 # begin some common mac osx
 
 alias mac-ls=_mac_ls
+_nfc(){
+    #/usr/bin/iconv -c -f utf8-mac
+    #/usr/bin/iconv -c -f UTF-8-MAC -t UTF-8-MAC//IGNORE
+    #python3 -c "import sys,unicodedata;d=sys.stdin.buffer.read().decode('utf-8',errors='ignore');sys.stdout.buffer.write(unicodedata.normalize('NFC',d).encode('utf-8',errors='ignore'))"
+    python3 -c "import sys, unicodedata; data=sys.stdin.read(); normalized=unicodedata.normalize('NFC', data); sys.stdout.write(normalized)"
+}
 _mac_ls(){
-    #command ls "$@" | /usr/bin/iconv -c -f utf8-mac
-    command ls "$@" | /usr/bin/iconv -c -f UTF-8-MAC
+    command ls "$@" | _nfc
 }
 unaliase ls 2>/dev/null || true
 alias ls='_mac_ls -sF'

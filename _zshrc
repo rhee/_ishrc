@@ -1,4 +1,12 @@
 :
+# locale preference
+LC_MESSAGES=C
+LC_TIME=C
+LC_NUMERIC=C
+LC_COLLATE=ko_KR.UTF-8
+LC_CTYPE=ko_KR.UTF-8
+export LC_MESSAGES LC_TIME LC_NUMERIC LC_COLLATE LC_CTYPE
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -36,3 +44,6 @@ setopt nomatch nonullglob
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Added by Antigravity
+export PATH="/Users/rhee/.antigravity/antigravity/bin:$PATH"

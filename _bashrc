@@ -1,4 +1,12 @@
 :
+# locale preference
+LC_MESSAGES=C
+LC_TIME=C
+LC_NUMERIC=C
+LC_COLLATE=ko_KR.UTF-8
+LC_CTYPE=ko_KR.UTF-8
+export LC_MESSAGES LC_TIME LC_NUMERIC LC_COLLATE LC_CTYPE
+
 # If not running interactively, don't do anything
 case $- in *i*) ;; *) return;; esac
 
