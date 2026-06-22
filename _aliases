@@ -6,7 +6,8 @@ alias Copy='\rsync -e ssh -avP'
 alias cpV='rsync --partial --progress --append'
 alias mvV='rsync --partial --progress --append --remove-sent-files'
 
-alias rN='perl -e '"'"'$pat=shift@ARGV;for$f(@ARGV){eval"(\$ff=\$f)=~\$pat";$f ne$ff&&(!-f$ff&&rename $f,$ff&&print"rNF $f $ff\n"||warn "skip $f->$ff\n");}'"'"
+## install Devel::Trace :: curl -L https://cpanmin.us | perl - --sudo Devel::Trace
+alias rN='perl -d:Trace -e '"'"'$pat=shift@ARGV;for$f(@ARGV){eval"(\$ff=\$f)=~\$pat";$f ne$ff&&(!-f$ff&&rename $f,$ff&&print"rNF $f $ff\n"||warn "skip $f->$ff\n");}'"'"
 alias rM='sh -c "mkdir -p $HOME/.Trash; /bin/mv \$* $HOME/.Trash" rM'
 alias zap='perl -e "truncate \$ARGV[0],0"'
 alias mkclean='echo -n "Purge " .#* *~ .??*~ " ?"; read ans; case "$ans" in [Yy]*) rm -fvr .\#* *~ .??*~; ;; esac'

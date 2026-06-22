@@ -1,8 +1,12 @@
 :
-
 if \podman -v >/dev/null 2>&1
 then
 
+    alias podman-reset=_podman_reset
+    _podman_reset() { (
+        podman machine stop podman-machine-default
+        podman machine rm -f podman-machine-default
+    ) }
     alias podman-start=_podman_start
     _podman_start() { (
 
@@ -17,12 +21,13 @@ then
         test -d /Volumes/250330 && extra_podman_volumes+=("--volume" "/Volumes/250330:/Volumes/250330")
 
         podman machine ssh podman-machine-default uptime >/dev/null 2>&1 || (
+          set -x
           podman machine inspect podman-machine-default >/dev/null 2>&1 || (
-            podman machine stop podman-machine-default >/dev/null 2>&1
-            podman machine rm podman-machine-default >/dev/null 2>&1
+            _podman_reset >/dev/null 2>&1
             podman machine init "${extra_podman_volumes[@]}"
           )
           podman machine start podman-machine-default
+          set +x
         )
 
     ) }

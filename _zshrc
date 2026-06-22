@@ -47,3 +47,11 @@ setopt nomatch nonullglob
 
 # Added by Antigravity
 export PATH="/Users/rhee/.antigravity/antigravity/bin:$PATH"
+export PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
+export PATH="/opt/homebrew/opt/util-linux/sbin:$PATH"
+
+# OpenClaw Completion
+#source "/Users/rhee/.openclaw/completions/openclaw.zsh"
+
+# Added by Antigravity
+export PATH="/Users/rhee/.antigravity/antigravity/bin:$PATH"

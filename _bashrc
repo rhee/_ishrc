@@ -31,3 +31,8 @@ source ~/.aliases-mosh
 test -x nvim && alias vim='nvim' && alias vi='nvim'
 export MODULAR_HOME="/Users/rhee/.modular"
 case :$PATH: in *:$HOME/$MODULAR_HOME/pkg/packages.modular.com_mojo/bin:*);;*) PATH=$HOME/$MODULAR_HOME/pkg/packages.modular.com_mojo/bin:$PATH; ;;esac
+
+# Added by Antigravity
+export PATH="/Users/rhee/.antigravity/antigravity/bin:$PATH"
+export PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
+export PATH="/opt/homebrew/opt/util-linux/sbin:$PATH"
