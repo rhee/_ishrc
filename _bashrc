@@ -25,14 +25,42 @@ alias kor='export LANG=ko_KR.UTF-8'
 
 source ~/.aliases-mosh
 
-#MACHINE_STORAGE_PATH=/Volumes/ext/Docker
-#export MACHINE_STORAGE_PATH
 
-test -x nvim && alias vim='nvim' && alias vi='nvim'
-export MODULAR_HOME="/Users/rhee/.modular"
+if test -x nvim
+then
+  alias vim='nvim'
+  alias vi='nvim'
+fi
+
+# nvm: node version manager
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export HF_HOME=/mnt/wsl/ext/hf-models
+export HF_HUB_CACHE=$HF_HOME/hub
+
+export MODULAR_HOME="$HOME/.modular"
 case :$PATH: in *:$HOME/$MODULAR_HOME/pkg/packages.modular.com_mojo/bin:*);;*) PATH=$HOME/$MODULAR_HOME/pkg/packages.modular.com_mojo/bin:$PATH; ;;esac
 
-# Added by Antigravity
-export PATH="/Users/rhee/.antigravity/antigravity/bin:$PATH"
-export PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
-export PATH="/opt/homebrew/opt/util-linux/sbin:$PATH"
+
+# Added by Antigravity CLI installer
+export PATH="/home/rhee/.local/bin:$PATH"
+
+export CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1
+# export PIP_CACHE_URL=http://127.0.0.1:3141/root/combined_index/+simple/
+
+##
+export HERMES_TUI_DIR=/home/rhee/.hermes/hermes-agent/ui-tui
+
+# kimi-code
+export PATH="/home/rhee/.kimi-code/bin:$PATH"
+
+export GEMINI_API_KEY=AIzaSyCdX3NiR71LoH-89tmlLmAlpt-HG6HEK1Y
+
+# .env
+set -a
+test -f ~/.tokens && source ~/.tokens
+test -f ~/.env && source ~/.env
+set +a
+

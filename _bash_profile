@@ -49,3 +49,7 @@ pyenv --version >/dev/null 2>&1 && eval "$(pyenv virtualenv-init -)"
 
 source $HOME/.bashrc
 
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/rhee/.local/bin:$PATH"
