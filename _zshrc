@@ -68,8 +68,6 @@ export HERMES_TUI_DIR=/home/rhee/.hermes/hermes-agent/ui-tui
 # kimi-code
 export PATH="/home/rhee/.kimi-code/bin:$PATH"
 
-export GEMINI_API_KEY=AIzaSyCdX3NiR71LoH-89tmlLmAlpt-HG6HEK1Y
-
 # .env
 set -a
 test -f ~/.tokens && source ~/.tokens
@@ -79,3 +77,18 @@ set +a
 
 # kimi-code
 export PATH="/Users/rhee/.kimi-code/bin:$PATH"
+
+# bun completions
+[ -s "/Users/rhee/.bun/_bun" ] && source "/Users/rhee/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# >>> headroom persistent env >>>
+export HEADROOM_PORT="8787"
+export HEADROOM_HOST="127.0.0.1"
+export HEADROOM_MODE="cache"
+export HEADROOM_BACKEND="anthropic"
+export HEADROOM_TELEMETRY="off"
+# <<< headroom persistent env <<<
