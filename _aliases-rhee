@@ -1,2 +1,0 @@
-:
-alias ssh-rhee='ssh $(ssh -p 2222 -t vps6.keym.kr cat Downloads/data/addr-rhee.iptime.org.txt) -p 2222 '

@@ -70,7 +70,8 @@ export PATH="/home/rhee/.kimi-code/bin:$PATH"
 
 # .env
 set -a
-test -f ~/.tokens && source ~/.tokens
+test -f ~/.tokens.157 && source ~/.tokens.157
+test -f ~/.tokens.244 && source ~/.tokens.244
 test -f ~/.env && source ~/.env
 set +a
 
